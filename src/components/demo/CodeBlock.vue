@@ -16,15 +16,26 @@
       </button>
     </div>
     
-    <!-- 代码内容 -->
-    <pre 
-      class="line-numbers"
-      :class="'language-' + language"
-    ><code 
-        ref="codeEl"
+    <!-- 代码内容（带行号） -->
+    <div class="code-container">
+      <!-- 行号列 -->
+      <div class="line-numbers-wrapper" aria-hidden="true">
+        <span 
+          v-for="n in lineCount" 
+          :key="n" 
+          class="line-number"
+        >{{ n }}</span>
+      </div>
+      
+      <!-- 代码区 -->
+      <pre 
         :class="'language-' + language"
-        v-html="highlightedCode"
-      ></code></pre>
+      ><code 
+          ref="codeEl"
+          :class="'language-' + language"
+          v-html="highlightedCode"
+        ></code></pre>
+    </div>
   </div>
 </template>
 
@@ -80,6 +91,20 @@ export default {
       const grammar = Prism.languages[this.language] || Prism.languages.javascript
       // 高亮代码
       return Prism.highlight(this.code.trim(), grammar, this.language)
+    },
+    
+    /**
+     * 代码行数组（用于显示行号）
+     */
+    codeLines() {
+      return this.code.trim().split('\n')
+    },
+    
+    /**
+     * 行号数量
+     */
+    lineCount() {
+      return this.codeLines.length
     }
   },
   
@@ -153,5 +178,47 @@ export default {
   margin: 0;
   border: none;
   border-radius: 0;
+}
+
+// 代码容器 - 行号 + 代码并排
+.code-container {
+  display: flex;
+  overflow-x: auto;
+  @include custom-scrollbar;
+}
+
+// 行号列
+.line-numbers-wrapper {
+  flex-shrink: 0;
+  padding: $spacing-md 0;
+  padding-right: $spacing-sm;
+  padding-left: $spacing-md;
+  background: rgba(0, 0, 0, 0.02);
+  border-right: 1px solid $color-border;
+  text-align: right;
+  user-select: none;
+  
+  .line-number {
+    display: block;
+    font-family: $font-family-code;
+    font-size: 13px;
+    line-height: 1.6;
+    color: $color-text-light;
+    min-width: 2em;
+  }
+}
+
+// 代码区
+:deep(pre[class*="language-"]) {
+  flex: 1;
+  padding: $spacing-md;
+  margin: 0;
+  background: transparent;
+  
+  code {
+    font-family: $font-family-code;
+    font-size: 13px;
+    line-height: 1.6;
+  }
 }
 </style>

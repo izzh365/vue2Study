@@ -36,7 +36,7 @@
         </div>
       </router-link>
       
-      <router-link to="/es6/promise" class="section-item">
+      <router-link to="/es6/promise-async" class="section-item">
         <span class="section-icon">🔄</span>
         <div class="section-info">
           <h3>2.5 Promise 与异步</h3>

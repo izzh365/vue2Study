@@ -25,6 +25,36 @@ const routes = [
     component: () => import('@/views/chapters/es6/Index.vue'),
     meta: { title: 'ES6 基础', chapter: 2 }
   },
+  {
+    path: '/es6/const-let',
+    name: 'ConstLet',
+    component: () => import('@/views/chapters/es6/ConstLet.vue'),
+    meta: { title: 'const 与 let', chapter: 2 }
+  },
+  {
+    path: '/es6/object-enhance',
+    name: 'ObjectEnhance',
+    component: () => import('@/views/chapters/es6/ObjectEnhance.vue'),
+    meta: { title: '对象增强写法', chapter: 2 }
+  },
+  {
+    path: '/es6/higher-order',
+    name: 'HigherOrder',
+    component: () => import('@/views/chapters/es6/HigherOrder.vue'),
+    meta: { title: '高阶函数', chapter: 2 }
+  },
+  {
+    path: '/es6/arrow-function',
+    name: 'ArrowFunction',
+    component: () => import('@/views/chapters/es6/ArrowFunction.vue'),
+    meta: { title: '箭头函数', chapter: 2 }
+  },
+  {
+    path: '/es6/promise-async',
+    name: 'PromiseAsync',
+    component: () => import('@/views/chapters/es6/PromiseAsync.vue'),
+    meta: { title: 'Promise 与异步', chapter: 2 }
+  },
 
   // ==================== 生命周期章节 ====================
   {

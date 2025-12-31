@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>属性简写</title>
+  <script src="https://cdn.jsdelivr.net/npm/vue@2.7.16/dist/vue.js"></script>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; padding: 20px; background: #F5F5F7; }
+    .demo-container { background: #fff; border-radius: 12px; padding: 20px; box-shadow: 0 2px 12px rgba(0,0,0,0.08); }
+    h3 { color: #1D1D1F; margin-bottom: 16px; font-size: 18px; }
+    .btn { background: #007AFF; color: #fff; border: none; padding: 10px 20px; border-radius: 8px; cursor: pointer; font-size: 14px; margin-right: 10px; margin-bottom: 10px; }
+    .btn:hover { background: #0056b3; }
+    .result-box { background: #F9FAFB; border: 1px solid #E5E5EA; border-radius: 8px; padding: 16px; margin-top: 16px; font-family: 'SF Mono', Consolas, monospace; font-size: 14px; line-height: 1.8; }
+    .result-item { padding: 8px 12px; margin: 4px 0; background: #fff; border-radius: 6px; border-left: 3px solid #007AFF; }
+    .highlight { color: #FF3B30; font-weight: 600; }
+    .success { color: #34C759; font-weight: 600; }
+    .code-compare { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 16px 0; }
+    .code-box { background: #F9FAFB; padding: 12px; border-radius: 8px; border: 1px solid #E5E5EA; }
+    .code-box-title { font-weight: 600; margin-bottom: 8px; font-size: 12px; color: #86868B; }
+  </style>
+</head>
+<body>
+  <div id="app" class="demo-container">
+    <h3>✨ 属性简写</h3>
+    <p style="color: #86868B; margin-bottom: 16px;">当变量名和属性名相同时，可以省略冒号和值</p>
+    
+    <div class="code-compare">
+      <div class="code-box">
+        <div class="code-box-title">ES5 写法</div>
+        <pre style="margin: 0;">var name = '张三'
+var age = 18
+var user = {
+  name: name,
+  age: age
+}</pre>
+      </div>
+      <div class="code-box">
+        <div class="code-box-title">ES6 简写</div>
+        <pre style="margin: 0;">const name = '张三'
+const age = 18
+const user = {
+  name,  // 等同于 name: name
+  age    // 等同于 age: age
+}</pre>
+      </div>
+    </div>
+    
+    <button class="btn" @click="testShorthand">运行演示</button>
+    
+    <div class="result-box" v-if="results.length">
+      <div class="result-item" v-for="(item, index) in results" :key="index" v-html="item"></div>
+    </div>
+  </div>
+  
+  <script src="app.js"></script>
+</body>
+</html>

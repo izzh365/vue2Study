@@ -1,0 +1,18 @@
+// main.scss
+// 样式入口文件
+// 按顺序导入所有样式
+
+// 1. 第三方库样式
+@import 'normalize.css';
+
+// 2. 变量定义（已通过 vue.config.js 全局引入，此处注释）
+// @import 'variables';
+
+// 3. 混入定义（已通过 vue.config.js 全局引入，此处注释）
+// @import 'mixins';
+
+// 4. 通用样式
+@import 'common';
+
+// 5. Prism 代码高亮主题
+@import 'prism-theme';

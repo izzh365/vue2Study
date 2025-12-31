@@ -1,0 +1,51 @@
+# 依赖目录
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# 构建输出
+dist/
+build/
+
+# 开发环境
+.env.local
+.env.*.local
+
+# IDE 编辑器
+.vscode/
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+*.swp
+*.swo
+*~
+.DS_Store
+
+# 日志文件
+logs/
+*.log
+
+# 临时文件
+.temp/
+.cache/
+temp/
+
+# 操作系统
+.DS_Store
+Thumbs.db
+
+# 测试覆盖率
+coverage/
+.nyc_output/
+
+# 编译输出
+*.tsbuildinfo
+
+# IDE 本地文件
+.vscode/settings.json
+.idea/workspace.xml

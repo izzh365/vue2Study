@@ -1,0 +1,146 @@
+// _mixins.scss
+// 项目全局 SCSS 混入定义
+
+// ==================== Flexbox 布局 ====================
+
+// Flex 居中
+@mixin flex-center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+// Flex 两端对齐
+@mixin flex-between {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+// Flex 列布局
+@mixin flex-column {
+  display: flex;
+  flex-direction: column;
+}
+
+// ==================== 文字处理 ====================
+
+// 单行省略
+@mixin text-ellipsis {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+// 多行省略
+@mixin text-clamp($lines: 2) {
+  display: -webkit-box;
+  -webkit-line-clamp: $lines;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+// ==================== 卡片样式 ====================
+
+// 基础卡片
+@mixin card-base {
+  background: $color-card;
+  border-radius: $radius-md;
+  box-shadow: $shadow-md;
+}
+
+// 玻璃效果卡片
+@mixin card-glass {
+  background: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(10px);
+  border-radius: $radius-md;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+// ==================== 按钮样式 ====================
+
+// 基础按钮
+@mixin button-base {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: $spacing-sm $spacing-md;
+  border: none;
+  border-radius: $radius-sm;
+  font-size: $font-size-sm;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all $transition-base;
+  
+  &:hover {
+    transform: translateY(-1px);
+  }
+  
+  &:active {
+    transform: translateY(0);
+  }
+}
+
+// 主要按钮
+@mixin button-primary {
+  @include button-base;
+  background: $color-primary;
+  color: white;
+  
+  &:hover {
+    background: $color-primary-dark;
+  }
+}
+
+// ==================== 响应式 ====================
+
+// 移动端优先的媒体查询
+@mixin media-sm {
+  @media (min-width: $breakpoint-sm) {
+    @content;
+  }
+}
+
+@mixin media-md {
+  @media (min-width: $breakpoint-md) {
+    @content;
+  }
+}
+
+@mixin media-lg {
+  @media (min-width: $breakpoint-lg) {
+    @content;
+  }
+}
+
+// ==================== 滚动条样式 ====================
+
+@mixin custom-scrollbar {
+  &::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+  
+  &::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  
+  &::-webkit-scrollbar-thumb {
+    background: $color-border;
+    border-radius: 3px;
+    
+    &:hover {
+      background: $color-text-secondary;
+    }
+  }
+}
+
+// ==================== 代码块样式 ====================
+
+@mixin code-block {
+  background: $color-code-bg;
+  border-radius: $radius-sm;
+  font-family: $font-family-code;
+  font-size: $font-size-sm;
+  line-height: $line-height-relaxed;
+}

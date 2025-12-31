@@ -1,0 +1,15 @@
+<template>
+  <div class="chapter-index">
+    <h1>🧩 第7章 Vue 组件化 <span class="badge core">核心</span></h1>
+    <p class="chapter-desc">组件化是 Vue 最核心的概念，必须完全掌握。</p>
+    <div class="section-list">
+      <router-link to="/components/basic" class="section-item"><span class="section-icon">🧱</span><div class="section-info"><h3>7.1 组件基础</h3><p>全局/局部组件、data 函数</p></div></router-link>
+      <router-link to="/components/props" class="section-item"><span class="section-icon">⬇️</span><div class="section-info"><h3>7.2 Props 父传子</h3><p>类型验证、单向数据流</p></div></router-link>
+      <router-link to="/components/emit" class="section-item"><span class="section-icon">⬆️</span><div class="section-info"><h3>7.3 $emit 子传父</h3><p>自定义事件、.sync 修饰符</p></div></router-link>
+      <router-link to="/components/refs" class="section-item"><span class="section-icon">🎯</span><div class="section-info"><h3>7.4 $refs</h3><p>访问 DOM 和子组件</p></div></router-link>
+      <router-link to="/components/slot" class="section-item"><span class="section-icon">📦</span><div class="section-info"><h3>7.5 Slot 插槽</h3><p>默认/具名/作用域插槽</p></div></router-link>
+    </div>
+  </div>
+</template>
+<script>export default { name: 'ComponentsIndex' }</script>
+<style lang="scss" scoped>.chapter-index { max-width: 800px; h1 { margin-bottom: $spacing-md; .badge { font-size: $font-size-xs; padding: 2px 8px; border-radius: $radius-sm; vertical-align: middle; &.core { background: rgba($color-error, 0.1); color: $color-error; } } } .chapter-desc { color: $color-text-secondary; margin-bottom: $spacing-xl; } } .section-list { display: flex; flex-direction: column; gap: $spacing-md; } .section-item { @include card-base; display: flex; align-items: center; gap: $spacing-md; padding: $spacing-lg; text-decoration: none; transition: all $transition-base; &:hover { transform: translateX(8px); border-left: 3px solid $color-primary; } .section-icon { font-size: 28px; } .section-info { h3 { font-size: $font-size-base; color: $color-text; margin: 0 0 $spacing-xs; } p { font-size: $font-size-sm; color: $color-text-secondary; margin: 0; } } }</style>

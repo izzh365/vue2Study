@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>箭头函数注意事项</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; padding: 20px; background: #f5f5f7; }
+    .demo-container { max-width: 700px; margin: 0 auto; }
+    h3 { color: #1d1d1f; margin-bottom: 16px; font-size: 18px; }
+    .demo-section { background: white; border-radius: 12px; padding: 20px; margin-bottom: 16px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
+    .section-title { font-size: 14px; color: #86868b; margin-bottom: 12px; font-weight: 500; }
+    .caution-card { border-radius: 8px; padding: 16px; margin-bottom: 12px; }
+    .caution-card.warning { background: #fff3e0; border-left: 3px solid #ff9500; }
+    .caution-card.error { background: #ffebee; border-left: 3px solid #ff3b30; }
+    .caution-card.info { background: #e3f2fd; border-left: 3px solid #007aff; }
+    .caution-title { font-weight: 600; margin-bottom: 8px; display: flex; align-items: center; gap: 8px; }
+    .caution-card.warning .caution-title { color: #e65100; }
+    .caution-card.error .caution-title { color: #c62828; }
+    .caution-card.info .caution-title { color: #1565c0; }
+    .code-block { background: #1d1d1f; color: #f5f5f7; padding: 12px; border-radius: 6px; font-family: 'SF Mono', monospace; font-size: 12px; margin-top: 8px; overflow-x: auto; }
+    .btn { padding: 10px 20px; border: none; border-radius: 8px; cursor: pointer; font-size: 14px; font-weight: 500; transition: all 0.2s; margin-right: 8px; margin-bottom: 8px; }
+    .btn-primary { background: #007aff; color: white; }
+    .result-box { background: #f5f5f7; border-radius: 8px; padding: 12px 16px; margin-top: 12px; font-size: 14px; }
+    pre { white-space: pre-wrap; margin: 0; }
+    .summary-table { width: 100%; border-collapse: collapse; margin-top: 12px; }
+    .summary-table th, .summary-table td { padding: 10px; text-align: left; border: 1px solid #e5e5ea; font-size: 13px; }
+    .summary-table th { background: #f5f5f7; font-weight: 600; }
+    .badge { display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 11px; font-weight: 500; }
+    .badge-yes { background: #e8f5e9; color: #2e7d32; }
+    .badge-no { background: #ffebee; color: #c62828; }
+  </style>
+</head>
+<body>
+  <div id="app" class="demo-container">
+    <h3>⚠️ 箭头函数注意事项</h3>
+    
+    <div class="demo-section">
+      <div class="section-title">🚫 箭头函数的限制</div>
+      
+      <div class="caution-card error">
+        <div class="caution-title">❌ 1. 没有 arguments 对象</div>
+        <div class="code-block">
+<pre>// 普通函数有 arguments
+function sum() {
+  console.log(arguments)  // [1, 2, 3]
+}
+
+// 箭头函数没有 arguments
+const sum = () => {
+  console.log(arguments)  // 报错！
+}
+
+// 解决方案：使用剩余参数
+const sum = (...args) => args.reduce((a, b) => a + b, 0)</pre>
+        </div>
+      </div>
+      
+      <div class="caution-card error">
+        <div class="caution-title">❌ 2. 不能作为构造函数</div>
+        <div class="code-block">
+<pre>// 普通函数可以 new
+function Person(name) {
+  this.name = name
+}
+new Person('张三')  // OK
+
+// 箭头函数不能 new
+const Person = (name) => {
+  this.name = name
+}
+new Person('张三')  // 报错！TypeError</pre>
+        </div>
+      </div>
+      
+      <div class="caution-card warning">
+        <div class="caution-title">⚠️ 3. 没有 prototype 属性</div>
+        <div class="code-block">
+<pre>const fn = () => {}
+console.log(fn.prototype)  // undefined</pre>
+        </div>
+      </div>
+      
+      <div class="caution-card info">
+        <div class="caution-title">💡 4. 不能用 call/apply/bind 改变 this</div>
+        <div class="code-block">
+<pre>const obj = { name: '对象' }
+const arrow = () => this.name
+
+// call/apply/bind 对箭头函数无效
+arrow.call(obj)   // 还是外层的 this，不是 obj</pre>
+        </div>
+      </div>
+      
+      <button class="btn btn-primary" @click="testLimitations">测试限制</button>
+      <div v-if="testResult" class="result-box" v-html="testResult"></div>
+    </div>
+    
+    <div class="demo-section">
+      <div class="section-title">📊 普通函数 vs 箭头函数 对比</div>
+      <table class="summary-table">
+        <tr>
+          <th>特性</th>
+          <th>普通函数</th>
+          <th>箭头函数</th>
+        </tr>
+        <tr>
+          <td>this 绑定</td>
+          <td>动态（调用时决定）</td>
+          <td>词法（定义时决定）</td>
+        </tr>
+        <tr>
+          <td>arguments</td>
+          <td><span class="badge badge-yes">✓ 有</span></td>
+          <td><span class="badge badge-no">✗ 没有</span></td>
+        </tr>
+        <tr>
+          <td>作为构造函数</td>
+          <td><span class="badge badge-yes">✓ 可以</span></td>
+          <td><span class="badge badge-no">✗ 不能</span></td>
+        </tr>
+        <tr>
+          <td>prototype</td>
+          <td><span class="badge badge-yes">✓ 有</span></td>
+          <td><span class="badge badge-no">✗ 没有</span></td>
+        </tr>
+        <tr>
+          <td>call/apply/bind</td>
+          <td><span class="badge badge-yes">✓ 可改变 this</span></td>
+          <td><span class="badge badge-no">✗ 无效</span></td>
+        </tr>
+      </table>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/vue@2.7.16/dist/vue.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>箭头函数参数规则</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; padding: 20px; background: #f5f5f7; }
+    .demo-container { max-width: 650px; margin: 0 auto; }
+    h3 { color: #1d1d1f; margin-bottom: 16px; font-size: 18px; }
+    .demo-section { background: white; border-radius: 12px; padding: 20px; margin-bottom: 16px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
+    .section-title { font-size: 14px; color: #86868b; margin-bottom: 12px; font-weight: 500; }
+    .rule-card { background: #f9fafb; border-radius: 8px; padding: 16px; margin-bottom: 12px; border-left: 3px solid #007aff; }
+    .rule-title { font-weight: 600; color: #1d1d1f; margin-bottom: 8px; display: flex; align-items: center; gap: 8px; }
+    .rule-code { font-family: 'SF Mono', monospace; font-size: 14px; background: #e3f2fd; padding: 8px 12px; border-radius: 6px; margin-top: 8px; }
+    .btn { padding: 10px 20px; border: none; border-radius: 8px; cursor: pointer; font-size: 14px; font-weight: 500; transition: all 0.2s; margin-right: 8px; margin-bottom: 8px; }
+    .btn-primary { background: #007aff; color: white; }
+    .btn-primary:hover { background: #0056b3; }
+    .result-box { background: #e8f5e9; border-radius: 8px; padding: 12px 16px; margin-top: 12px; }
+    .result-item { padding: 4px 0; font-size: 14px; }
+  </style>
+</head>
+<body>
+  <div id="app" class="demo-container">
+    <h3>📋 箭头函数参数规则</h3>
+    
+    <div class="demo-section">
+      <div class="section-title">🎯 参数简写规则</div>
+      
+      <div class="rule-card">
+        <div class="rule-title">1️⃣ 无参数：必须写空括号</div>
+        <div class="rule-code">const sayHi = () => 'Hello!'</div>
+      </div>
+      
+      <div class="rule-card">
+        <div class="rule-title">2️⃣ 单参数：可省略括号</div>
+        <div class="rule-code">const double = n => n * 2</div>
+      </div>
+      
+      <div class="rule-card">
+        <div class="rule-title">3️⃣ 多参数：必须写括号</div>
+        <div class="rule-code">const add = (a, b) => a + b</div>
+      </div>
+      
+      <div class="rule-card">
+        <div class="rule-title">4️⃣ 默认参数：正常使用</div>
+        <div class="rule-code">const greet = (name = '访客') => `你好, ${name}`</div>
+      </div>
+      
+      <div class="rule-card">
+        <div class="rule-title">5️⃣ 剩余参数：正常使用</div>
+        <div class="rule-code">const sum = (...nums) => nums.reduce((a, b) => a + b, 0)</div>
+      </div>
+      
+      <button class="btn btn-primary" @click="testAllRules">测试所有规则</button>
+      
+      <div v-if="results.length" class="result-box">
+        <div v-for="(item, index) in results" :key="index" class="result-item">
+          {{ item }}
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/vue@2.7.16/dist/vue.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>箭头函数语法</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; padding: 20px; background: #f5f5f7; }
+    .demo-container { max-width: 650px; margin: 0 auto; }
+    h3 { color: #1d1d1f; margin-bottom: 16px; font-size: 18px; }
+    .demo-section { background: white; border-radius: 12px; padding: 20px; margin-bottom: 16px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
+    .section-title { font-size: 14px; color: #86868b; margin-bottom: 12px; font-weight: 500; }
+    .code-compare { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    .code-box { background: #f9fafb; border-radius: 8px; padding: 16px; }
+    .code-box.old { border-left: 3px solid #ff9500; }
+    .code-box.new { border-left: 3px solid #34c759; }
+    .code-label { font-size: 12px; font-weight: 600; margin-bottom: 8px; }
+    .code-label.old { color: #ff9500; }
+    .code-label.new { color: #34c759; }
+    pre { font-family: 'SF Mono', monospace; font-size: 13px; line-height: 1.6; white-space: pre-wrap; }
+    .btn { padding: 10px 20px; border: none; border-radius: 8px; cursor: pointer; font-size: 14px; font-weight: 500; transition: all 0.2s; margin-right: 8px; margin-bottom: 8px; }
+    .btn-primary { background: #007aff; color: white; }
+    .btn-primary:hover { background: #0056b3; }
+    .result-box { background: #e8f5e9; border-radius: 8px; padding: 12px 16px; margin-top: 12px; font-size: 14px; color: #2e7d32; }
+    .arrow-visual { text-align: center; padding: 24px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 12px; color: white; margin-bottom: 16px; }
+    .arrow-visual .arrow { font-size: 48px; margin-bottom: 8px; }
+    .arrow-visual .text { font-size: 14px; opacity: 0.9; }
+  </style>
+</head>
+<body>
+  <div id="app" class="demo-container">
+    <h3>➡️ 箭头函数语法</h3>
+    
+    <div class="arrow-visual">
+      <div class="arrow">(参数) => 返回值</div>
+      <div class="text">箭头函数的核心语法</div>
+    </div>
+    
+    <div class="demo-section">
+      <div class="section-title">📝 语法对比</div>
+      <div class="code-compare">
+        <div class="code-box old">
+          <div class="code-label old">ES5 传统写法</div>
+          <pre>var add = function(a, b) {
+  return a + b;
+};</pre>
+        </div>
+        <div class="code-box new">
+          <div class="code-label new">ES6 箭头函数</div>
+          <pre>const add = (a, b) => {
+  return a + b;
+};</pre>
+        </div>
+      </div>
+      
+      <button class="btn btn-primary" @click="testAdd" style="margin-top: 16px;">测试 add(3, 5)</button>
+      <div v-if="addResult" class="result-box">结果：{{ addResult }}</div>
+    </div>
+    
+    <div class="demo-section">
+      <div class="section-title">🎯 更简洁的写法</div>
+      <div class="code-compare">
+        <div class="code-box old">
+          <div class="code-label old">完整写法</div>
+          <pre>const double = (n) => {
+  return n * 2;
+};</pre>
+        </div>
+        <div class="code-box new">
+          <div class="code-label new">简写（单表达式）</div>
+          <pre>const double = n => n * 2;</pre>
+        </div>
+      </div>
+      
+      <button class="btn btn-primary" @click="testDouble" style="margin-top: 16px;">测试 double(10)</button>
+      <div v-if="doubleResult" class="result-box">结果：{{ doubleResult }}</div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/vue@2.7.16/dist/vue.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

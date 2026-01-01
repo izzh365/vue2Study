@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>箭头函数在 Vue 中的应用</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; padding: 20px; background: #f5f5f7; }
+    .demo-container { max-width: 700px; margin: 0 auto; }
+    h3 { color: #1d1d1f; margin-bottom: 16px; font-size: 18px; }
+    .demo-section { background: white; border-radius: 12px; padding: 20px; margin-bottom: 16px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
+    .section-title { font-size: 14px; color: #86868b; margin-bottom: 12px; font-weight: 500; }
+    .usage-card { background: #f9fafb; border-radius: 8px; padding: 16px; margin-bottom: 12px; }
+    .usage-title { font-weight: 600; color: #1d1d1f; margin-bottom: 8px; display: flex; align-items: center; gap: 8px; }
+    .usage-title.good { color: #2e7d32; }
+    .usage-title.bad { color: #c62828; }
+    .code-block { background: #1d1d1f; color: #f5f5f7; padding: 12px; border-radius: 6px; font-family: 'SF Mono', monospace; font-size: 12px; margin-top: 8px; overflow-x: auto; }
+    .btn { padding: 10px 20px; border: none; border-radius: 8px; cursor: pointer; font-size: 14px; font-weight: 500; transition: all 0.2s; margin-right: 8px; margin-bottom: 8px; }
+    .btn-primary { background: #007aff; color: white; }
+    .btn-primary:hover { background: #0056b3; }
+    .result-box { background: #e8f5e9; border-radius: 8px; padding: 12px 16px; margin-top: 12px; color: #2e7d32; }
+    .warning-box { background: #fff3e0; border: 1px solid #ffcc80; border-radius: 8px; padding: 12px 16px; margin: 12px 0; color: #e65100; font-size: 13px; }
+    pre { white-space: pre-wrap; margin: 0; }
+  </style>
+</head>
+<body>
+  <div id="app" class="demo-container">
+    <h3>🔥 箭头函数在 Vue 中的应用</h3>
+    
+    <div class="demo-section">
+      <div class="section-title">✅ 推荐使用箭头函数的场景</div>
+      
+      <div class="usage-card">
+        <div class="usage-title good">✅ 1. 数组方法回调（filter/map/reduce）</div>
+        <div class="code-block">
+<pre>computed: {
+  filteredList() {
+    return this.items.filter(item => item.active)
+  }
+}</pre>
+        </div>
+      </div>
+      
+      <div class="usage-card">
+        <div class="usage-title good">✅ 2. 定时器回调</div>
+        <div class="code-block">
+<pre>methods: {
+  delayedAction() {
+    setTimeout(() => {
+      this.message = '更新了！'  // this 正确指向 Vue 实例
+    }, 1000)
+  }
+}</pre>
+        </div>
+      </div>
+      
+      <div class="usage-card">
+        <div class="usage-title good">✅ 3. Promise 回调</div>
+        <div class="code-block">
+<pre>methods: {
+  fetchData() {
+    axios.get('/api/data')
+      .then(res => {
+        this.data = res.data  // this 正确
+      })
+  }
+}</pre>
+        </div>
+      </div>
+      
+      <button class="btn btn-primary" @click="testGoodUsage">测试推荐用法</button>
+      <div v-if="goodResult" class="result-box">{{ goodResult }}</div>
+    </div>
+    
+    <div class="demo-section">
+      <div class="section-title">❌ 不能使用箭头函数的场景</div>
+      
+      <div class="warning-box">
+        ⚠️ Vue 官方文档明确警告：不要在选项属性或回调上使用箭头函数！
+      </div>
+      
+      <div class="usage-card">
+        <div class="usage-title bad">❌ 1. methods 方法定义</div>
+        <div class="code-block">
+<pre>// ❌ 错误！this 不是 Vue 实例
+methods: {
+  handleClick: () => {
+    this.count++  // 报错！this 是 undefined
+  }
+}</pre>
+        </div>
+      </div>
+      
+      <div class="usage-card">
+        <div class="usage-title bad">❌ 2. computed 计算属性</div>
+        <div class="code-block">
+<pre>// ❌ 错误！
+computed: {
+  fullName: () => this.firstName + this.lastName  // this 不对
+}</pre>
+        </div>
+      </div>
+      
+      <div class="usage-card">
+        <div class="usage-title bad">❌ 3. watch 侦听器</div>
+        <div class="code-block">
+<pre>// ❌ 错误！
+watch: {
+  value: (newVal) => {
+    this.doSomething()  // this 不是 Vue 实例
+  }
+}</pre>
+        </div>
+      </div>
+      
+      <div class="usage-card">
+        <div class="usage-title bad">❌ 4. 生命周期钩子</div>
+        <div class="code-block">
+<pre>// ❌ 错误！
+created: () => {
+  this.fetchData()  // 报错
+}</pre>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/vue@2.7.16/dist/vue.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

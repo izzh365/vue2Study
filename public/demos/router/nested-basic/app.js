@@ -1,6 +1,6 @@
 /**
  * 嵌套路由基础演示
- * 
+ *
  * 嵌套路由的核心：
  * 1. 父组件中需要有 <router-view>
  * 2. 路由配置中使用 children 定义子路由
@@ -114,14 +114,14 @@ new Vue({
 
 /**
  * 嵌套路由要点：
- * 
+ *
  * 1. 父组件必须包含 <router-view>
  *    - 子路由内容会渲染到这里
- * 
+ *
  * 2. children 中的 path 不要以 / 开头
  *    - path: 'profile' ✅
  *    - path: '/profile' ❌ (会变成根路径)
- * 
+ *
  * 3. 完整路径 = 父路径 + 子路径
  *    - /user/1 + profile = /user/1/profile
  */

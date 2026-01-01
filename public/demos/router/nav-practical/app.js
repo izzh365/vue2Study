@@ -1,6 +1,6 @@
 /**
  * 编程式导航实战应用：登录跳转
- * 
+ *
  * 场景：
  * 1. 用户登录成功后跳转到 Dashboard
  * 2. 使用 replace 防止用户后退回登录页
@@ -48,16 +48,16 @@ const Login = {
   methods: {
     async handleLogin() {
       this.loading = true
-      
+
       // 模拟登录请求
       await new Promise(r => setTimeout(r, 1000))
-      
+
       // 更新状态
       userState.isLoggedIn = true
       userState.username = this.username
-      
+
       this.loading = false
-      
+
       // ⭐ 登录成功后使用 replace 跳转
       // 这样用户无法后退到登录页
       this.$router.replace('/dashboard')
@@ -85,7 +85,7 @@ const Dashboard = {
       // 清除状态
       userState.isLoggedIn = false
       userState.username = ''
-      
+
       // ⭐ 退出后使用 replace 跳转到登录页
       this.$router.replace('/login')
     }
@@ -120,14 +120,14 @@ new Vue({
 
 /**
  * 实战要点：
- * 
+ *
  * 1. 登录成功后使用 replace 而非 push
  *    - 用户无法后退到登录页
  *    - 避免重复提交登录表单
- * 
+ *
  * 2. 退出登录同样使用 replace
  *    - 防止用户后退到需要登录的页面
- * 
+ *
  * 3. 配合路由守卫使用
  *    - beforeRouteEnter 检查登录状态
  *    - 未登录时重定向到登录页

@@ -1,6 +1,6 @@
 /**
  * 编程式导航传递参数演示
- * 
+ *
  * 两种参数类型：
  * 1. params - 路径参数（动态路由）
  * 2. query - 查询参数（URL 问号后的参数）
@@ -60,11 +60,11 @@ new Vue({
         name: 'user',
         params: { id: id }
       })
-      
+
       // 方式2：直接拼接路径
       // this.$router.push(`/user/${id}`)
     },
-    
+
     /**
      * 使用 query（查询参数）
      * URL: /search?keyword=vue
@@ -75,7 +75,7 @@ new Vue({
         query: { keyword: keyword }
       })
     },
-    
+
     /**
      * 多个 query 参数
      * URL: /search?keyword=javascript&page=1&sort=newest
@@ -95,13 +95,13 @@ new Vue({
 
 /**
  * params vs query 对比：
- * 
+ *
  * params（路径参数）:
  * - URL: /user/123
  * - 需要在路由定义中声明 :id
  * - 使用 name + params（不能用 path + params）
  * - 页面刷新后依然存在
- * 
+ *
  * query（查询参数）:
  * - URL: /search?keyword=vue
  * - 无需在路由中定义

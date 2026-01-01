@@ -1,6 +1,6 @@
 /**
  * 实战：完整的登录验证系统
- * 
+ *
  * 功能：
  * 1. 未登录时访问私有页面，跳转登录页
  * 2. 登录成功后跳回原目标页面
@@ -11,19 +11,19 @@
 const auth = {
   isLoggedIn: false,
   username: '',
-  
+
   login(username) {
     this.isLoggedIn = true
     this.username = username
     localStorage.setItem('token', 'mock-token-' + Date.now())
   },
-  
+
   logout() {
     this.isLoggedIn = false
     this.username = ''
     localStorage.removeItem('token')
   },
-  
+
   checkAuth() {
     const token = localStorage.getItem('token')
     this.isLoggedIn = !!token
@@ -77,10 +77,10 @@ const Login = {
   methods: {
     handleLogin() {
       if (!this.username || !this.password) return
-      
+
       // 执行登录
       auth.login(this.username)
-      
+
       // 跳转到原目标页面或首页
       const redirect = this.$route.query.redirect || '/'
       this.$router.replace(redirect)
@@ -93,9 +93,9 @@ const routes = [
   { path: '/about', component: About },
   { path: '/login', component: Login },
   // 私有路由，通过 meta.requiresAuth 标记
-  { path: '/dashboard', component: Dashboard, meta: { requiresAuth: true }},
-  { path: '/profile', component: Profile, meta: { requiresAuth: true }},
-  { path: '/settings', component: Settings, meta: { requiresAuth: true }}
+  { path: '/dashboard', component: Dashboard, meta: { requiresAuth: true } },
+  { path: '/profile', component: Profile, meta: { requiresAuth: true } },
+  { path: '/settings', component: Settings, meta: { requiresAuth: true } }
 ]
 
 const router = new VueRouter({ routes })

@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>异步请求数据 - Vuex Demo</title>
+  <script src="https://unpkg.com/vue@2.7.16/dist/vue.js"></script>
+  <script src="https://unpkg.com/vuex@3.6.2/dist/vuex.js"></script>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; padding: 20px; background: #f5f5f7; }
+    .demo-container { max-width: 600px; margin: 0 auto; }
+    h3 { color: #1d1d1f; margin-bottom: 16px; font-size: 18px; }
+    .card { background: white; border-radius: 12px; padding: 20px; box-shadow: 0 2px 10px rgba(0,0,0,0.08); }
+    .btn { width: 100%; padding: 14px; border: none; border-radius: 10px; cursor: pointer; font-size: 16px; font-weight: 600; background: #007aff; color: white; display: flex; align-items: center; justify-content: center; gap: 8px; }
+    .btn:hover { background: #0056b3; }
+    .btn:disabled { opacity: 0.6; cursor: not-allowed; }
+    .loading { display: inline-block; width: 16px; height: 16px; border: 2px solid rgba(255,255,255,0.3); border-top-color: white; border-radius: 50%; animation: spin 0.8s linear infinite; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .status { text-align: center; padding: 20px; margin: 16px 0; }
+    .status-loading { color: #007aff; }
+    .status-error { color: #ff3b30; }
+    .user-list { margin-top: 16px; }
+    .user-item { display: flex; align-items: center; gap: 12px; padding: 12px; background: #f8f9fa; border-radius: 8px; margin-bottom: 8px; }
+    .user-avatar { width: 48px; height: 48px; border-radius: 50%; background: linear-gradient(135deg, #667eea, #764ba2); display: flex; align-items: center; justify-content: center; color: white; font-size: 20px; }
+    .user-info { flex: 1; }
+    .user-name { font-weight: 600; margin-bottom: 4px; }
+    .user-email { font-size: 13px; color: #86868b; }
+    .user-role { font-size: 12px; padding: 2px 8px; background: #e8f5e9; color: #4caf50; border-radius: 4px; }
+  </style>
+</head>
+<body>
+  <div id="app">
+    <div class="demo-container">
+      <h3>🌐 异步请求数据</h3>
+      
+      <div class="card">
+        <button class="btn" @click="fetchUsers" :disabled="loading">
+          <span v-if="loading" class="loading"></span>
+          <span>{{ loading ? '加载中...' : '获取用户列表' }}</span>
+        </button>
+        
+        <!-- 加载状态 -->
+        <div v-if="loading" class="status status-loading">
+          ⏳ 正在从服务器获取数据...
+        </div>
+        
+        <!-- 错误状态 -->
+        <div v-else-if="error" class="status status-error">
+          ❌ {{ error }}
+        </div>
+        
+        <!-- 用户列表 -->
+        <div v-else class="user-list">
+          <div v-for="user in users" :key="user.id" class="user-item">
+            <div class="user-avatar">{{ user.name.charAt(0) }}</div>
+            <div class="user-info">
+              <div class="user-name">{{ user.name }}</div>
+              <div class="user-email">{{ user.email }}</div>
+            </div>
+            <span class="user-role">{{ user.role }}</span>
+          </div>
+          <div v-if="users.length === 0" style="text-align:center;color:#86868b;padding:20px;">
+            点击按钮获取用户数据
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>

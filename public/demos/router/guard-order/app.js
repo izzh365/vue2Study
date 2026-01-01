@@ -1,6 +1,6 @@
 /**
  * 导航守卫执行顺序演示
- * 
+ *
  * 完整顺序：
  * 1. 失活组件 beforeRouteLeave
  * 2. 全局 beforeEach
@@ -31,14 +31,14 @@ function clearLogs() {
 function createPage(name) {
   return {
     template: `<div><h4>📄 ${name}</h4></div>`,
-    
+
     beforeRouteEnter(to, from, next) {
       addLog(`${name}: beforeRouteEnter`, 'component')
       next(vm => {
         addLog(`${name}: beforeRouteEnter → next(vm) 回调`, 'component')
       })
     },
-    
+
     beforeRouteLeave(to, from, next) {
       addLog(`${name}: beforeRouteLeave`, 'component')
       next()
@@ -92,7 +92,7 @@ new Vue({
 
 /**
  * 完整导航解析流程：
- * 
+ *
  * 1. 导航被触发
  * 2. 在失活组件里调用 beforeRouteLeave
  * 3. 调用全局 beforeEach

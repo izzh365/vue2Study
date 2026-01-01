@@ -1,6 +1,6 @@
 /**
  * router-link 使用方式演示
- * 
+ *
  * router-link 是 Vue Router 提供的导航组件
  * 它会被渲染成 <a> 标签，但不会触发页面刷新
  */
@@ -36,10 +36,10 @@ const Search = {
 const routes = [
   { path: '/', component: Home },
   { path: '/about', component: About },
-  { 
-    path: '/user/:id',  // 动态路由参数
-    name: 'user',       // 命名路由
-    component: User 
+  {
+    path: '/user/:id', // 动态路由参数
+    name: 'user', // 命名路由
+    component: User
   },
   { path: '/search', component: Search }
 ]
@@ -53,12 +53,12 @@ new Vue({
 
 /**
  * router-link 的 to 属性可以是：
- * 
+ *
  * 1. 字符串路径：to="/about"
  * 2. 对象（path）：:to="{ path: '/about' }"
  * 3. 对象（name）：:to="{ name: 'user', params: { id: 123 }}"
  * 4. 带 query：:to="{ path: '/search', query: { keyword: 'vue' }}"
- * 
+ *
  * 使用 name（命名路由）的好处：
  * - 修改 path 时不需要修改所有 router-link
  * - 更易读、更易维护

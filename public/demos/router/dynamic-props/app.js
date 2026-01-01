@@ -1,6 +1,6 @@
 /**
  * Props 解耦路由参数
- * 
+ *
  * 使用 props: true 可以将路由参数作为 props 传递给组件
  * 这样组件不再依赖 $route，更易复用和测试
  */
@@ -16,7 +16,7 @@ const users = {
 const UserWithProps = {
   // 直接声明 id 为 prop
   props: ['id'],
-  
+
   template: `
     <div>
       <h4>👤 {{ user.name }}</h4>
@@ -29,7 +29,7 @@ const UserWithProps = {
       </p>
     </div>
   `,
-  
+
   computed: {
     user() {
       // 使用 props 中的 id
@@ -41,7 +41,7 @@ const UserWithProps = {
 // 路由配置
 const routes = [
   { path: '/', redirect: '/user/1' },
-  { 
+  {
     path: '/user/:id',
     component: UserWithProps,
     // ✅ 启用 props
@@ -59,22 +59,22 @@ new Vue({
 
 /**
  * props 的三种模式：
- * 
+ *
  * 1. 布尔模式（最常用）
  *    props: true
  *    将 $route.params 作为 props 传递
- * 
+ *
  * 2. 对象模式（静态 props）
  *    props: { newsletter: true }
  *    传递固定的 props
- * 
+ *
  * 3. 函数模式（最灵活）
  *    props: route => ({
  *      id: route.params.id,
  *      query: route.query.q
  *    })
  *    可以转换和组合各种值
- * 
+ *
  * 解耦的好处：
  * - 组件可以独立于路由使用
  * - 更容易测试（直接传 props）

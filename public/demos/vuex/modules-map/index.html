@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>mapState 与模块 - Vuex Demo</title>
+  <script src="https://unpkg.com/vue@2.7.16/dist/vue.js"></script>
+  <script src="https://unpkg.com/vuex@3.6.2/dist/vuex.js"></script>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; padding: 20px; background: #f5f5f7; }
+    .demo-container { max-width: 700px; margin: 0 auto; }
+    h3 { color: #1d1d1f; margin-bottom: 16px; font-size: 18px; }
+    .card { background: white; border-radius: 12px; padding: 20px; box-shadow: 0 2px 10px rgba(0,0,0,0.08); }
+    .user-card { display: flex; align-items: center; gap: 16px; padding: 20px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 12px; color: white; margin-bottom: 20px; }
+    .avatar { width: 64px; height: 64px; border-radius: 50%; background: rgba(255,255,255,0.2); display: flex; align-items: center; justify-content: center; font-size: 28px; }
+    .user-info { flex: 1; }
+    .user-name { font-size: 20px; font-weight: 600; }
+    .user-email { font-size: 14px; opacity: 0.8; }
+    .compare { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .compare-item { background: #f8f9fa; padding: 12px; border-radius: 8px; }
+    .compare-title { font-size: 12px; color: #86868b; margin-bottom: 8px; display: flex; align-items: center; gap: 4px; }
+    .compare-code { font-size: 11px; font-family: 'SF Mono', monospace; line-height: 1.5; color: #333; background: white; padding: 8px; border-radius: 4px; }
+    .btn-row { display: flex; gap: 8px; margin-top: 16px; }
+    .btn { flex: 1; padding: 12px; border: none; border-radius: 8px; cursor: pointer; font-size: 14px; font-weight: 500; transition: all 0.2s; }
+    .btn-primary { background: #007aff; color: white; }
+    .btn-success { background: #34c759; color: white; }
+    .btn:hover { opacity: 0.9; }
+  </style>
+</head>
+<body>
+  <div id="app">
+    <div class="demo-container">
+      <h3>🗺️ mapState 与模块</h3>
+      
+      <div class="card">
+        <!-- 用户信息展示 -->
+        <div class="user-card">
+          <div class="avatar">{{ avatar }}</div>
+          <div class="user-info">
+            <div class="user-name">{{ name }}</div>
+            <div class="user-email">{{ email }}</div>
+          </div>
+        </div>
+        
+        <!-- 代码对比 -->
+        <div class="compare">
+          <div class="compare-item">
+            <div class="compare-title">❌ 不使用辅助函数</div>
+            <div class="compare-code">
+<pre>computed: {
+  name() {
+    return this.$store
+      .state.user.name
+  },
+  email() {
+    return this.$store
+      .state.user.email
+  }
+}</pre>
+            </div>
+          </div>
+          
+          <div class="compare-item">
+            <div class="compare-title">✅ 使用 mapState</div>
+            <div class="compare-code">
+<pre>computed: {
+  // 传入命名空间作为第一个参数
+  ...mapState('user', [
+    'name',
+    'email'
+  ])
+}</pre>
+            </div>
+          </div>
+        </div>
+        
+        <div class="btn-row">
+          <button class="btn btn-primary" @click="login">
+            登录 (mapActions)
+          </button>
+          <button class="btn btn-success" @click="updateEmail">
+            修改邮箱 (mapMutations)
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>

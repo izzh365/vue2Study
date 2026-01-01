@@ -1,6 +1,6 @@
 /**
  * Vue Router 基础路由配置演示
- * 
+ *
  * 核心知识点：
  * 1. 定义路由组件
  * 2. 配置 routes 数组
@@ -49,16 +49,16 @@ const Contact = {
 
 const routes = [
   {
-    path: '/',           // 根路径
-    component: Home      // 显示 Home 组件
+    path: '/', // 根路径
+    component: Home // 显示 Home 组件
   },
   {
-    path: '/about',      // /about 路径
-    component: About     // 显示 About 组件
+    path: '/about', // /about 路径
+    component: About // 显示 About 组件
   },
   {
-    path: '/contact',    // /contact 路径
-    component: Contact   // 显示 Contact 组件
+    path: '/contact', // /contact 路径
+    component: Contact // 显示 Contact 组件
   }
 ]
 
@@ -66,7 +66,7 @@ const routes = [
 // 将路由配置传入 VueRouter
 
 const router = new VueRouter({
-  routes  // ES6 简写，等同于 routes: routes
+  routes // ES6 简写，等同于 routes: routes
 })
 
 // ==================== 4. 创建 Vue 实例并挂载路由 ====================
@@ -74,12 +74,12 @@ const router = new VueRouter({
 
 new Vue({
   el: '#app',
-  router  // 注入路由，使整个应用都能使用路由功能
+  router // 注入路由，使整个应用都能使用路由功能
 })
 
 /**
  * 小结：
- * 
+ *
  * 1. <router-link to="/path"> 用于导航，会渲染为 <a> 标签
  * 2. <router-view> 是路由出口，匹配的组件会渲染在这里
  * 3. 当前路由信息可通过 this.$route 访问

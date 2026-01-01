@@ -1,6 +1,6 @@
 /**
  * 全局前置守卫 beforeEach 演示
- * 
+ *
  * 用于：
  * - 登录验证
  * - 权限检查
@@ -53,15 +53,15 @@ const routes = [
   { path: '/about', component: About },
   { path: '/login', component: Login },
   // 需要登录的路由，通过 meta 标记
-  { path: '/dashboard', component: Dashboard, meta: { requiresAuth: true }},
-  { path: '/profile', component: Profile, meta: { requiresAuth: true }}
+  { path: '/dashboard', component: Dashboard, meta: { requiresAuth: true } },
+  { path: '/profile', component: Profile, meta: { requiresAuth: true } }
 ]
 
 const router = new VueRouter({ routes })
 
 /**
  * ⭐ 全局前置守卫 beforeEach
- * 
+ *
  * 参数：
  * - to: 即将进入的目标路由对象
  * - from: 当前导航正要离开的路由
@@ -69,7 +69,7 @@ const router = new VueRouter({ routes })
  */
 router.beforeEach((to, from, next) => {
   addLog(`beforeEach: ${from.path} → ${to.path}`)
-  
+
   // 检查目标路由是否需要登录（通过 meta.requiresAuth）
   if (to.matched.some(record => record.meta.requiresAuth)) {
     // 需要登录
@@ -78,7 +78,7 @@ router.beforeEach((to, from, next) => {
       addLog(`⛔ 未登录，重定向到登录页`)
       next({
         path: '/login',
-        query: { redirect: to.fullPath }  // 保存原目标，登录后跳回
+        query: { redirect: to.fullPath } // 保存原目标，登录后跳回
       })
     } else {
       // 已登录，放行
@@ -112,7 +112,7 @@ new Vue({
 
 /**
  * beforeEach 要点：
- * 
+ *
  * 1. 每次路由跳转都会触发
  * 2. 必须调用 next() 才能继续
  * 3. 可通过 meta 字段标记路由属性

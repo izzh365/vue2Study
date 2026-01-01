@@ -1,6 +1,6 @@
 /**
  * 命名视图演示
- * 
+ *
  * 有时候一个页面需要同时展示多个视图，而不是嵌套
  * 可以给 router-view 添加 name 属性来区分
  */
@@ -80,7 +80,7 @@ const routes = [
       // name: 组件
       header: HomeHeader,
       sidebar: HomeSidebar,
-      default: HomeMain,   // 没有 name 的 router-view
+      default: HomeMain, // 没有 name 的 router-view
       footer: HomeFooter
     }
   },
@@ -104,17 +104,17 @@ new Vue({
 
 /**
  * 命名视图要点：
- * 
+ *
  * 1. 模板中使用 name 属性
  *    <router-view name="sidebar"></router-view>
  *    <router-view></router-view>  <!-- 默认 default -->
- * 
+ *
  * 2. 路由配置使用 components（复数！）
  *    components: {
  *      sidebar: SidebarComponent,
  *      default: MainComponent  // 对应没有 name 的 router-view
  *    }
- * 
+ *
  * 应用场景：
  * - 复杂布局（头部、侧边栏、主内容、底部）
  * - 不同页面使用不同的布局组件

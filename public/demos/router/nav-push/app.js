@@ -1,6 +1,6 @@
 /**
  * $router.push() 编程式导航演示
- * 
+ *
  * push 方法用于跳转到新页面，会在历史记录中添加新记录
  */
 
@@ -44,14 +44,14 @@ new Vue({
     pushString(path) {
       this.$router.push(path)
     },
-    
+
     /**
      * 方式2：对象形式（path）
      */
     pushObject(path) {
       this.$router.push({ path: path })
     },
-    
+
     /**
      * 方式3：命名路由 + params
      * 使用 name 更安全，URL 变更不影响
@@ -67,18 +67,18 @@ new Vue({
 
 /**
  * push 方法的几种写法：
- * 
+ *
  * 1. 字符串：this.$router.push('/about')
- * 
+ *
  * 2. 对象（path）：
  *    this.$router.push({ path: '/about' })
- * 
+ *
  * 3. 对象（name + params）：
  *    this.$router.push({ name: 'user', params: { id: 123 }})
- * 
+ *
  * 4. 对象（path + query）：
  *    this.$router.push({ path: '/search', query: { q: 'vue' }})
- * 
+ *
  * 注意：path 和 params 不能同时使用！
  * 如果提供了 path，params 会被忽略
  */

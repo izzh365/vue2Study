@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Getter 返回函数 - Vuex Demo</title>
+  <script src="https://unpkg.com/vue@2.7.16/dist/vue.js"></script>
+  <script src="https://unpkg.com/vuex@3.6.2/dist/vuex.js"></script>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; padding: 20px; background: #f5f5f7; }
+    .demo-container { max-width: 600px; margin: 0 auto; }
+    h3 { color: #1d1d1f; margin-bottom: 16px; font-size: 18px; }
+    .card { background: white; border-radius: 12px; padding: 20px; box-shadow: 0 2px 10px rgba(0,0,0,0.08); }
+    .input-section { margin-bottom: 20px; }
+    .input-row { display: flex; gap: 12px; align-items: center; }
+    .input-row label { color: #86868b; font-size: 14px; }
+    .input-row input { flex: 1; padding: 10px 14px; border: 1px solid #e5e5ea; border-radius: 8px; font-size: 14px; }
+    .input-row input:focus { outline: none; border-color: #007aff; }
+    .result-section { margin-top: 16px; }
+    .result-title { font-size: 14px; color: #86868b; margin-bottom: 8px; }
+    .result-card { background: #f0f0f5; padding: 16px; border-radius: 8px; }
+    .todo-found { display: flex; align-items: center; gap: 12px; }
+    .todo-id { background: #007aff; color: white; width: 32px; height: 32px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-weight: 600; }
+    .todo-info { flex: 1; }
+    .todo-text { font-weight: 600; margin-bottom: 4px; }
+    .todo-status { font-size: 12px; color: #86868b; }
+    .not-found { color: #ff3b30; text-align: center; padding: 20px; }
+    .info-box { background: #fff3cd; padding: 12px; border-radius: 8px; margin-top: 16px; font-size: 13px; }
+    .code-block { background: #1e1e1e; color: #d4d4d4; padding: 12px; border-radius: 8px; font-family: 'SF Mono', monospace; font-size: 12px; margin-top: 16px; overflow-x: auto; }
+  </style>
+</head>
+<body>
+  <div id="app">
+    <div class="demo-container">
+      <h3>🔎 Getter 返回函数（带参数）</h3>
+      
+      <div class="card">
+        <!-- 输入 -->
+        <div class="input-section">
+          <div class="input-row">
+            <label>查找 ID:</label>
+            <input type="number" v-model.number="searchId" placeholder="输入 Todo ID (1-5)" min="1" max="10">
+          </div>
+        </div>
+        
+        <!-- 结果 -->
+        <div class="result-section">
+          <div class="result-title">📋 查找结果：getTodoById({{ searchId }})</div>
+          <div class="result-card">
+            <div v-if="foundTodo" class="todo-found">
+              <div class="todo-id">#{{ foundTodo.id }}</div>
+              <div class="todo-info">
+                <div class="todo-text">{{ foundTodo.text }}</div>
+                <div class="todo-status">
+                  状态: {{ foundTodo.done ? '✅ 已完成' : '⏳ 进行中' }}
+                </div>
+              </div>
+            </div>
+            <div v-else class="not-found">
+              ❌ 未找到 ID 为 {{ searchId }} 的 Todo
+            </div>
+          </div>
+        </div>
+        
+        <div class="info-box">
+          ⚠️ 注意：通过方法访问的 getter（返回函数）每次调用都会执行，不会被缓存！
+        </div>
+        
+        <div class="code-block">
+<pre>// 定义返回函数的 getter
+getTodoById: (state) => (id) => {
+  return state.todos.find(todo => todo.id === id)
+}
+
+// 使用（方法访问，传入参数）
+this.$store.getters.getTodoById(2)</pre>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>

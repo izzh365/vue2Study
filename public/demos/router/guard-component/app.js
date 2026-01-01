@@ -1,6 +1,6 @@
 /**
  * 组件内守卫演示
- * 
+ *
  * 三种组件内守卫：
  * 1. beforeRouteEnter - 进入组件前
  * 2. beforeRouteUpdate - 路由参数变化时
@@ -46,14 +46,14 @@ const FormPage = {
    */
   beforeRouteEnter(to, from, next) {
     addLog('FormPage: beforeRouteEnter (无 this)')
-    
+
     // 通过 next 回调访问组件实例
     next(vm => {
       addLog('  next(vm) 回调: 可以访问 vm')
-      vm.savedContent = ''  // 初始化
+      vm.savedContent = '' // 初始化
     })
   },
-  
+
   /**
    * ⭐ beforeRouteLeave
    * 离开组件前调用
@@ -61,7 +61,7 @@ const FormPage = {
    */
   beforeRouteLeave(to, from, next) {
     addLog('FormPage: beforeRouteLeave')
-    
+
     if (this.content && this.content !== this.savedContent) {
       const answer = window.confirm('内容未保存，确定要离开吗？')
       if (answer) {
@@ -90,7 +90,7 @@ const UserDetail = {
     addLog(`UserDetail: beforeRouteEnter (用户${to.params.id})`)
     next()
   },
-  
+
   /**
    * ⭐ beforeRouteUpdate
    * 路由参数变化时调用（组件被复用）
@@ -102,7 +102,7 @@ const UserDetail = {
     // 可以在这里重新获取数据
     next()
   },
-  
+
   beforeRouteLeave(to, from, next) {
     addLog(`UserDetail: beforeRouteLeave (用户${from.params.id})`)
     next()
@@ -125,16 +125,16 @@ new Vue({
 
 /**
  * 组件内守卫对比：
- * 
+ *
  * beforeRouteEnter:
  * - 组件创建前调用
  * - 无法访问 this
  * - 可用 next(vm => {}) 访问实例
- * 
+ *
  * beforeRouteUpdate:
  * - 组件复用时调用（参数变化）
  * - 可以访问 this
- * 
+ *
  * beforeRouteLeave:
  * - 离开组件前调用
  * - 可以访问 this

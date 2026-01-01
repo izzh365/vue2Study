@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>展开运算符混合本地计算属性 - Vuex Demo</title>
+  <script src="https://unpkg.com/vue@2.7.16/dist/vue.js"></script>
+  <script src="https://unpkg.com/vuex@3.6.2/dist/vuex.js"></script>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; padding: 20px; background: #f5f5f7; }
+    .demo-container { max-width: 600px; margin: 0 auto; }
+    h3 { color: #1d1d1f; margin-bottom: 16px; font-size: 18px; }
+    .card { background: white; border-radius: 12px; padding: 20px; margin-bottom: 16px; box-shadow: 0 2px 10px rgba(0,0,0,0.08); }
+    .section { margin-bottom: 20px; padding-bottom: 16px; border-bottom: 1px solid #e5e5ea; }
+    .section:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+    .section-title { font-size: 14px; color: #1d1d1f; font-weight: 600; margin-bottom: 12px; }
+    .computed-list { background: #f0f0f5; border-radius: 8px; overflow: hidden; }
+    .computed-item { display: flex; justify-content: space-between; align-items: center; padding: 12px 16px; border-bottom: 1px solid #e5e5ea; }
+    .computed-item:last-child { border-bottom: none; }
+    .computed-name { font-size: 14px; }
+    .computed-source { font-size: 12px; padding: 2px 8px; border-radius: 4px; }
+    .source-store { background: #e3f2fd; color: #1976d2; }
+    .source-local { background: #e8f5e9; color: #388e3c; }
+    .computed-value { font-weight: 600; color: #007aff; }
+    .code-block { background: #1e1e1e; color: #d4d4d4; padding: 16px; border-radius: 8px; font-family: 'SF Mono', monospace; font-size: 13px; overflow-x: auto; }
+    .code-keyword { color: #569cd6; }
+    .code-string { color: #ce9178; }
+    .code-comment { color: #6a9955; }
+  </style>
+</head>
+<body>
+  <div id="app">
+    <div class="demo-container">
+      <h3>🔀 展开运算符混合本地计算属性</h3>
+      
+      <div class="card">
+        <div class="section">
+          <div class="section-title">📊 所有计算属性</div>
+          <div class="computed-list">
+            <div class="computed-item">
+              <div>
+                <span class="computed-name">count</span>
+                <span class="computed-source source-store">Store State</span>
+              </div>
+              <span class="computed-value">{{ count }}</span>
+            </div>
+            <div class="computed-item">
+              <div>
+                <span class="computed-name">message</span>
+                <span class="computed-source source-store">Store State</span>
+              </div>
+              <span class="computed-value">{{ message }}</span>
+            </div>
+            <div class="computed-item">
+              <div>
+                <span class="computed-name">localTime</span>
+                <span class="computed-source source-local">本地 Computed</span>
+              </div>
+              <span class="computed-value">{{ localTime }}</span>
+            </div>
+            <div class="computed-item">
+              <div>
+                <span class="computed-name">doubleCount</span>
+                <span class="computed-source source-local">本地 Computed</span>
+              </div>
+              <span class="computed-value">{{ doubleCount }}</span>
+            </div>
+          </div>
+        </div>
+        
+        <div class="section">
+          <div class="section-title">💻 代码写法</div>
+          <div class="code-block">
+<span class="code-keyword">computed</span>: {
+  <span class="code-comment">// 本地计算属性</span>
+  localTime() {
+    <span class="code-keyword">return new</span> Date().toLocaleTimeString()
+  },
+  doubleCount() {
+    <span class="code-keyword">return this</span>.count * 2
+  },
+  
+  <span class="code-comment">// 使用展开运算符混入 mapState</span>
+  ...<span class="code-keyword">mapState</span>([<span class="code-string">'count'</span>, <span class="code-string">'message'</span>])
+}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>

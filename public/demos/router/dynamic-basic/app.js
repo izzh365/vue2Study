@@ -1,6 +1,6 @@
 /**
  * 动态路由基础演示
- * 
+ *
  * 动态路由参数以冒号 : 开头
  * 例如 /user/:id 可以匹配 /user/1, /user/2, /user/abc 等
  */
@@ -49,9 +49,9 @@ const UserDetail = {
 // 路由配置
 const routes = [
   { path: '/', component: Home },
-  { 
-    path: '/user/:id',  // :id 是动态参数
-    component: UserDetail 
+  {
+    path: '/user/:id', // :id 是动态参数
+    component: UserDetail
   }
 ]
 
@@ -64,15 +64,15 @@ new Vue({
 
 /**
  * 知识点总结：
- * 
+ *
  * 1. 定义动态参数：path: '/user/:id'
  *    - :id 是动态部分，可以匹配任意值
  *    - 参数名可以自定义，如 :userId, :postId
- * 
+ *
  * 2. 获取参数值：this.$route.params.id
  *    - 在模板中：{{ $route.params.id }}
  *    - 在组件中：this.$route.params.id
- * 
+ *
  * 3. 参数值总是字符串类型
  *    - 如需数字：parseInt($route.params.id)
  */

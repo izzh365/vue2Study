@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>综合案例 - 用户与购物车 - Vuex Demo</title>
+  <script src="https://unpkg.com/vue@2.7.16/dist/vue.js"></script>
+  <script src="https://unpkg.com/vuex@3.6.2/dist/vuex.js"></script>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; padding: 20px; background: #f5f5f7; }
+    .demo-container { max-width: 700px; margin: 0 auto; }
+    h3 { color: #1d1d1f; margin-bottom: 16px; font-size: 18px; }
+    .card { background: white; border-radius: 12px; padding: 20px; box-shadow: 0 2px 10px rgba(0,0,0,0.08); margin-bottom: 16px; }
+    .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; padding-bottom: 12px; border-bottom: 1px solid #e5e5ea; }
+    .card-title { font-size: 16px; font-weight: 600; display: flex; align-items: center; gap: 8px; }
+    .user-bar { display: flex; align-items: center; gap: 12px; padding: 12px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 12px; color: white; }
+    .user-avatar { width: 40px; height: 40px; border-radius: 50%; background: rgba(255,255,255,0.2); display: flex; align-items: center; justify-content: center; font-size: 18px; }
+    .user-info { flex: 1; }
+    .user-name { font-weight: 600; }
+    .user-balance { font-size: 13px; opacity: 0.9; }
+    .btn-logout { padding: 6px 12px; border: 1px solid rgba(255,255,255,0.3); background: transparent; color: white; border-radius: 6px; cursor: pointer; font-size: 12px; }
+    .product-list { display: grid; gap: 12px; }
+    .product-item { display: flex; align-items: center; gap: 12px; padding: 12px; background: #f8f9fa; border-radius: 10px; }
+    .product-img { width: 60px; height: 60px; border-radius: 8px; background: #e0e0e0; display: flex; align-items: center; justify-content: center; font-size: 28px; }
+    .product-info { flex: 1; }
+    .product-name { font-weight: 600; margin-bottom: 4px; }
+    .product-price { color: #ff3b30; font-weight: 600; }
+    .btn-add { padding: 8px 16px; border: none; border-radius: 6px; background: #007aff; color: white; cursor: pointer; font-size: 13px; }
+    .btn-add:hover { background: #0056b3; }
+    .cart-list { display: grid; gap: 8px; }
+    .cart-item { display: flex; align-items: center; gap: 12px; padding: 10px; background: #f8f9fa; border-radius: 8px; }
+    .cart-name { flex: 1; font-size: 14px; }
+    .cart-qty { display: flex; align-items: center; gap: 8px; }
+    .qty-btn { width: 24px; height: 24px; border: none; border-radius: 4px; background: #e0e0e0; cursor: pointer; font-weight: 600; }
+    .cart-subtotal { font-weight: 600; color: #007aff; min-width: 60px; text-align: right; }
+    .cart-footer { display: flex; justify-content: space-between; align-items: center; margin-top: 16px; padding-top: 12px; border-top: 1px solid #e5e5ea; }
+    .cart-total { font-size: 18px; font-weight: 700; color: #1d1d1f; }
+    .btn-checkout { padding: 12px 24px; border: none; border-radius: 8px; background: #34c759; color: white; cursor: pointer; font-size: 14px; font-weight: 600; }
+    .btn-checkout:disabled { background: #ccc; cursor: not-allowed; }
+    .empty-cart { text-align: center; padding: 30px; color: #86868b; }
+    .badge { background: #ff3b30; color: white; font-size: 12px; padding: 2px 8px; border-radius: 10px; }
+  </style>
+</head>
+<body>
+  <div id="app">
+    <div class="demo-container">
+      <h3>🛒 综合案例 - 用户与购物车</h3>
+      
+      <!-- 用户模块 -->
+      <div class="card">
+        <div class="user-bar" v-if="isLoggedIn">
+          <div class="user-avatar">{{ userName.charAt(0) }}</div>
+          <div class="user-info">
+            <div class="user-name">{{ userName }}</div>
+            <div class="user-balance">余额: ¥{{ balance }}</div>
+          </div>
+          <button class="btn-logout" @click="logout">退出</button>
+        </div>
+        <div v-else style="text-align:center;padding:20px;">
+          <button class="btn-add" @click="login({ name: '张三', balance: 1000 })">
+            点击登录
+          </button>
+        </div>
+      </div>
+      
+      <!-- 商品列表 -->
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">📦 商品列表</div>
+        </div>
+        <div class="product-list">
+          <div v-for="product in products" :key="product.id" class="product-item">
+            <div class="product-img">{{ product.icon }}</div>
+            <div class="product-info">
+              <div class="product-name">{{ product.name }}</div>
+              <div class="product-price">¥{{ product.price }}</div>
+            </div>
+            <button class="btn-add" @click="addToCart(product)" :disabled="!isLoggedIn">
+              加入购物车
+            </button>
+          </div>
+        </div>
+      </div>
+      
+      <!-- 购物车 -->
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">
+            🛒 购物车
+            <span v-if="cartCount > 0" class="badge">{{ cartCount }}</span>
+          </div>
+        </div>
+        <div v-if="cartItems.length > 0" class="cart-list">
+          <div v-for="item in cartItems" :key="item.id" class="cart-item">
+            <span class="cart-name">{{ item.name }}</span>
+            <div class="cart-qty">
+              <button class="qty-btn" @click="decreaseQty(item.id)">-</button>
+              <span>{{ item.quantity }}</span>
+              <button class="qty-btn" @click="increaseQty(item.id)">+</button>
+            </div>
+            <span class="cart-subtotal">¥{{ item.price * item.quantity }}</span>
+          </div>
+        </div>
+        <div v-else class="empty-cart">购物车是空的</div>
+        
+        <div class="cart-footer">
+          <div class="cart-total">总计: ¥{{ cartTotal }}</div>
+          <button class="btn-checkout" @click="checkout" :disabled="cartItems.length === 0 || !isLoggedIn">
+            结算
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>

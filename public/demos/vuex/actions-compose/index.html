@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>组合 Actions - Vuex Demo</title>
+  <script src="https://unpkg.com/vue@2.7.16/dist/vue.js"></script>
+  <script src="https://unpkg.com/vuex@3.6.2/dist/vuex.js"></script>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; padding: 20px; background: #f5f5f7; }
+    .demo-container { max-width: 600px; margin: 0 auto; }
+    h3 { color: #1d1d1f; margin-bottom: 16px; font-size: 18px; }
+    .card { background: white; border-radius: 12px; padding: 20px; box-shadow: 0 2px 10px rgba(0,0,0,0.08); }
+    .btn { width: 100%; padding: 14px; border: none; border-radius: 10px; cursor: pointer; font-size: 16px; font-weight: 600; background: #007aff; color: white; margin-bottom: 16px; }
+    .btn:hover { background: #0056b3; }
+    .btn:disabled { opacity: 0.6; cursor: not-allowed; }
+    .flow { display: flex; align-items: center; justify-content: center; gap: 12px; margin-bottom: 20px; flex-wrap: wrap; }
+    .flow-box { padding: 16px 20px; border-radius: 12px; text-align: center; min-width: 120px; }
+    .flow-box.waiting { background: #f0f0f5; color: #86868b; }
+    .flow-box.active { background: #e3f2fd; color: #1976d2; animation: pulse 1s infinite; }
+    .flow-box.completed { background: #e8f5e9; color: #388e3c; }
+    @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.7; } }
+    .flow-arrow { color: #86868b; font-size: 24px; }
+    .flow-title { font-weight: 600; margin-bottom: 4px; }
+    .flow-desc { font-size: 12px; }
+    .log-section { margin-top: 16px; }
+    .log-title { font-size: 14px; color: #86868b; margin-bottom: 8px; }
+    .log-list { background: #1e1e1e; border-radius: 8px; padding: 12px; max-height: 150px; overflow-y: auto; font-family: 'SF Mono', monospace; font-size: 12px; }
+    .log-item { padding: 4px 0; }
+    .log-time { color: #86868b; }
+    .log-action { color: #4fc1ff; }
+    .log-mutation { color: #ce9178; }
+  </style>
+</head>
+<body>
+  <div id="app">
+    <div class="demo-container">
+      <h3>🔗 组合 Actions</h3>
+      
+      <div class="card">
+        <button class="btn" @click="startCheckout" :disabled="processing">
+          {{ processing ? '处理中...' : '开始结账流程' }}
+        </button>
+        
+        <div class="flow">
+          <div class="flow-box" :class="getStepClass(1)">
+            <div class="flow-title">验证用户</div>
+            <div class="flow-desc">checkAuth</div>
+          </div>
+          <span class="flow-arrow">→</span>
+          <div class="flow-box" :class="getStepClass(2)">
+            <div class="flow-title">验证库存</div>
+            <div class="flow-desc">checkStock</div>
+          </div>
+          <span class="flow-arrow">→</span>
+          <div class="flow-box" :class="getStepClass(3)">
+            <div class="flow-title">创建订单</div>
+            <div class="flow-desc">createOrder</div>
+          </div>
+        </div>
+        
+        <div class="log-section">
+          <div class="log-title">📝 执行日志</div>
+          <div class="log-list">
+            <div v-for="(log, index) in logs" :key="index" class="log-item">
+              <span class="log-time">[{{ log.time }}]</span>
+              <span :class="log.type === 'action' ? 'log-action' : 'log-mutation'">
+                {{ log.message }}
+              </span>
+            </div>
+            <div v-if="logs.length === 0" style="color:#86868b;">
+              点击按钮开始...
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>

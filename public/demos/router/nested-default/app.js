@@ -1,6 +1,6 @@
 /**
  * 默认子路由演示
- * 
+ *
  * 当 path 为空字符串时，该子路由会作为默认子路由
  * 访问父路由时自动显示默认子路由的内容
  */
@@ -60,9 +60,9 @@ const routes = [
     children: [
       // ⭐ 默认子路由：path 为空字符串
       // 访问 /dashboard 时会渲染 Overview 组件
-      { 
-        path: '', 
-        component: Overview 
+      {
+        path: '',
+        component: Overview
       },
       { path: 'users', component: Users },
       { path: 'orders', component: Orders }
@@ -79,12 +79,12 @@ new Vue({
 
 /**
  * 默认子路由的两种写法：
- * 
+ *
  * 写法1：path 为空字符串
  * children: [
  *   { path: '', component: DefaultChild }
  * ]
- * 
+ *
  * 写法2：使用 redirect
  * {
  *   path: '/dashboard',
@@ -93,7 +93,7 @@ new Vue({
  *     { path: 'overview', component: Overview }
  *   ]
  * }
- * 
+ *
  * 区别：
  * - 写法1：URL 保持 /dashboard
  * - 写法2：URL 变为 /dashboard/overview

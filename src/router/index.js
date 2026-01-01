@@ -225,6 +225,36 @@ const routes = [
     component: () => import('@/views/chapters/vuex/Index.vue'),
     meta: { title: 'Vuex 状态管理', chapter: 9 }
   },
+  {
+    path: '/vuex/state',
+    name: 'VuexState',
+    component: () => import('@/views/chapters/vuex/State.vue'),
+    meta: { title: 'State 状态', chapter: 9 }
+  },
+  {
+    path: '/vuex/getters',
+    name: 'VuexGetters',
+    component: () => import('@/views/chapters/vuex/Getters.vue'),
+    meta: { title: 'Getters 计算属性', chapter: 9 }
+  },
+  {
+    path: '/vuex/mutations',
+    name: 'VuexMutations',
+    component: () => import('@/views/chapters/vuex/Mutations.vue'),
+    meta: { title: 'Mutations 同步修改', chapter: 9 }
+  },
+  {
+    path: '/vuex/actions',
+    name: 'VuexActions',
+    component: () => import('@/views/chapters/vuex/Actions.vue'),
+    meta: { title: 'Actions 异步操作', chapter: 9 }
+  },
+  {
+    path: '/vuex/modules',
+    name: 'VuexModules',
+    component: () => import('@/views/chapters/vuex/Modules.vue'),
+    meta: { title: 'Modules 模块化', chapter: 9 }
+  },
 
   // ==================== Axios 章节 ====================
   {

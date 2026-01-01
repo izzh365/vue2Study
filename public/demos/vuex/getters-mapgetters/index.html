@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>mapGetters 辅助函数 - Vuex Demo</title>
+  <script src="https://unpkg.com/vue@2.7.16/dist/vue.js"></script>
+  <script src="https://unpkg.com/vuex@3.6.2/dist/vuex.js"></script>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; padding: 20px; background: #f5f5f7; }
+    .demo-container { max-width: 600px; margin: 0 auto; }
+    h3 { color: #1d1d1f; margin-bottom: 16px; font-size: 18px; }
+    .card { background: white; border-radius: 12px; padding: 20px; box-shadow: 0 2px 10px rgba(0,0,0,0.08); }
+    .section { margin-bottom: 20px; padding-bottom: 16px; border-bottom: 1px solid #e5e5ea; }
+    .section:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+    .section-title { font-size: 14px; color: #86868b; margin-bottom: 12px; }
+    .getter-list { background: #f0f0f5; border-radius: 8px; overflow: hidden; }
+    .getter-item { display: flex; justify-content: space-between; padding: 12px 16px; border-bottom: 1px solid #e5e5ea; }
+    .getter-item:last-child { border-bottom: none; }
+    .getter-name { font-family: 'SF Mono', monospace; font-size: 13px; }
+    .getter-value { font-weight: 600; color: #007aff; }
+    .compare { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 16px; }
+    .compare-item { background: #f8f9fa; padding: 12px; border-radius: 8px; }
+    .compare-title { font-size: 12px; color: #86868b; margin-bottom: 8px; display: flex; align-items: center; gap: 4px; }
+    .compare-code { font-size: 11px; font-family: 'SF Mono', monospace; line-height: 1.5; }
+  </style>
+</head>
+<body>
+  <div id="app">
+    <div class="demo-container">
+      <h3>🗺️ mapGetters 辅助函数</h3>
+      
+      <div class="card">
+        <!-- 数组写法 -->
+        <div class="section">
+          <div class="section-title">📋 数组写法：直接映射</div>
+          <div class="getter-list">
+            <div class="getter-item">
+              <span class="getter-name">doneTodos.length</span>
+              <span class="getter-value">{{ doneTodos.length }}</span>
+            </div>
+            <div class="getter-item">
+              <span class="getter-name">pendingTodos.length</span>
+              <span class="getter-value">{{ pendingTodos.length }}</span>
+            </div>
+            <div class="getter-item">
+              <span class="getter-name">totalCount</span>
+              <span class="getter-value">{{ totalCount }}</span>
+            </div>
+          </div>
+        </div>
+        
+        <!-- 对象写法 -->
+        <div class="section">
+          <div class="section-title">📝 对象写法：重命名映射</div>
+          <div class="getter-list">
+            <div class="getter-item">
+              <span class="getter-name">completedCount（原名: doneCount）</span>
+              <span class="getter-value">{{ completedCount }}</span>
+            </div>
+            <div class="getter-item">
+              <span class="getter-name">unfinishedCount（原名: pendingCount）</span>
+              <span class="getter-value">{{ unfinishedCount }}</span>
+            </div>
+          </div>
+        </div>
+        
+        <!-- 对比 -->
+        <div class="section">
+          <div class="section-title">⚖️ 代码对比</div>
+          <div class="compare">
+            <div class="compare-item">
+              <div class="compare-title">❌ 传统写法</div>
+              <div class="compare-code">
+<pre>computed: {
+  doneTodos() {
+    return this.$store.getters.doneTodos
+  },
+  totalCount() {
+    return this.$store.getters.totalCount
+  }
+}</pre>
+              </div>
+            </div>
+            <div class="compare-item">
+              <div class="compare-title">✅ mapGetters</div>
+              <div class="compare-code">
+<pre>computed: {
+  ...mapGetters([
+    'doneTodos',
+    'totalCount'
+  ])
+}</pre>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>

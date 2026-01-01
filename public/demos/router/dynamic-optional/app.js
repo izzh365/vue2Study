@@ -1,6 +1,6 @@
 /**
  * 可选参数与通配符演示
- * 
+ *
  * 1. 可选参数：:param? - 参数可有可无
  * 2. 通配符：* - 匹配任意路径
  */
@@ -62,21 +62,21 @@ const NotFound = {
 
 const routes = [
   // 可选参数：? 表示参数可选
-  { 
-    path: '/category/:type?', 
-    component: Category 
+  {
+    path: '/category/:type?',
+    component: Category
   },
-  
+
   // 通配符：匹配 /docs 下的所有路径
-  { 
-    path: '/docs/*', 
-    component: Docs 
+  {
+    path: '/docs/*',
+    component: Docs
   },
-  
+
   // 404：匹配所有未定义路由（必须放最后）
-  { 
-    path: '*', 
-    component: NotFound 
+  {
+    path: '*',
+    component: NotFound
   }
 ]
 
@@ -89,15 +89,15 @@ new Vue({
 
 /**
  * 重点总结：
- * 
+ *
  * 1. 可选参数 :param?
  *    - /category/:type? 可匹配 /category 和 /category/xxx
  *    - 没有参数时 $route.params.type 为 undefined
- * 
+ *
  * 2. 通配符 *
  *    - /docs/* 匹配 /docs/a/b/c
  *    - 匹配的部分存储在 $route.params.pathMatch
- * 
+ *
  * 3. 路由匹配优先级
  *    - 按定义顺序匹配
  *    - 通配符 * 放在最后，用于 404

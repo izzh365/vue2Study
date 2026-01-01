@@ -1,6 +1,6 @@
 /**
  * 路由独享守卫 beforeEnter 演示
- * 
+ *
  * 在路由配置中直接定义，只对当前路由生效
  */
 
@@ -57,13 +57,13 @@ const routes = [
     beforeEnter: (to, from, next) => {
       addLog(`beforeEnter: 进入管理后台`)
       addLog(`  当前角色: ${userState.role}`)
-      
+
       if (userState.role === 'admin') {
         addLog(`  ✅ 权限验证通过`)
-        next()  // 放行
+        next() // 放行
       } else {
         addLog(`  ⛔ 权限不足，跳转到 403`)
-        next('/forbidden')  // 跳转到无权限页
+        next('/forbidden') // 跳转到无权限页
       }
     }
   }
@@ -92,13 +92,13 @@ new Vue({
 
 /**
  * beforeEnter 特点：
- * 
+ *
  * 1. 在路由配置中定义（routes 数组里）
  * 2. 只对该路由生效
  * 3. 适合：
  *    - 特定页面的权限验证
  *    - 某个路由的特殊逻辑
- * 
+ *
  * 对比：
  * - beforeEach: 全局，所有路由
  * - beforeEnter: 单个路由独享

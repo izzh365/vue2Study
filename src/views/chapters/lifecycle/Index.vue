@@ -4,7 +4,7 @@
     <p class="chapter-desc">Vue 实例从创建到销毁的完整过程，理解生命周期是掌握 Vue 的关键。</p>
     
     <div class="section-list">
-      <router-link to="/lifecycle/hooks" class="section-item">
+      <router-link to="/lifecycle/detail" class="section-item">
         <span class="section-icon">🔄</span>
         <div class="section-info">
           <h3>3.1 生命周期钩子详解</h3>

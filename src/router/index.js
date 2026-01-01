@@ -63,6 +63,12 @@ const routes = [
     component: () => import('@/views/chapters/lifecycle/Index.vue'),
     meta: { title: 'Vue 生命周期', chapter: 3 }
   },
+  {
+    path: '/lifecycle/detail',
+    name: 'Lifecycle',
+    component: () => import('@/views/chapters/lifecycle/Lifecycle.vue'),
+    meta: { title: '生命周期详解', chapter: 3 }
+  },
 
   // ==================== 指令章节 ====================
   {

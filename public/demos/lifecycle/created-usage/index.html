@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>created 钩子常见用法</title>
+  <script src="https://cdn.jsdelivr.net/npm/vue@2.7.16/dist/vue.js"></script>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; padding: 20px; background: #f5f5f7; }
+    .demo-container { max-width: 600px; margin: 0 auto; }
+    h3 { color: #1d1d1f; margin-bottom: 16px; font-size: 18px; }
+    .card { background: white; border-radius: 12px; padding: 20px; margin-bottom: 16px; box-shadow: 0 2px 10px rgba(0,0,0,0.08); }
+    .card-title { font-size: 16px; font-weight: 600; color: #1d1d1f; margin-bottom: 12px; display: flex; align-items: center; gap: 8px; }
+    .user-info { display: flex; align-items: center; gap: 16px; }
+    .avatar { width: 64px; height: 64px; border-radius: 50%; background: linear-gradient(135deg, #667eea, #764ba2); display: flex; align-items: center; justify-content: center; color: white; font-size: 24px; }
+    .user-details { flex: 1; }
+    .user-name { font-size: 18px; font-weight: 600; color: #1d1d1f; }
+    .user-email { font-size: 14px; color: #86868b; margin-top: 4px; }
+    .loading { text-align: center; padding: 40px; color: #86868b; }
+    .loading-spinner { width: 40px; height: 40px; border: 3px solid #e5e5ea; border-top-color: #007AFF; border-radius: 50%; animation: spin 1s linear infinite; margin: 0 auto 16px; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .error { background: #ffebee; color: #c62828; padding: 16px; border-radius: 8px; text-align: center; }
+    .btn { padding: 10px 20px; border: none; border-radius: 8px; font-size: 14px; cursor: pointer; transition: all 0.2s; }
+    .btn-primary { background: #007AFF; color: white; }
+    .btn-primary:hover { background: #0056b3; }
+    .timeline { position: relative; padding-left: 30px; }
+    .timeline::before { content: ''; position: absolute; left: 10px; top: 0; bottom: 0; width: 2px; background: #e5e5ea; }
+    .timeline-item { position: relative; padding: 12px 0; }
+    .timeline-item::before { content: ''; position: absolute; left: -24px; top: 16px; width: 10px; height: 10px; border-radius: 50%; background: #007AFF; }
+    .timeline-item.done::before { background: #34C759; }
+    .timeline-time { font-size: 12px; color: #86868b; }
+    .timeline-text { font-size: 14px; color: #1d1d1f; margin-top: 4px; }
+    .code-tip { background: #f9fafb; border-radius: 8px; padding: 12px; margin-top: 16px; font-family: 'SF Mono', monospace; font-size: 13px; color: #1d1d1f; border-left: 3px solid #007AFF; }
+  </style>
+</head>
+<body>
+  <div id="app">
+    <div class="demo-container">
+      <h3>📝 created 钩子常见用法</h3>
+      
+      <!-- 用例1：请求数据 -->
+      <div class="card">
+        <div class="card-title">
+          <span>📡</span>
+          <span>用例1：在 created 中请求数据</span>
+        </div>
+        
+        <div v-if="loading" class="loading">
+          <div class="loading-spinner"></div>
+          <p>正在加载用户信息...</p>
+        </div>
+        
+        <div v-else-if="error" class="error">
+          {{ error }}
+        </div>
+        
+        <div v-else class="user-info">
+          <div class="avatar">{{ userInfo.name.charAt(0) }}</div>
+          <div class="user-details">
+            <div class="user-name">{{ userInfo.name }}</div>
+            <div class="user-email">{{ userInfo.email }}</div>
+            <div class="user-email">ID: {{ userInfo.id }}</div>
+          </div>
+        </div>
+        
+        <div class="code-tip">
+          💡 在 created 中发起请求比 mounted 更早，数据可以更快准备好
+        </div>
+      </div>
+      
+      <!-- 用例2：初始化数据 -->
+      <div class="card">
+        <div class="card-title">
+          <span>🔧</span>
+          <span>用例2：初始化计算数据</span>
+        </div>
+        
+        <p style="margin-bottom: 12px;">当前时间戳（created 时计算）：</p>
+        <p style="font-size: 24px; font-weight: 600; color: #007AFF;">{{ formattedTime }}</p>
+        
+        <div class="code-tip">
+          💡 在 created 中可以基于 props 或其他数据进行初始化计算
+        </div>
+      </div>
+      
+      <!-- 执行时间线 -->
+      <div class="card">
+        <div class="card-title">
+          <span>📋</span>
+          <span>执行时间线</span>
+        </div>
+        
+        <div class="timeline">
+          <div class="timeline-item done" v-for="(event, index) in timeline" :key="index">
+            <div class="timeline-time">{{ event.time }}</div>
+            <div class="timeline-text">{{ event.text }}</div>
+          </div>
+        </div>
+      </div>
+      
+      <button class="btn btn-primary" @click="refreshData" style="width: 100%;">
+        🔄 重新加载数据
+      </button>
+    </div>
+  </div>
+  
+  <script src="app.js"></script>
+</body>
+</html>

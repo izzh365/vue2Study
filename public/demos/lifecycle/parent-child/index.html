@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>父子组件生命周期顺序</title>
+  <script src="https://cdn.jsdelivr.net/npm/vue@2.7.16/dist/vue.js"></script>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; padding: 20px; background: #f5f5f7; }
+    .demo-container { max-width: 700px; margin: 0 auto; }
+    h3 { color: #1d1d1f; margin-bottom: 16px; font-size: 18px; }
+    .card { background: white; border-radius: 12px; padding: 20px; margin-bottom: 16px; box-shadow: 0 2px 10px rgba(0,0,0,0.08); }
+    .card-title { font-size: 16px; font-weight: 600; color: #1d1d1f; margin-bottom: 12px; display: flex; align-items: center; gap: 8px; }
+    .btn { padding: 10px 20px; border: none; border-radius: 8px; font-size: 14px; cursor: pointer; transition: all 0.2s; margin-right: 8px; margin-bottom: 8px; }
+    .btn-primary { background: #007AFF; color: white; }
+    .btn-primary:hover { background: #0056b3; }
+    .btn-warning { background: #FF9500; color: white; }
+    .btn-warning:hover { background: #cc7700; }
+    .btn-danger { background: #FF3B30; color: white; }
+    .btn-danger:hover { background: #cc2f26; }
+    .component-tree { display: flex; flex-direction: column; align-items: center; padding: 20px; }
+    .component-box { padding: 16px 24px; border-radius: 12px; text-align: center; margin: 8px 0; transition: all 0.3s; }
+    .component-box.active { transform: scale(1.05); box-shadow: 0 4px 20px rgba(0,0,0,0.15); }
+    .parent-box { background: linear-gradient(135deg, #667eea, #764ba2); color: white; }
+    .child-box { background: linear-gradient(135deg, #11998e, #38ef7d); color: white; }
+    .component-name { font-weight: 600; font-size: 16px; }
+    .component-hook { font-size: 12px; opacity: 0.8; margin-top: 4px; }
+    .arrow { font-size: 24px; color: #86868b; }
+    .children-row { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; }
+    .timeline { position: relative; padding-left: 40px; }
+    .timeline::before { content: ''; position: absolute; left: 15px; top: 0; bottom: 0; width: 3px; background: #e5e5ea; border-radius: 2px; }
+    .timeline-item { position: relative; padding: 10px 0; display: flex; align-items: center; gap: 12px; }
+    .timeline-item::before { content: ''; position: absolute; left: -29px; width: 12px; height: 12px; border-radius: 50%; border: 2px solid white; box-shadow: 0 0 0 2px #e5e5ea; }
+    .timeline-item.parent::before { background: #667eea; box-shadow: 0 0 0 2px #667eea; }
+    .timeline-item.child::before { background: #11998e; box-shadow: 0 0 0 2px #11998e; }
+    .timeline-item.active::before { animation: pulse-dot 0.5s ease; }
+    @keyframes pulse-dot { 0% { transform: scale(1); } 50% { transform: scale(1.5); } 100% { transform: scale(1); } }
+    .timeline-order { font-size: 12px; color: #86868b; min-width: 24px; }
+    .timeline-hook { font-size: 14px; font-weight: 500; }
+    .timeline-hook.parent { color: #667eea; }
+    .timeline-hook.child { color: #11998e; }
+    .phase-label { font-size: 12px; color: #86868b; margin: 16px 0 8px; text-transform: uppercase; letter-spacing: 1px; }
+    .summary-box { background: #f9fafb; border-radius: 8px; padding: 16px; margin-top: 16px; }
+    .summary-title { font-weight: 600; margin-bottom: 8px; color: #1d1d1f; }
+    .summary-text { font-size: 14px; color: #86868b; line-height: 1.6; }
+    .summary-text code { background: #e5e5ea; padding: 2px 6px; border-radius: 4px; font-size: 13px; }
+  </style>
+</head>
+<body>
+  <div id="app">
+    <div class="demo-container">
+      <h3>👨‍👦 父子组件生命周期顺序</h3>
+      
+      <!-- 控制按钮 -->
+      <div class="card">
+        <div class="card-title">
+          <span>🎮</span>
+          <span>操作面板</span>
+        </div>
+        <button class="btn btn-primary" @click="mountComponents" :disabled="isMounted">
+          🚀 挂载组件
+        </button>
+        <button class="btn btn-warning" @click="updateComponents" :disabled="!isMounted">
+          🔄 更新数据
+        </button>
+        <button class="btn btn-danger" @click="destroyComponents" :disabled="!isMounted">
+          💥 销毁组件
+        </button>
+        <button class="btn" style="background: #e5e5ea;" @click="clearTimeline">
+          🗑️ 清空记录
+        </button>
+      </div>
+      
+      <!-- 组件树可视化 -->
+      <div class="card" v-if="isMounted">
+        <div class="card-title">
+          <span>🌳</span>
+          <span>组件树结构</span>
+        </div>
+        
+        <div class="component-tree">
+          <!-- 父组件 -->
+          <div class="component-box parent-box" :class="{ active: activeComponent === 'parent' }">
+            <div class="component-name">👨 父组件 (Parent)</div>
+            <div class="component-hook">{{ parentHook }}</div>
+          </div>
+          
+          <div class="arrow">↓</div>
+          
+          <!-- 子组件们 -->
+          <div class="children-row">
+            <div class="component-box child-box" :class="{ active: activeComponent === 'child1' }">
+              <div class="component-name">👦 子组件 A</div>
+              <div class="component-hook">{{ child1Hook }}</div>
+            </div>
+            <div class="component-box child-box" :class="{ active: activeComponent === 'child2' }">
+              <div class="component-name">👧 子组件 B</div>
+              <div class="component-hook">{{ child2Hook }}</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- 真实的父子组件 -->
+      <parent-component 
+        v-if="isMounted" 
+        :message="message"
+        @hook-called="onHookCalled"
+      ></parent-component>
+      
+      <!-- 生命周期时间线 -->
+      <div class="card">
+        <div class="card-title">
+          <span>📋</span>
+          <span>生命周期执行顺序</span>
+        </div>
+        
+        <div class="timeline" v-if="timeline.length > 0">
+          <template v-for="(item, index) in timeline">
+            <div class="phase-label" v-if="item.phase" :key="'phase-' + index">
+              {{ item.phase }}
+            </div>
+            <div 
+              class="timeline-item" 
+              :class="[item.type, { active: item.active }]" 
+              :key="index"
+            >
+              <span class="timeline-order">{{ item.order }}</span>
+              <span class="timeline-hook" :class="item.type">{{ item.hook }}</span>
+            </div>
+          </template>
+        </div>
+        
+        <div v-else style="text-align: center; color: #86868b; padding: 20px;">
+          点击"挂载组件"按钮开始观察
+        </div>
+      </div>
+      
+      <!-- 总结 -->
+      <div class="card">
+        <div class="summary-box">
+          <div class="summary-title">📝 执行顺序总结</div>
+          <div class="summary-text">
+            <strong>挂载阶段：</strong>父 beforeCreate → 父 created → 父 beforeMount → <code>子 beforeCreate → 子 created → 子 beforeMount → 子 mounted</code> → 父 mounted
+            <br><br>
+            <strong>更新阶段：</strong>父 beforeUpdate → <code>子 beforeUpdate → 子 updated</code> → 父 updated
+            <br><br>
+            <strong>销毁阶段：</strong>父 beforeDestroy → <code>子 beforeDestroy → 子 destroyed</code> → 父 destroyed
+            <br><br>
+            💡 规律：父组件要等所有子组件完成后，才能完成自己的 mounted/updated/destroyed
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <script src="app.js"></script>
+</body>
+</html>

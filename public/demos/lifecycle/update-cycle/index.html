@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>更新周期演示</title>
+  <script src="https://cdn.jsdelivr.net/npm/vue@2.7.16/dist/vue.js"></script>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; padding: 20px; background: #f5f5f7; }
+    .demo-container { max-width: 600px; margin: 0 auto; }
+    h3 { color: #1d1d1f; margin-bottom: 16px; font-size: 18px; }
+    .card { background: white; border-radius: 12px; padding: 20px; margin-bottom: 16px; box-shadow: 0 2px 10px rgba(0,0,0,0.08); }
+    .card-title { font-size: 16px; font-weight: 600; color: #1d1d1f; margin-bottom: 12px; display: flex; align-items: center; gap: 8px; }
+    .counter { display: flex; align-items: center; justify-content: center; gap: 20px; padding: 20px; }
+    .count-display { font-size: 48px; font-weight: 700; color: #007AFF; min-width: 100px; text-align: center; }
+    .btn { padding: 12px 24px; border: none; border-radius: 10px; font-size: 16px; cursor: pointer; transition: all 0.2s; }
+    .btn-primary { background: #007AFF; color: white; }
+    .btn-primary:hover { background: #0056b3; transform: scale(1.05); }
+    .btn-secondary { background: #e5e5ea; color: #1d1d1f; }
+    .btn-secondary:hover { background: #d1d1d6; }
+    .update-flow { display: flex; flex-direction: column; gap: 12px; }
+    .flow-step { display: flex; align-items: center; gap: 12px; padding: 12px 16px; border-radius: 8px; transition: all 0.3s; }
+    .flow-step.active { transform: translateX(10px); }
+    .flow-step-before { background: #fff3e0; border-left: 4px solid #FF9800; }
+    .flow-step-update { background: #e3f2fd; border-left: 4px solid #2196F3; }
+    .flow-step-after { background: #e8f5e9; border-left: 4px solid #4CAF50; }
+    .flow-icon { font-size: 20px; }
+    .flow-text { flex: 1; }
+    .flow-name { font-weight: 600; color: #1d1d1f; }
+    .flow-desc { font-size: 12px; color: #86868b; margin-top: 2px; }
+    .flow-status { font-size: 12px; padding: 4px 8px; border-radius: 4px; background: #e5e5ea; color: #86868b; }
+    .flow-status.done { background: #c8e6c9; color: #2e7d32; }
+    .dom-compare { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 16px; }
+    .dom-box { padding: 16px; border-radius: 8px; text-align: center; }
+    .dom-box-before { background: #fff3e0; }
+    .dom-box-after { background: #e8f5e9; }
+    .dom-label { font-size: 12px; color: #86868b; margin-bottom: 8px; }
+    .dom-value { font-size: 24px; font-weight: 600; }
+    .log-panel { background: #1e1e1e; border-radius: 8px; padding: 12px; max-height: 150px; overflow-y: auto; margin-top: 16px; }
+    .log-item { font-family: 'SF Mono', monospace; font-size: 12px; color: #a5d6a7; padding: 4px 0; }
+    .warning-box { background: #fff3e0; border-radius: 8px; padding: 12px; margin-top: 16px; display: flex; align-items: flex-start; gap: 10px; }
+    .warning-icon { font-size: 20px; }
+    .warning-text { font-size: 13px; color: #e65100; line-height: 1.5; }
+  </style>
+</head>
+<body>
+  <div id="app">
+    <div class="demo-container">
+      <h3>🔄 更新周期演示（beforeUpdate → updated）</h3>
+      
+      <!-- 计数器 -->
+      <div class="card">
+        <div class="card-title">
+          <span>🔢</span>
+          <span>点击按钮触发更新周期</span>
+        </div>
+        
+        <div class="counter">
+          <button class="btn btn-secondary" @click="count--">－</button>
+          <div class="count-display" ref="countDisplay">{{ count }}</div>
+          <button class="btn btn-primary" @click="count++">＋</button>
+        </div>
+        
+        <p style="text-align: center; color: #86868b; font-size: 14px;">
+          更新次数: {{ updateCount }}
+        </p>
+      </div>
+      
+      <!-- 更新流程 -->
+      <div class="card">
+        <div class="card-title">
+          <span>📋</span>
+          <span>更新流程</span>
+        </div>
+        
+        <div class="update-flow">
+          <div class="flow-step flow-step-before" :class="{ active: currentStep === 'before' }">
+            <span class="flow-icon">1️⃣</span>
+            <div class="flow-text">
+              <div class="flow-name">beforeUpdate</div>
+              <div class="flow-desc">数据已变化，DOM 还是旧的</div>
+            </div>
+            <span class="flow-status" :class="{ done: stepsDone.before }">
+              {{ stepsDone.before ? '已执行' : '等待' }}
+            </span>
+          </div>
+          
+          <div class="flow-step flow-step-update" :class="{ active: currentStep === 'render' }">
+            <span class="flow-icon">2️⃣</span>
+            <div class="flow-text">
+              <div class="flow-name">Virtual DOM 重新渲染</div>
+              <div class="flow-desc">Vue 计算最小更新范围</div>
+            </div>
+            <span class="flow-status" :class="{ done: stepsDone.render }">
+              {{ stepsDone.render ? '已执行' : '等待' }}
+            </span>
+          </div>
+          
+          <div class="flow-step flow-step-after" :class="{ active: currentStep === 'after' }">
+            <span class="flow-icon">3️⃣</span>
+            <div class="flow-text">
+              <div class="flow-name">updated</div>
+              <div class="flow-desc">DOM 已更新完成</div>
+            </div>
+            <span class="flow-status" :class="{ done: stepsDone.after }">
+              {{ stepsDone.after ? '已执行' : '等待' }}
+            </span>
+          </div>
+        </div>
+        
+        <!-- DOM 对比 -->
+        <div class="dom-compare">
+          <div class="dom-box dom-box-before">
+            <div class="dom-label">beforeUpdate 时的 DOM</div>
+            <div class="dom-value">{{ beforeUpdateValue }}</div>
+          </div>
+          <div class="dom-box dom-box-after">
+            <div class="dom-label">updated 后的 DOM</div>
+            <div class="dom-value">{{ afterUpdateValue }}</div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- 警告 -->
+      <div class="card">
+        <div class="warning-box">
+          <span class="warning-icon">⚠️</span>
+          <div class="warning-text">
+            <strong>注意：</strong>避免在 updated 中修改 data，可能导致无限循环！
+            <br>如需在数据变化后执行操作，建议使用 watch 或 $nextTick。
+          </div>
+        </div>
+        
+        <!-- 日志 -->
+        <div class="log-panel">
+          <div class="log-item" v-for="(log, index) in logs" :key="index">
+            {{ log }}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <script src="app.js"></script>
+</body>
+</html>

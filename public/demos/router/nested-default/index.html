@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>默认子路由</title>
+  <script src="https://unpkg.com/vue@2.7.16/dist/vue.js"></script>
+  <script src="https://unpkg.com/vue-router@3.6.5/dist/vue-router.js"></script>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; padding: 20px; background: #f5f5f7; }
+    .app-container { max-width: 600px; margin: 0 auto; }
+    h3 { color: #1d1d1f; margin-bottom: 8px; font-size: 18px; }
+    .subtitle { color: #86868b; font-size: 14px; margin-bottom: 16px; }
+    
+    .dashboard {
+      background: white;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    }
+    .dashboard-header {
+      padding: 16px;
+      background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+      color: white;
+    }
+    .dashboard-nav {
+      display: flex;
+      border-bottom: 1px solid #e5e5ea;
+    }
+    .dashboard-nav a {
+      flex: 1;
+      padding: 12px;
+      text-align: center;
+      text-decoration: none;
+      color: #86868b;
+      font-size: 14px;
+    }
+    .dashboard-nav a:hover { background: #f9fafb; }
+    .dashboard-nav a.router-link-exact-active {
+      color: #11998e;
+      font-weight: 600;
+      border-bottom: 2px solid #11998e;
+    }
+    .dashboard-content {
+      padding: 20px;
+      min-height: 180px;
+    }
+    
+    .stat-cards {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+    }
+    .stat-card {
+      padding: 16px;
+      background: #f9fafb;
+      border-radius: 8px;
+      text-align: center;
+    }
+    .stat-card .number { font-size: 28px; font-weight: 600; color: #11998e; }
+    .stat-card .label { font-size: 12px; color: #86868b; margin-top: 4px; }
+    
+    .code-hint {
+      margin-top: 16px;
+      padding: 12px;
+      background: #fff3e0;
+      border-radius: 8px;
+      font-family: 'SF Mono', monospace;
+      font-size: 12px;
+    }
+  </style>
+</head>
+<body>
+  <div id="app">
+    <div class="app-container">
+      <h3>📊 默认子路由</h3>
+      <p class="subtitle">访问 /dashboard 时自动显示默认子路由内容</p>
+      
+      <div class="dashboard">
+        <div class="dashboard-header">
+          <h4>📈 数据看板</h4>
+        </div>
+        
+        <nav class="dashboard-nav">
+          <router-link to="/dashboard" exact>概览</router-link>
+          <router-link to="/dashboard/users">用户</router-link>
+          <router-link to="/dashboard/orders">订单</router-link>
+        </nav>
+        
+        <div class="dashboard-content">
+          <router-view></router-view>
+        </div>
+      </div>
+      
+      <div class="code-hint">
+        💡 默认子路由配置：{ path: '', component: Overview }
+      </div>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>

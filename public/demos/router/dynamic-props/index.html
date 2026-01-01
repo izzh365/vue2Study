@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Props 解耦</title>
+  <script src="https://unpkg.com/vue@2.7.16/dist/vue.js"></script>
+  <script src="https://unpkg.com/vue-router@3.6.5/dist/vue-router.js"></script>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; padding: 20px; background: #f5f5f7; }
+    .app-container { max-width: 600px; margin: 0 auto; }
+    h3 { color: #1d1d1f; margin-bottom: 8px; font-size: 18px; }
+    .subtitle { color: #86868b; font-size: 14px; margin-bottom: 16px; }
+    
+    .compare-section {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-bottom: 16px;
+    }
+    .compare-box {
+      background: white;
+      border-radius: 12px;
+      padding: 16px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    }
+    .compare-box h4 {
+      font-size: 14px;
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .compare-box.bad h4 { color: #ff3b30; }
+    .compare-box.good h4 { color: #34c759; }
+    
+    .code-block {
+      background: #1d1d1f;
+      color: #fff;
+      padding: 12px;
+      border-radius: 8px;
+      font-family: 'SF Mono', monospace;
+      font-size: 12px;
+      white-space: pre-wrap;
+    }
+    .code-block .comment { color: #6a737d; }
+    .code-block .keyword { color: #ff7b72; }
+    .code-block .string { color: #a5d6ff; }
+    .code-block .prop { color: #d2a8ff; }
+    
+    .nav-demo {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 16px;
+    }
+    .nav-demo a {
+      padding: 8px 16px;
+      background: white;
+      border-radius: 8px;
+      text-decoration: none;
+      color: #007aff;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+    }
+    .nav-demo a.router-link-active { background: #007aff; color: white; }
+    
+    .view-box {
+      background: white;
+      border-radius: 12px;
+      padding: 20px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    }
+  </style>
+</head>
+<body>
+  <div id="app">
+    <div class="app-container">
+      <h3>🔗 Props 解耦路由参数</h3>
+      <p class="subtitle">使用 props 使组件与路由解耦，更易复用和测试</p>
+      
+      <!-- 对比说明 -->
+      <div class="compare-section">
+        <div class="compare-box bad">
+          <h4>❌ 紧耦合方式</h4>
+          <div class="code-block">
+<span class="comment">// 组件内</span>
+computed: {
+  id() {
+    <span class="keyword">return</span> <span class="prop">this.$route</span>.params.id
+  }
+}</div>
+        </div>
+        <div class="compare-box good">
+          <h4>✅ Props 解耦</h4>
+          <div class="code-block">
+<span class="comment">// 组件内</span>
+props: [<span class="string">'id'</span>]
+
+<span class="comment">// 路由配置</span>
+{ props: <span class="keyword">true</span> }</div>
+        </div>
+      </div>
+      
+      <!-- 导航 -->
+      <div class="nav-demo">
+        <router-link to="/user/1">用户 1</router-link>
+        <router-link to="/user/2">用户 2</router-link>
+        <router-link to="/user/3">用户 3</router-link>
+      </div>
+      
+      <!-- 视图 -->
+      <div class="view-box">
+        <router-view></router-view>
+      </div>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>

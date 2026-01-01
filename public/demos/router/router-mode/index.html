@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>路由模式对比</title>
+  <script src="https://unpkg.com/vue@2.7.16/dist/vue.js"></script>
+  <script src="https://unpkg.com/vue-router@3.6.5/dist/vue-router.js"></script>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; padding: 20px; background: #f5f5f7; }
+    .app-container { max-width: 650px; margin: 0 auto; }
+    h3 { color: #1d1d1f; margin-bottom: 16px; font-size: 18px; }
+    
+    .mode-switch {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+    .mode-switch button {
+      flex: 1;
+      padding: 12px;
+      border: 2px solid #e5e5ea;
+      background: white;
+      border-radius: 12px;
+      cursor: pointer;
+      font-size: 14px;
+      transition: all 0.2s;
+    }
+    .mode-switch button:hover { border-color: #007aff; }
+    .mode-switch button.active {
+      border-color: #007aff;
+      background: rgba(0,122,255,0.1);
+      color: #007aff;
+    }
+    
+    .info-card {
+      background: white;
+      border-radius: 12px;
+      padding: 20px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+      margin-bottom: 16px;
+    }
+    .info-card h4 {
+      font-size: 16px;
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    
+    .url-example {
+      background: #1d1d1f;
+      color: #fff;
+      padding: 12px 16px;
+      border-radius: 8px;
+      font-family: 'SF Mono', monospace;
+      font-size: 14px;
+      margin-bottom: 16px;
+    }
+    .url-example .hash { color: #ff9500; }
+    .url-example .path { color: #34c759; }
+    
+    .feature-list {
+      list-style: none;
+    }
+    .feature-list li {
+      padding: 8px 0;
+      border-bottom: 1px solid #f5f5f7;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .feature-list li:last-child { border-bottom: none; }
+    .feature-list .icon { font-size: 18px; }
+    
+    .nav-demo {
+      display: flex;
+      gap: 10px;
+      margin-top: 16px;
+    }
+    .nav-demo a {
+      padding: 8px 16px;
+      text-decoration: none;
+      color: #007aff;
+      border: 1px solid #007aff;
+      border-radius: 8px;
+    }
+    .nav-demo a.router-link-active { background: #007aff; color: white; }
+    
+    .current-url {
+      margin-top: 16px;
+      padding: 12px;
+      background: #e3f2fd;
+      border-radius: 8px;
+      font-family: 'SF Mono', monospace;
+      font-size: 13px;
+      word-break: break-all;
+    }
+  </style>
+</head>
+<body>
+  <div id="app">
+    <div class="app-container">
+      <h3>#️⃣ 路由模式对比</h3>
+      
+      <p style="color: #86868b; margin-bottom: 16px; font-size: 14px;">
+        当前使用的是 <strong>Hash 模式</strong>（Demo 环境限制），下方展示两种模式的区别
+      </p>
+      
+      <!-- Hash 模式说明 -->
+      <div class="info-card">
+        <h4><span style="font-size: 24px;">#️⃣</span> Hash 模式（默认）</h4>
+        <div class="url-example">
+          http://example.com<span class="hash">/#/</span>about
+        </div>
+        <ul class="feature-list">
+          <li><span class="icon">✅</span> 兼容所有浏览器</li>
+          <li><span class="icon">✅</span> 无需服务器配置</li>
+          <li><span class="icon">⚠️</span> URL 带 # 号，不够美观</li>
+          <li><span class="icon">❌</span> 对 SEO 不友好</li>
+        </ul>
+      </div>
+      
+      <!-- History 模式说明 -->
+      <div class="info-card">
+        <h4><span style="font-size: 24px;">🌐</span> History 模式</h4>
+        <div class="url-example">
+          http://example.com<span class="path">/about</span>
+        </div>
+        <ul class="feature-list">
+          <li><span class="icon">✅</span> URL 更美观、更规范</li>
+          <li><span class="icon">✅</span> 对 SEO 友好</li>
+          <li><span class="icon">⚠️</span> 需要服务器配置回退</li>
+          <li><span class="icon">⚠️</span> 需要 IE10+ 支持</li>
+        </ul>
+      </div>
+      
+      <!-- 导航演示 -->
+      <div class="info-card">
+        <h4>🧪 导航测试</h4>
+        <div class="nav-demo">
+          <router-link to="/">首页</router-link>
+          <router-link to="/about">关于</router-link>
+          <router-link to="/contact">联系</router-link>
+        </div>
+        <div class="current-url">
+          当前 URL：{{ currentUrl }}
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>

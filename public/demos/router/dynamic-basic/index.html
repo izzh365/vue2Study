@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>动态路由基础</title>
+  <script src="https://unpkg.com/vue@2.7.16/dist/vue.js"></script>
+  <script src="https://unpkg.com/vue-router@3.6.5/dist/vue-router.js"></script>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; padding: 20px; background: #f5f5f7; }
+    .app-container { max-width: 600px; margin: 0 auto; }
+    h3 { color: #1d1d1f; margin-bottom: 16px; font-size: 18px; }
+    
+    .user-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 16px;
+    }
+    .user-list a {
+      padding: 10px 20px;
+      background: white;
+      border-radius: 8px;
+      text-decoration: none;
+      color: #007aff;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+      transition: all 0.2s;
+    }
+    .user-list a:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.12); }
+    .user-list a.router-link-active { background: #007aff; color: white; }
+    
+    .user-detail {
+      background: white;
+      border-radius: 12px;
+      padding: 24px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    }
+    .user-detail .avatar {
+      width: 80px;
+      height: 80px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 32px;
+      color: white;
+      margin-bottom: 16px;
+    }
+    .user-detail h4 { font-size: 20px; margin-bottom: 8px; }
+    .user-detail p { color: #86868b; margin: 4px 0; }
+    
+    .param-info {
+      margin-top: 16px;
+      padding: 12px;
+      background: #e8f5e9;
+      border-radius: 8px;
+      font-family: 'SF Mono', monospace;
+      font-size: 13px;
+      color: #2e7d32;
+    }
+    
+    .placeholder {
+      text-align: center;
+      color: #86868b;
+      padding: 40px;
+    }
+  </style>
+</head>
+<body>
+  <div id="app">
+    <div class="app-container">
+      <h3>👤 动态路由 - 用户详情</h3>
+      
+      <!-- 用户列表导航 -->
+      <div class="user-list">
+        <router-link to="/user/1">用户 1</router-link>
+        <router-link to="/user/2">用户 2</router-link>
+        <router-link to="/user/3">用户 3</router-link>
+        <router-link to="/user/100">用户 100</router-link>
+      </div>
+      
+      <!-- 用户详情视图 -->
+      <router-view></router-view>
+      
+      <!-- 当前路由参数 -->
+      <div class="param-info" v-if="$route.params.id">
+        $route.params = {{ JSON.stringify($route.params) }}
+      </div>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>

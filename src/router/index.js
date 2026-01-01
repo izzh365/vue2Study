@@ -187,6 +187,36 @@ const routes = [
     component: () => import('@/views/chapters/router/Index.vue'),
     meta: { title: 'Vue-Router', chapter: 8 }
   },
+  {
+    path: '/router/basic',
+    name: 'RouterBasic',
+    component: () => import('@/views/chapters/router/RouterBasic.vue'),
+    meta: { title: '路由基础', chapter: 8 }
+  },
+  {
+    path: '/router/dynamic',
+    name: 'DynamicRoute',
+    component: () => import('@/views/chapters/router/DynamicRoute.vue'),
+    meta: { title: '动态路由', chapter: 8 }
+  },
+  {
+    path: '/router/nested',
+    name: 'NestedRoute',
+    component: () => import('@/views/chapters/router/NestedRoute.vue'),
+    meta: { title: '嵌套路由', chapter: 8 }
+  },
+  {
+    path: '/router/programmatic',
+    name: 'ProgrammaticNav',
+    component: () => import('@/views/chapters/router/ProgrammaticNav.vue'),
+    meta: { title: '编程式导航', chapter: 8 }
+  },
+  {
+    path: '/router/guards',
+    name: 'NavigationGuards',
+    component: () => import('@/views/chapters/router/NavigationGuards.vue'),
+    meta: { title: '导航守卫', chapter: 8 }
+  },
 
   // ==================== Vuex 章节 ====================
   {

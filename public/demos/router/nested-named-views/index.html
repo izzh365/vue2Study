@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>命名视图</title>
+  <script src="https://unpkg.com/vue@2.7.16/dist/vue.js"></script>
+  <script src="https://unpkg.com/vue-router@3.6.5/dist/vue-router.js"></script>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; padding: 20px; background: #f5f5f7; }
+    .app-container { max-width: 650px; margin: 0 auto; }
+    h3 { color: #1d1d1f; margin-bottom: 8px; font-size: 18px; }
+    .subtitle { color: #86868b; font-size: 14px; margin-bottom: 16px; }
+    
+    .layout {
+      display: grid;
+      grid-template-columns: 150px 1fr;
+      grid-template-rows: 50px 1fr 40px;
+      gap: 8px;
+      height: 320px;
+    }
+    
+    .header {
+      grid-column: 1 / -1;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-weight: 500;
+    }
+    
+    .sidebar {
+      background: #34c759;
+      border-radius: 8px;
+      padding: 12px;
+      color: white;
+    }
+    .sidebar h5 { font-size: 13px; margin-bottom: 8px; }
+    .sidebar ul { list-style: none; font-size: 12px; }
+    .sidebar li { padding: 4px 0; }
+    
+    .main {
+      background: white;
+      border-radius: 8px;
+      padding: 16px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+    }
+    
+    .footer {
+      grid-column: 1 / -1;
+      background: #1d1d1f;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #86868b;
+      font-size: 12px;
+    }
+    
+    .nav-demo {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 16px;
+    }
+    .nav-demo a {
+      padding: 8px 14px;
+      background: white;
+      border-radius: 6px;
+      text-decoration: none;
+      color: #007aff;
+      font-size: 13px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.08);
+    }
+    .nav-demo a.router-link-active { background: #007aff; color: white; }
+    
+    .code-hint {
+      margin-top: 16px;
+      padding: 10px;
+      background: #e8f5e9;
+      border-radius: 8px;
+      font-family: 'SF Mono', monospace;
+      font-size: 11px;
+      line-height: 1.6;
+    }
+  </style>
+</head>
+<body>
+  <div id="app">
+    <div class="app-container">
+      <h3>📐 命名视图</h3>
+      <p class="subtitle">一个页面可以有多个 router-view，通过 name 区分</p>
+      
+      <div class="nav-demo">
+        <router-link to="/">首页布局</router-link>
+        <router-link to="/about">关于布局</router-link>
+      </div>
+      
+      <!-- 多个命名视图 -->
+      <div class="layout">
+        <router-view name="header" class="header"></router-view>
+        <router-view name="sidebar" class="sidebar"></router-view>
+        <router-view class="main"></router-view>
+        <router-view name="footer" class="footer"></router-view>
+      </div>
+      
+      <div class="code-hint">
+        &lt;router-view name="header"&gt;&lt;/router-view&gt;<br>
+        &lt;router-view name="sidebar"&gt;&lt;/router-view&gt;<br>
+        &lt;router-view&gt;&lt;/router-view&gt; &lt;!-- 默认视图 --&gt;<br>
+        &lt;router-view name="footer"&gt;&lt;/router-view&gt;
+      </div>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>

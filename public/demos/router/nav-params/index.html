@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>传递参数</title>
+  <script src="https://unpkg.com/vue@2.7.16/dist/vue.js"></script>
+  <script src="https://unpkg.com/vue-router@3.6.5/dist/vue-router.js"></script>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; padding: 20px; background: #f5f5f7; }
+    .app-container { max-width: 600px; margin: 0 auto; }
+    h3 { color: #1d1d1f; margin-bottom: 16px; font-size: 18px; }
+    
+    .demo-section {
+      background: white;
+      border-radius: 12px;
+      padding: 16px;
+      margin-bottom: 16px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    }
+    .demo-section h4 {
+      font-size: 14px;
+      color: #1d1d1f;
+      margin-bottom: 8px;
+    }
+    .demo-section p {
+      font-size: 13px;
+      color: #86868b;
+      margin-bottom: 12px;
+    }
+    
+    .btn-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    .btn {
+      padding: 10px 16px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 14px;
+      color: white;
+    }
+    .btn-params { background: #007aff; }
+    .btn-query { background: #34c759; }
+    .btn:hover { opacity: 0.9; }
+    
+    .view-box {
+      background: #f9fafb;
+      border-radius: 8px;
+      padding: 16px;
+      margin-top: 16px;
+    }
+    
+    .param-display {
+      margin-top: 12px;
+      padding: 12px;
+      background: #e3f2fd;
+      border-radius: 8px;
+      font-family: 'SF Mono', monospace;
+      font-size: 12px;
+    }
+    .param-display .label { color: #1565c0; }
+    
+    code {
+      background: rgba(0,0,0,0.05);
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-size: 12px;
+    }
+  </style>
+</head>
+<body>
+  <div id="app">
+    <div class="app-container">
+      <h3>📦 传递参数</h3>
+      
+      <!-- params 参数 -->
+      <div class="demo-section">
+        <h4>1️⃣ params 路径参数</h4>
+        <p>参数在 URL 路径中：<code>/user/123</code></p>
+        <div class="btn-group">
+          <button class="btn btn-params" @click="goWithParams(1)">用户 1</button>
+          <button class="btn btn-params" @click="goWithParams(2)">用户 2</button>
+          <button class="btn btn-params" @click="goWithParams(100)">用户 100</button>
+        </div>
+      </div>
+      
+      <!-- query 参数 -->
+      <div class="demo-section">
+        <h4>2️⃣ query 查询参数</h4>
+        <p>参数在 URL 查询字符串中：<code>/search?keyword=vue&page=1</code></p>
+        <div class="btn-group">
+          <button class="btn btn-query" @click="goWithQuery('vue')">搜索 Vue</button>
+          <button class="btn btn-query" @click="goWithQuery('react')">搜索 React</button>
+          <button class="btn btn-query" @click="goWithQueryMultiple()">多参数搜索</button>
+        </div>
+      </div>
+      
+      <!-- 视图 -->
+      <div class="view-box">
+        <router-view></router-view>
+      </div>
+      
+      <!-- 参数显示 -->
+      <div class="param-display">
+        <div><span class="label">$route.params:</span> {{ JSON.stringify($route.params) }}</div>
+        <div><span class="label">$route.query:</span> {{ JSON.stringify($route.query) }}</div>
+        <div><span class="label">$route.path:</span> {{ $route.path }}</div>
+        <div><span class="label">$route.fullPath:</span> {{ $route.fullPath }}</div>
+      </div>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>

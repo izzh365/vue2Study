@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Promise 基本用法</title>
+  <script src="https://cdn.jsdelivr.net/npm/vue@2.7.16/dist/vue.js"></script>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      padding: 20px;
+    }
+    #app {
+      max-width: 700px;
+      margin: 0 auto;
+      background: white;
+      border-radius: 16px;
+      padding: 24px;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+    }
+    h3 { color: #1d1d1f; margin-bottom: 16px; }
+    .desc {
+      color: #666;
+      margin-bottom: 20px;
+      line-height: 1.6;
+      padding: 12px;
+      background: #e3f2fd;
+      border-radius: 8px;
+      border-left: 4px solid #2196f3;
+    }
+    .state-diagram {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 16px;
+      padding: 20px;
+      background: #f5f5f7;
+      border-radius: 12px;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+    }
+    .state-box {
+      padding: 12px 20px;
+      border-radius: 8px;
+      font-weight: 600;
+      text-align: center;
+      min-width: 100px;
+    }
+    .state-pending { background: #fff3e0; color: #e65100; border: 2px solid #ff9800; }
+    .state-fulfilled { background: #e8f5e9; color: #2e7d32; border: 2px solid #4caf50; }
+    .state-rejected { background: #ffebee; color: #c62828; border: 2px solid #f44336; }
+    .arrow {
+      font-size: 24px;
+      color: #666;
+    }
+    .demo-section {
+      margin-bottom: 20px;
+      padding: 16px;
+      background: #f5f5f7;
+      border-radius: 12px;
+    }
+    .demo-section h4 {
+      color: #333;
+      margin-bottom: 12px;
+    }
+    .btn {
+      padding: 10px 20px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 500;
+      transition: all 0.3s;
+      margin-right: 8px;
+      margin-bottom: 8px;
+    }
+    .btn-success { background: #34c759; color: white; }
+    .btn-success:hover { background: #2da44e; }
+    .btn-error { background: #ff3b30; color: white; }
+    .btn-error:hover { background: #d32f2f; }
+    .result-box {
+      margin-top: 16px;
+      padding: 16px;
+      border-radius: 8px;
+      font-family: 'SF Mono', Monaco, monospace;
+      font-size: 14px;
+    }
+    .result-pending { background: #fff3e0; color: #e65100; }
+    .result-success { background: #e8f5e9; color: #2e7d32; }
+    .result-error { background: #ffebee; color: #c62828; }
+    .syntax-box {
+      background: #2d2d2d;
+      border-radius: 8px;
+      padding: 16px;
+      margin: 12px 0;
+      font-family: 'SF Mono', Monaco, monospace;
+      font-size: 13px;
+      color: #e6e6e6;
+      line-height: 1.6;
+      overflow-x: auto;
+    }
+    .syntax-box .comment { color: #6a9955; }
+    .syntax-box .keyword { color: #c586c0; }
+    .syntax-box .function { color: #dcdcaa; }
+    .syntax-box .string { color: #ce9178; }
+    .syntax-box .param { color: #9cdcfe; }
+  </style>
+</head>
+<body>
+  <div id="app">
+    <h3>📦 Promise 基本用法</h3>
+    <p class="desc">
+      <strong>Promise</strong> 是异步编程的一种解决方案。它代表一个异步操作的最终完成（或失败）及其结果值。
+    </p>
+
+    <!-- 状态图 -->
+    <div class="state-diagram">
+      <div class="state-box state-pending">
+        ⏳ pending<br>
+        <small>进行中</small>
+      </div>
+      <div class="arrow">→</div>
+      <div style="display:flex;flex-direction:column;gap:8px;">
+        <div class="state-box state-fulfilled">
+          ✅ fulfilled<br>
+          <small>成功</small>
+        </div>
+        <div class="state-box state-rejected">
+          ❌ rejected<br>
+          <small>失败</small>
+        </div>
+      </div>
+    </div>
+
+    <!-- 基本语法 -->
+    <div class="demo-section">
+      <h4>📝 基本语法</h4>
+      <div class="syntax-box">
+        <div><span class="keyword">const</span> promise = <span class="keyword">new</span> <span class="function">Promise</span>((<span class="param">resolve</span>, <span class="param">reject</span>) => {</div>
+        <div style="padding-left:20px;"><span class="comment">// 异步操作</span></div>
+        <div style="padding-left:20px;"><span class="keyword">if</span> (成功) {</div>
+        <div style="padding-left:40px;"><span class="function">resolve</span>(<span class="string">'成功的数据'</span>);  <span class="comment">// 调用 resolve，状态变为 fulfilled</span></div>
+        <div style="padding-left:20px;">} <span class="keyword">else</span> {</div>
+        <div style="padding-left:40px;"><span class="function">reject</span>(<span class="string">'失败的原因'</span>);   <span class="comment">// 调用 reject，状态变为 rejected</span></div>
+        <div style="padding-left:20px;">}</div>
+        <div>});</div>
+        <div></div>
+        <div><span class="comment">// 处理结果</span></div>
+        <div>promise</div>
+        <div style="padding-left:20px;">.<span class="function">then</span>(<span class="param">data</span> => console.log(data))   <span class="comment">// 成功时执行</span></div>
+        <div style="padding-left:20px;">.<span class="function">catch</span>(<span class="param">err</span> => console.error(err)); <span class="comment">// 失败时执行</span></div>
+      </div>
+    </div>
+
+    <!-- 模拟请求 -->
+    <div class="demo-section">
+      <h4>🎯 模拟异步请求</h4>
+      <p style="margin-bottom:12px;color:#666;">点击按钮模拟网络请求，观察 Promise 的状态变化</p>
+      <button class="btn btn-success" @click="mockSuccess">✅ 模拟请求成功</button>
+      <button class="btn btn-error" @click="mockFail">❌ 模拟请求失败</button>
+      
+      <div class="result-box" :class="'result-' + status">
+        <div><strong>状态：</strong>{{ statusText }}</div>
+        <div v-if="result"><strong>结果：</strong>{{ result }}</div>
+      </div>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>

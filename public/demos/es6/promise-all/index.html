@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Promise.all 并发请求</title>
+  <script src="https://cdn.jsdelivr.net/npm/vue@2.7.16/dist/vue.js"></script>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      padding: 20px;
+    }
+    #app {
+      max-width: 700px;
+      margin: 0 auto;
+      background: white;
+      border-radius: 16px;
+      padding: 24px;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+    }
+    h3 { color: #1d1d1f; margin-bottom: 16px; }
+    .desc {
+      color: #666;
+      margin-bottom: 20px;
+      line-height: 1.6;
+      padding: 12px;
+      background: #e3f2fd;
+      border-radius: 8px;
+      border-left: 4px solid #2196f3;
+    }
+    .demo-section {
+      margin-bottom: 20px;
+      padding: 16px;
+      background: #f5f5f7;
+      border-radius: 12px;
+    }
+    .demo-section h4 {
+      color: #333;
+      margin-bottom: 12px;
+    }
+    .btn {
+      padding: 10px 20px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 500;
+      transition: all 0.3s;
+      margin-right: 8px;
+      margin-bottom: 8px;
+    }
+    .btn-primary { background: #007AFF; color: white; }
+    .btn-primary:hover { background: #0056b3; }
+    .btn-danger { background: #ff3b30; color: white; }
+    .btn-danger:hover { background: #d32f2f; }
+    .task-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      margin: 16px 0;
+    }
+    .task-card {
+      padding: 16px;
+      background: white;
+      border-radius: 8px;
+      text-align: center;
+      border: 2px solid #ddd;
+      transition: all 0.3s;
+    }
+    .task-card.pending { border-color: #ff9800; background: #fff8e1; }
+    .task-card.success { border-color: #4caf50; background: #e8f5e9; }
+    .task-card.error { border-color: #f44336; background: #ffebee; }
+    .task-icon { font-size: 32px; margin-bottom: 8px; }
+    .task-name { font-weight: 600; font-size: 14px; }
+    .task-time { font-size: 12px; color: #666; margin-top: 4px; }
+    .result-box {
+      margin-top: 16px;
+      padding: 16px;
+      border-radius: 8px;
+      font-family: 'SF Mono', Monaco, monospace;
+      font-size: 13px;
+    }
+    .result-success { background: #e8f5e9; color: #2e7d32; }
+    .result-error { background: #ffebee; color: #c62828; }
+    .time-compare {
+      display: flex;
+      justify-content: space-around;
+      margin-top: 16px;
+      padding: 12px;
+      background: #fff3e0;
+      border-radius: 8px;
+    }
+    .time-item {
+      text-align: center;
+    }
+    .time-label { font-size: 12px; color: #666; }
+    .time-value { font-size: 20px; font-weight: 600; color: #e65100; }
+  </style>
+</head>
+<body>
+  <div id="app">
+    <h3>⚡ Promise.all 并发请求</h3>
+    <p class="desc">
+      <strong>Promise.all()</strong> 接收一个 Promise 数组，等待所有 Promise 都完成后返回结果数组。<br>
+      特点：<strong>并行执行</strong>，总时间 = 最慢的那个请求时间
+    </p>
+
+    <!-- 成功示例 -->
+    <div class="demo-section">
+      <h4>✅ 全部成功的情况</h4>
+      <p style="margin-bottom:12px;color:#666;">同时请求用户、订单、商品数据（模拟不同延迟）</p>
+      <button class="btn btn-primary" @click="runAllSuccess" :disabled="loading">
+        {{ loading ? '请求中...' : '并发请求（Promise.all）' }}
+      </button>
+      
+      <div class="task-grid">
+        <div class="task-card" :class="tasks.user.status">
+          <div class="task-icon">{{ tasks.user.icon }}</div>
+          <div class="task-name">用户数据</div>
+          <div class="task-time">{{ tasks.user.time }}</div>
+        </div>
+        <div class="task-card" :class="tasks.orders.status">
+          <div class="task-icon">{{ tasks.orders.icon }}</div>
+          <div class="task-name">订单数据</div>
+          <div class="task-time">{{ tasks.orders.time }}</div>
+        </div>
+        <div class="task-card" :class="tasks.products.status">
+          <div class="task-icon">{{ tasks.products.icon }}</div>
+          <div class="task-name">商品数据</div>
+          <div class="task-time">{{ tasks.products.time }}</div>
+        </div>
+      </div>
+      
+      <div class="time-compare" v-if="totalTime">
+        <div class="time-item">
+          <div class="time-label">串行执行时间</div>
+          <div class="time-value">{{ serialTime }}ms</div>
+        </div>
+        <div class="time-item">
+          <div class="time-label">并行执行时间</div>
+          <div class="time-value" style="color:#4caf50;">{{ totalTime }}ms</div>
+        </div>
+        <div class="time-item">
+          <div class="time-label">节省时间</div>
+          <div class="time-value">{{ serialTime - totalTime }}ms</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 失败示例 -->
+    <div class="demo-section">
+      <h4>❌ 有一个失败的情况</h4>
+      <p style="margin-bottom:12px;color:#666;">Promise.all 中任意一个失败，整体就失败</p>
+      <button class="btn btn-danger" @click="runOneFail" :disabled="loading">
+        模拟一个请求失败
+      </button>
+    </div>
+
+    <!-- 结果展示 -->
+    <div class="result-box" :class="'result-' + resultType" v-if="result">
+      <div><strong>{{ resultType === 'success' ? '✅ 成功' : '❌ 失败' }}</strong></div>
+      <pre>{{ result }}</pre>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>

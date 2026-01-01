@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Promise.race 竞速</title>
+  <script src="https://cdn.jsdelivr.net/npm/vue@2.7.16/dist/vue.js"></script>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      padding: 20px;
+    }
+    #app {
+      max-width: 700px;
+      margin: 0 auto;
+      background: white;
+      border-radius: 16px;
+      padding: 24px;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+    }
+    h3 { color: #1d1d1f; margin-bottom: 16px; }
+    .desc {
+      color: #666;
+      margin-bottom: 20px;
+      line-height: 1.6;
+      padding: 12px;
+      background: #fce4ec;
+      border-radius: 8px;
+      border-left: 4px solid #e91e63;
+    }
+    .demo-section {
+      margin-bottom: 20px;
+      padding: 16px;
+      background: #f5f5f7;
+      border-radius: 12px;
+    }
+    .demo-section h4 {
+      color: #333;
+      margin-bottom: 12px;
+    }
+    .btn {
+      padding: 10px 20px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 500;
+      transition: all 0.3s;
+      margin-right: 8px;
+      margin-bottom: 8px;
+    }
+    .btn-primary { background: #007AFF; color: white; }
+    .btn-primary:hover { background: #0056b3; }
+    .btn-warning { background: #ff9800; color: white; }
+    .btn-warning:hover { background: #f57c00; }
+    .race-track {
+      position: relative;
+      background: #333;
+      border-radius: 8px;
+      padding: 16px;
+      margin: 16px 0;
+    }
+    .racer {
+      display: flex;
+      align-items: center;
+      margin-bottom: 12px;
+      height: 40px;
+    }
+    .racer:last-child { margin-bottom: 0; }
+    .racer-name {
+      width: 100px;
+      color: white;
+      font-size: 13px;
+    }
+    .racer-track {
+      flex: 1;
+      height: 30px;
+      background: #555;
+      border-radius: 4px;
+      position: relative;
+      overflow: hidden;
+    }
+    .racer-progress {
+      position: absolute;
+      left: 0;
+      top: 0;
+      height: 100%;
+      border-radius: 4px;
+      transition: width 0.1s linear;
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      padding-right: 8px;
+      font-size: 20px;
+    }
+    .racer-1 .racer-progress { background: linear-gradient(90deg, #ff6b6b, #ee5a5a); }
+    .racer-2 .racer-progress { background: linear-gradient(90deg, #4ecdc4, #44b3ab); }
+    .racer-3 .racer-progress { background: linear-gradient(90deg, #45b7d1, #3ba4bc); }
+    .finish-line {
+      position: absolute;
+      right: 10px;
+      top: 0;
+      bottom: 0;
+      width: 2px;
+      background: repeating-linear-gradient(0deg, #fff, #fff 5px, #333 5px, #333 10px);
+    }
+    .result-box {
+      margin-top: 16px;
+      padding: 16px;
+      border-radius: 8px;
+      font-size: 14px;
+      text-align: center;
+    }
+    .result-success { background: #e8f5e9; color: #2e7d32; }
+    .result-error { background: #ffebee; color: #c62828; }
+    .winner-badge {
+      font-size: 48px;
+      margin-bottom: 8px;
+    }
+    .use-case {
+      background: #fff3e0;
+      border-radius: 8px;
+      padding: 12px;
+      margin-top: 12px;
+    }
+    .use-case h5 { color: #e65100; margin-bottom: 8px; }
+    .use-case code {
+      background: #ffe0b2;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-family: monospace;
+    }
+  </style>
+</head>
+<body>
+  <div id="app">
+    <h3>🏎️ Promise.race 竞速</h3>
+    <p class="desc">
+      <strong>Promise.race()</strong> 返回第一个完成（成功或失败）的 Promise 结果。<br>
+      谁先完成，就用谁的结果！其他的会被忽略。
+    </p>
+
+    <!-- 赛跑示例 -->
+    <div class="demo-section">
+      <h4>🏁 赛跑示例</h4>
+      <p style="margin-bottom:12px;color:#666;">三个请求同时开始，看谁先完成</p>
+      <button class="btn btn-primary" @click="startRace" :disabled="racing">
+        {{ racing ? '比赛中...' : '开始比赛！' }}
+      </button>
+      
+      <div class="race-track">
+        <div class="finish-line"></div>
+        <div class="racer racer-1">
+          <div class="racer-name">🚗 请求A ({{ delays[0] }}ms)</div>
+          <div class="racer-track">
+            <div class="racer-progress" :style="{ width: progress[0] + '%' }">
+              {{ progress[0] >= 100 ? '🏆' : '🚗' }}
+            </div>
+          </div>
+        </div>
+        <div class="racer racer-2">
+          <div class="racer-name">🚙 请求B ({{ delays[1] }}ms)</div>
+          <div class="racer-track">
+            <div class="racer-progress" :style="{ width: progress[1] + '%' }">
+              {{ progress[1] >= 100 ? '🏆' : '🚙' }}
+            </div>
+          </div>
+        </div>
+        <div class="racer racer-3">
+          <div class="racer-name">🚕 请求C ({{ delays[2] }}ms)</div>
+          <div class="racer-track">
+            <div class="racer-progress" :style="{ width: progress[2] + '%' }">
+              {{ progress[2] >= 100 ? '🏆' : '🚕' }}
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="result-box result-success" v-if="winner">
+        <div class="winner-badge">🏆</div>
+        <div><strong>{{ winner }}</strong> 获胜！</div>
+        <div style="font-size:12px;color:#666;margin-top:8px;">其他请求的结果被忽略</div>
+      </div>
+    </div>
+
+    <!-- 超时控制示例 -->
+    <div class="demo-section">
+      <h4>⏰ 实际应用：请求超时控制</h4>
+      <p style="margin-bottom:12px;color:#666;">利用 race 实现请求超时：请求 vs 定时器，谁先完成</p>
+      <button class="btn btn-primary" @click="testTimeout(false)">正常请求 (500ms)</button>
+      <button class="btn btn-warning" @click="testTimeout(true)">超时请求 (2000ms)</button>
+      
+      <div class="result-box" :class="'result-' + timeoutResult.type" v-if="timeoutResult.message">
+        {{ timeoutResult.message }}
+      </div>
+      
+      <div class="use-case">
+        <h5>💡 代码示例</h5>
+        <code>Promise.race([fetch(url), timeout(1000)])</code>
+        <p style="font-size:12px;margin-top:8px;">如果请求超过 1 秒，就返回超时错误</p>
+      </div>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Promise 链式调用</title>
+  <script src="https://cdn.jsdelivr.net/npm/vue@2.7.16/dist/vue.js"></script>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      padding: 20px;
+    }
+    #app {
+      max-width: 700px;
+      margin: 0 auto;
+      background: white;
+      border-radius: 16px;
+      padding: 24px;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+    }
+    h3 { color: #1d1d1f; margin-bottom: 16px; }
+    .desc {
+      color: #666;
+      margin-bottom: 20px;
+      line-height: 1.6;
+      padding: 12px;
+      background: #e8f5e9;
+      border-radius: 8px;
+      border-left: 4px solid #4caf50;
+    }
+    .chain-flow {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 20px;
+      background: #f5f5f7;
+      border-radius: 12px;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+    }
+    .chain-step {
+      padding: 10px 16px;
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      color: white;
+      border-radius: 8px;
+      font-weight: 500;
+      font-size: 13px;
+    }
+    .chain-arrow { color: #666; font-size: 18px; }
+    .demo-section {
+      margin-bottom: 20px;
+      padding: 16px;
+      background: #f5f5f7;
+      border-radius: 12px;
+    }
+    .demo-section h4 {
+      color: #333;
+      margin-bottom: 12px;
+    }
+    .btn {
+      padding: 10px 20px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 500;
+      transition: all 0.3s;
+      margin-right: 8px;
+    }
+    .btn-primary { background: #007AFF; color: white; }
+    .btn-primary:hover { background: #0056b3; }
+    .step-list {
+      margin-top: 16px;
+    }
+    .step-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      padding: 12px;
+      margin-bottom: 8px;
+      background: white;
+      border-radius: 8px;
+      border-left: 3px solid #ddd;
+      transition: all 0.3s;
+    }
+    .step-item.active { border-left-color: #ff9800; background: #fff8e1; }
+    .step-item.done { border-left-color: #4caf50; background: #e8f5e9; }
+    .step-num {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: #ddd;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 600;
+      font-size: 12px;
+      flex-shrink: 0;
+    }
+    .step-item.active .step-num { background: #ff9800; color: white; }
+    .step-item.done .step-num { background: #4caf50; color: white; }
+    .step-content { flex: 1; }
+    .step-title { font-weight: 600; margin-bottom: 4px; }
+    .step-desc { font-size: 13px; color: #666; }
+    .step-result {
+      font-family: 'SF Mono', Monaco, monospace;
+      font-size: 12px;
+      color: #2e7d32;
+      margin-top: 4px;
+    }
+    .key-point {
+      background: #fff3e0;
+      border-radius: 8px;
+      padding: 12px;
+      margin-top: 12px;
+      font-size: 14px;
+      color: #e65100;
+    }
+  </style>
+</head>
+<body>
+  <div id="app">
+    <h3>🔗 Promise 链式调用</h3>
+    <p class="desc">
+      <strong>then() 方法返回一个新的 Promise</strong>，这使得我们可以链式调用多个异步操作，避免回调地狱。
+    </p>
+
+    <!-- 链式调用流程图 -->
+    <div class="chain-flow">
+      <div class="chain-step">Promise</div>
+      <div class="chain-arrow">→</div>
+      <div class="chain-step">.then()</div>
+      <div class="chain-arrow">→</div>
+      <div class="chain-step">.then()</div>
+      <div class="chain-arrow">→</div>
+      <div class="chain-step">.then()</div>
+      <div class="chain-arrow">→</div>
+      <div class="chain-step">最终结果</div>
+    </div>
+
+    <!-- 执行示例 -->
+    <div class="demo-section">
+      <h4>🎯 数据处理流水线</h4>
+      <p style="margin-bottom:12px;color:#666;">模拟：获取数字 → 翻倍 → 加10 → 转字符串</p>
+      <button class="btn btn-primary" @click="runChain" :disabled="running">
+        {{ running ? '执行中...' : '运行链式调用' }}
+      </button>
+      
+      <div class="step-list">
+        <div 
+          class="step-item" 
+          v-for="(step, index) in steps" 
+          :key="index"
+          :class="{ active: step.status === 'active', done: step.status === 'done' }"
+        >
+          <div class="step-num">{{ index + 1 }}</div>
+          <div class="step-content">
+            <div class="step-title">{{ step.title }}</div>
+            <div class="step-desc">{{ step.desc }}</div>
+            <div class="step-result" v-if="step.result">→ {{ step.result }}</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="key-point">
+        <strong>🔑 关键点：</strong>每个 then() 的返回值会传给下一个 then()！
+      </div>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>

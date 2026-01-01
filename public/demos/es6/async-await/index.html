@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>async/await 语法</title>
+  <script src="https://cdn.jsdelivr.net/npm/vue@2.7.16/dist/vue.js"></script>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      padding: 20px;
+    }
+    #app {
+      max-width: 750px;
+      margin: 0 auto;
+      background: white;
+      border-radius: 16px;
+      padding: 24px;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+    }
+    h3 { color: #1d1d1f; margin-bottom: 16px; }
+    .desc {
+      color: #666;
+      margin-bottom: 20px;
+      line-height: 1.6;
+      padding: 12px;
+      background: linear-gradient(135deg, #e8f5e9, #c8e6c9);
+      border-radius: 8px;
+      border-left: 4px solid #4caf50;
+    }
+    .demo-section {
+      margin-bottom: 20px;
+      padding: 16px;
+      background: #f5f5f7;
+      border-radius: 12px;
+    }
+    .demo-section h4 {
+      color: #333;
+      margin-bottom: 12px;
+    }
+    .compare-box {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+    .code-box {
+      background: #2d2d2d;
+      border-radius: 8px;
+      padding: 16px;
+      font-family: 'SF Mono', Monaco, monospace;
+      font-size: 12px;
+      color: #e6e6e6;
+      line-height: 1.6;
+      overflow-x: auto;
+    }
+    .code-box h5 {
+      color: #fff;
+      margin-bottom: 12px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid #444;
+    }
+    .code-box .keyword { color: #c586c0; }
+    .code-box .function { color: #dcdcaa; }
+    .code-box .string { color: #ce9178; }
+    .code-box .comment { color: #6a9955; }
+    .code-box .await { color: #4ec9b0; font-weight: bold; }
+    .btn {
+      padding: 10px 20px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 500;
+      transition: all 0.3s;
+      margin-right: 8px;
+      margin-bottom: 8px;
+    }
+    .btn-primary { background: #007AFF; color: white; }
+    .btn-primary:hover { background: #0056b3; }
+    .btn-danger { background: #ff3b30; color: white; }
+    .btn-danger:hover { background: #d32f2f; }
+    .log-box {
+      margin-top: 16px;
+      padding: 16px;
+      background: #1d1d1f;
+      border-radius: 8px;
+      font-family: 'SF Mono', Monaco, monospace;
+      font-size: 13px;
+      min-height: 100px;
+    }
+    .log-item { padding: 4px 0; }
+    .log-step { color: #5ac8fa; }
+    .log-data { color: #34c759; }
+    .log-error { color: #ff3b30; }
+    .tip-box {
+      background: #fff3e0;
+      border-radius: 8px;
+      padding: 12px;
+      margin-top: 12px;
+      font-size: 14px;
+      color: #e65100;
+    }
+  </style>
+</head>
+<body>
+  <div id="app">
+    <h3>✨ async/await 语法糖</h3>
+    <p class="desc">
+      <strong>async/await</strong> 是 Promise 的语法糖，让异步代码看起来像同步代码！<br>
+      <code>async</code> 声明异步函数，<code>await</code> 等待 Promise 完成
+    </p>
+
+    <!-- 语法对比 -->
+    <div class="demo-section">
+      <h4>📊 Promise vs async/await 对比</h4>
+      <div class="compare-box">
+        <div class="code-box">
+          <h5>Promise 链式调用</h5>
+          <div><span class="function">getUser</span>()</div>
+          <div style="padding-left:12px;">.then(<span class="keyword">user</span> => {</div>
+          <div style="padding-left:24px;"><span class="keyword">return</span> <span class="function">getOrders</span>(user.id)</div>
+          <div style="padding-left:12px;">})</div>
+          <div style="padding-left:12px;">.then(<span class="keyword">orders</span> => {</div>
+          <div style="padding-left:24px;">console.log(orders)</div>
+          <div style="padding-left:12px;">})</div>
+          <div style="padding-left:12px;">.catch(<span class="keyword">err</span> => {</div>
+          <div style="padding-left:24px;">console.error(err)</div>
+          <div style="padding-left:12px;">})</div>
+        </div>
+        <div class="code-box" style="border:2px solid #4caf50;">
+          <h5 style="color:#4caf50;">✅ async/await（推荐）</h5>
+          <div><span class="keyword">async function</span> <span class="function">loadData</span>() {</div>
+          <div style="padding-left:12px;"><span class="keyword">try</span> {</div>
+          <div style="padding-left:24px;"><span class="keyword">const</span> user = <span class="await">await</span> <span class="function">getUser</span>()</div>
+          <div style="padding-left:24px;"><span class="keyword">const</span> orders = <span class="await">await</span> <span class="function">getOrders</span>(user.id)</div>
+          <div style="padding-left:24px;">console.log(orders)</div>
+          <div style="padding-left:12px;">} <span class="keyword">catch</span> (err) {</div>
+          <div style="padding-left:24px;">console.error(err)</div>
+          <div style="padding-left:12px;">}</div>
+          <div>}</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 执行示例 -->
+    <div class="demo-section">
+      <h4>🎯 执行示例</h4>
+      <button class="btn btn-primary" @click="runAsyncAwait">运行 async/await</button>
+      <button class="btn btn-danger" @click="runWithError">测试错误处理</button>
+      
+      <div class="log-box" v-if="logs.length > 0">
+        <div class="log-item" v-for="(log, index) in logs" :key="index">
+          <span :class="'log-' + log.type">{{ log.message }}</span>
+        </div>
+      </div>
+
+      <div class="tip-box">
+        <strong>💡 关键点：</strong>
+        <ul style="margin-top:8px;padding-left:20px;">
+          <li><code>await</code> 只能在 <code>async</code> 函数内使用</li>
+          <li><code>await</code> 会暂停执行，等待 Promise 完成</li>
+          <li>用 <code>try/catch</code> 捕获错误</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>

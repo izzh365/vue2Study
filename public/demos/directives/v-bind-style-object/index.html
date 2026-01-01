@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>v-bind 绑定 style（对象语法）</title>
+  <script src="https://cdn.jsdelivr.net/npm/vue@2.7.16/dist/vue.js"></script>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; padding: 20px; background: #f5f5f7; }
+    .demo-container { max-width: 600px; margin: 0 auto; }
+    h3 { color: #1d1d1f; margin-bottom: 16px; font-size: 18px; }
+    .card { background: white; border-radius: 12px; padding: 20px; margin-bottom: 16px; box-shadow: 0 2px 10px rgba(0,0,0,0.08); }
+    .card-title { font-size: 16px; font-weight: 600; color: #1d1d1f; margin-bottom: 12px; display: flex; align-items: center; gap: 8px; }
+    
+    .box { padding: 20px; border-radius: 12px; text-align: center; margin-bottom: 16px; transition: all 0.3s; }
+    
+    .slider-group { margin-bottom: 12px; }
+    .slider-label { font-size: 13px; color: #86868b; margin-bottom: 6px; display: flex; justify-content: space-between; }
+    .slider { width: 100%; height: 6px; border-radius: 3px; -webkit-appearance: none; background: #e5e5ea; outline: none; }
+    .slider::-webkit-slider-thumb { -webkit-appearance: none; width: 18px; height: 18px; border-radius: 50%; background: #007AFF; cursor: pointer; }
+    
+    .color-picker { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 12px; }
+    .color-btn { width: 40px; height: 40px; border-radius: 8px; border: 3px solid transparent; cursor: pointer; transition: all 0.2s; }
+    .color-btn.selected { border-color: #1d1d1f; transform: scale(1.1); }
+    
+    .code-block { background: #1e1e1e; color: #d4d4d4; padding: 12px; border-radius: 8px; font-family: 'SF Mono', monospace; font-size: 13px; overflow-x: auto; margin-top: 12px; }
+    .code-comment { color: #6a9955; }
+    .code-string { color: #ce9178; }
+    .code-keyword { color: #569cd6; }
+    
+    .style-display { background: #f9fafb; padding: 12px; border-radius: 8px; font-family: 'SF Mono', monospace; font-size: 12px; color: #1d1d1f; margin-top: 12px; }
+    
+    .tip-box { background: #fff3e0; border-radius: 8px; padding: 12px; margin-top: 16px; font-size: 13px; color: #e65100; }
+  </style>
+</head>
+<body>
+  <div id="app">
+    <div class="demo-container">
+      <h3>🎨 v-bind:style 对象语法</h3>
+      
+      <!-- 基础对象语法 -->
+      <div class="card">
+        <div class="card-title">
+          <span>1️⃣</span>
+          <span>基础对象语法</span>
+        </div>
+        
+        <div class="box" :style="{ backgroundColor: bgColor, color: textColor, fontSize: fontSize + 'px' }">
+          动态样式文本
+        </div>
+        
+        <div class="color-picker">
+          <div class="color-btn" v-for="color in colors" :key="color" :style="{ background: color }" :class="{ selected: bgColor === color }" @click="bgColor = color"></div>
+        </div>
+        
+        <div class="slider-group">
+          <div class="slider-label">
+            <span>字体大小</span>
+            <span>{{ fontSize }}px</span>
+          </div>
+          <input type="range" class="slider" v-model="fontSize" min="12" max="32">
+        </div>
+        
+        <div class="code-block">
+          <span class="code-comment">&lt;!-- 对象语法：CSS 属性用驼峰命名 --&gt;</span><br>
+          &lt;div <span class="code-keyword">:style</span>=<span class="code-string">"{</span><br>
+          &nbsp;&nbsp;<span class="code-string">backgroundColor: bgColor,</span><br>
+          &nbsp;&nbsp;<span class="code-string">fontSize: fontSize + 'px'</span><br>
+          <span class="code-string">}"</span>&gt;&lt;/div&gt;
+        </div>
+      </div>
+      
+      <!-- 绑定样式对象 -->
+      <div class="card">
+        <div class="card-title">
+          <span>2️⃣</span>
+          <span>绑定样式对象（推荐）</span>
+        </div>
+        
+        <div class="box" :style="boxStyle">
+          使用 styleObject 绑定
+        </div>
+        
+        <div class="slider-group">
+          <div class="slider-label">
+            <span>内边距</span>
+            <span>{{ padding }}px</span>
+          </div>
+          <input type="range" class="slider" v-model="padding" min="10" max="50">
+        </div>
+        
+        <div class="slider-group">
+          <div class="slider-label">
+            <span>圆角</span>
+            <span>{{ borderRadius }}px</span>
+          </div>
+          <input type="range" class="slider" v-model="borderRadius" min="0" max="50">
+        </div>
+        
+        <div class="style-display">
+          boxStyle: {{ JSON.stringify(boxStyle) }}
+        </div>
+        
+        <div class="code-block">
+          <span class="code-comment">// 推荐：在 data 或 computed 中定义样式对象</span><br>
+          <span class="code-keyword">computed</span>: {<br>
+          &nbsp;&nbsp;<span class="code-keyword">boxStyle</span>() {<br>
+          &nbsp;&nbsp;&nbsp;&nbsp;<span class="code-keyword">return</span> {<br>
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;padding: <span class="code-keyword">this</span>.padding + <span class="code-string">'px'</span>,<br>
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;borderRadius: <span class="code-keyword">this</span>.borderRadius + <span class="code-string">'px'</span><br>
+          &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+          &nbsp;&nbsp;}<br>
+          }
+        </div>
+      </div>
+      
+      <!-- 自动添加前缀 -->
+      <div class="card">
+        <div class="card-title">
+          <span>3️⃣</span>
+          <span>自动添加浏览器前缀</span>
+        </div>
+        
+        <div class="box" :style="{ transform: 'rotate(' + rotation + 'deg)', background: 'linear-gradient(135deg, #667eea, #764ba2)', color: 'white' }">
+          Vue 自动添加浏览器前缀
+        </div>
+        
+        <div class="slider-group">
+          <div class="slider-label">
+            <span>旋转角度</span>
+            <span>{{ rotation }}°</span>
+          </div>
+          <input type="range" class="slider" v-model="rotation" min="0" max="360">
+        </div>
+        
+        <div class="tip-box">
+          💡 Vue 会自动为需要浏览器前缀的 CSS 属性（如 transform、flexbox）添加正确的前缀
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <script src="app.js"></script>
+</body>
+</html>

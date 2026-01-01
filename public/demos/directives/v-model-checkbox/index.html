@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>v-model 复选框和单选框</title>
+  <script src="https://cdn.jsdelivr.net/npm/vue@2.7.16/dist/vue.js"></script>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; padding: 20px; background: #f5f5f7; }
+    .demo-container { max-width: 650px; margin: 0 auto; }
+    h3 { color: #1d1d1f; margin-bottom: 16px; font-size: 18px; }
+    .card { background: white; border-radius: 12px; padding: 20px; margin-bottom: 16px; box-shadow: 0 2px 10px rgba(0,0,0,0.08); }
+    .card-title { font-size: 16px; font-weight: 600; color: #1d1d1f; margin-bottom: 12px; display: flex; align-items: center; gap: 8px; }
+    
+    .checkbox-group, .radio-group { display: flex; flex-wrap: wrap; gap: 12px; }
+    
+    .checkbox-item, .radio-item { display: flex; align-items: center; gap: 8px; padding: 10px 16px; background: #f9fafb; border-radius: 10px; cursor: pointer; transition: all 0.2s; border: 2px solid transparent; }
+    .checkbox-item:hover, .radio-item:hover { background: #e3f2fd; }
+    .checkbox-item.checked, .radio-item.checked { background: #e3f2fd; border-color: #007AFF; }
+    
+    input[type="checkbox"], input[type="radio"] { width: 18px; height: 18px; accent-color: #007AFF; cursor: pointer; }
+    
+    .result-box { background: #f9fafb; padding: 16px; border-radius: 8px; margin-top: 16px; }
+    .result-label { font-size: 13px; color: #86868b; margin-bottom: 6px; }
+    .result-value { font-size: 14px; color: #1d1d1f; }
+    
+    .code-block { background: #1e1e1e; color: #d4d4d4; padding: 12px; border-radius: 8px; font-family: 'SF Mono', monospace; font-size: 13px; overflow-x: auto; margin-top: 12px; }
+    .code-comment { color: #6a9955; }
+    .code-string { color: #ce9178; }
+    .code-keyword { color: #569cd6; }
+    
+    .tip-box { background: #e3f2fd; border-radius: 8px; padding: 12px; margin-top: 16px; font-size: 13px; color: #1565c0; }
+    
+    .tag { display: inline-block; padding: 4px 12px; background: #007AFF; color: white; border-radius: 20px; font-size: 13px; margin: 2px; }
+    
+    .switch { position: relative; width: 50px; height: 28px; }
+    .switch input { opacity: 0; width: 0; height: 0; }
+    .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #e5e5ea; transition: 0.3s; border-radius: 28px; }
+    .slider:before { position: absolute; content: ""; height: 22px; width: 22px; left: 3px; bottom: 3px; background-color: white; transition: 0.3s; border-radius: 50%; box-shadow: 0 2px 4px rgba(0,0,0,0.2); }
+    input:checked + .slider { background-color: #34C759; }
+    input:checked + .slider:before { transform: translateX(22px); }
+  </style>
+</head>
+<body>
+  <div id="app">
+    <div class="demo-container">
+      <h3>☑️ 复选框和单选框</h3>
+      
+      <!-- 单个复选框 -->
+      <div class="card">
+        <div class="card-title">
+          <span>1️⃣</span>
+          <span>单个复选框（布尔值）</span>
+        </div>
+        
+        <div style="display: flex; align-items: center; gap: 16px; margin-bottom: 16px;">
+          <label class="checkbox-item" :class="{ checked: agreed }">
+            <input type="checkbox" v-model="agreed">
+            <span>我已阅读并同意用户协议</span>
+          </label>
+          
+          <label class="switch">
+            <input type="checkbox" v-model="notifications">
+            <span class="slider"></span>
+          </label>
+          <span>{{ notifications ? '开启通知' : '关闭通知' }}</span>
+        </div>
+        
+        <div class="result-box">
+          <div class="result-label">状态：</div>
+          <div class="result-value">
+            同意协议: <strong :style="{ color: agreed ? '#34C759' : '#FF3B30' }">{{ agreed }}</strong> | 
+            通知: <strong :style="{ color: notifications ? '#34C759' : '#FF3B30' }">{{ notifications }}</strong>
+          </div>
+        </div>
+        
+        <div class="code-block">
+          <span class="code-comment">&lt;!-- 单个复选框绑定布尔值 --&gt;</span><br>
+          &lt;input type=<span class="code-string">"checkbox"</span> <span class="code-keyword">v-model</span>=<span class="code-string">"agreed"</span>&gt;<br><br>
+          <span class="code-comment">// data</span><br>
+          agreed: <span class="code-keyword">false</span> <span class="code-comment">// true 或 false</span>
+        </div>
+      </div>
+      
+      <!-- 多个复选框 -->
+      <div class="card">
+        <div class="card-title">
+          <span>2️⃣</span>
+          <span>多个复选框（数组）</span>
+        </div>
+        
+        <p style="color: #86868b; font-size: 14px; margin-bottom: 12px;">选择你喜欢的水果：</p>
+        
+        <div class="checkbox-group">
+          <label 
+            class="checkbox-item"
+            v-for="fruit in fruitOptions"
+            :key="fruit.value"
+            :class="{ checked: selectedFruits.includes(fruit.value) }"
+          >
+            <input 
+              type="checkbox" 
+              v-model="selectedFruits"
+              :value="fruit.value"
+            >
+            <span>{{ fruit.emoji }} {{ fruit.label }}</span>
+          </label>
+        </div>
+        
+        <div class="result-box">
+          <div class="result-label">已选择（数组）：</div>
+          <div class="result-value">
+            <span v-if="selectedFruits.length === 0">（未选择）</span>
+            <span class="tag" v-for="fruit in selectedFruits" :key="fruit">{{ fruit }}</span>
+          </div>
+        </div>
+        
+        <div class="code-block">
+          <span class="code-comment">&lt;!-- 多个复选框绑定到数组 --&gt;</span><br>
+          &lt;input type=<span class="code-string">"checkbox"</span> <span class="code-keyword">v-model</span>=<span class="code-string">"selectedFruits"</span> <span class="code-keyword">value</span>=<span class="code-string">"apple"</span>&gt;<br>
+          &lt;input type=<span class="code-string">"checkbox"</span> <span class="code-keyword">v-model</span>=<span class="code-string">"selectedFruits"</span> <span class="code-keyword">value</span>=<span class="code-string">"banana"</span>&gt;<br><br>
+          <span class="code-comment">// data</span><br>
+          selectedFruits: [] <span class="code-comment">// 选中的值会自动加入数组</span>
+        </div>
+      </div>
+      
+      <!-- 单选框 -->
+      <div class="card">
+        <div class="card-title">
+          <span>3️⃣</span>
+          <span>单选框（字符串）</span>
+        </div>
+        
+        <p style="color: #86868b; font-size: 14px; margin-bottom: 12px;">选择你的性别：</p>
+        
+        <div class="radio-group">
+          <label 
+            class="radio-item"
+            v-for="option in genderOptions"
+            :key="option.value"
+            :class="{ checked: gender === option.value }"
+          >
+            <input 
+              type="radio" 
+              v-model="gender"
+              :value="option.value"
+            >
+            <span>{{ option.emoji }} {{ option.label }}</span>
+          </label>
+        </div>
+        
+        <div class="result-box">
+          <div class="result-label">选择结果：</div>
+          <div class="result-value">{{ gender || '（未选择）' }}</div>
+        </div>
+        
+        <div class="code-block">
+          <span class="code-comment">&lt;!-- 单选框绑定到字符串 --&gt;</span><br>
+          &lt;input type=<span class="code-string">"radio"</span> <span class="code-keyword">v-model</span>=<span class="code-string">"gender"</span> <span class="code-keyword">value</span>=<span class="code-string">"male"</span>&gt;<br>
+          &lt;input type=<span class="code-string">"radio"</span> <span class="code-keyword">v-model</span>=<span class="code-string">"gender"</span> <span class="code-keyword">value</span>=<span class="code-string">"female"</span>&gt;<br><br>
+          <span class="code-comment">// data</span><br>
+          gender: <span class="code-string">''</span> <span class="code-comment">// 选中项的 value</span>
+        </div>
+      </div>
+      
+      <div class="tip-box">
+        💡 <strong>关键区别：</strong><br>
+        • 单个复选框：绑定 <strong>布尔值</strong> (true/false)<br>
+        • 多个复选框：绑定 <strong>数组</strong> (选中项的 value)<br>
+        • 单选框：绑定 <strong>字符串</strong> (选中项的 value)
+      </div>
+    </div>
+  </div>
+  
+  <script src="app.js"></script>
+</body>
+</html>

@@ -77,6 +77,36 @@ const routes = [
     component: () => import('@/views/chapters/directives/Index.vue'),
     meta: { title: 'Vue 指令', chapter: 4 }
   },
+  {
+    path: '/directives/v-bind',
+    name: 'VBind',
+    component: () => import('@/views/chapters/directives/VBind.vue'),
+    meta: { title: 'v-bind 属性绑定', chapter: 4 }
+  },
+  {
+    path: '/directives/v-on',
+    name: 'VOn',
+    component: () => import('@/views/chapters/directives/VOn.vue'),
+    meta: { title: 'v-on 事件绑定', chapter: 4 }
+  },
+  {
+    path: '/directives/v-model',
+    name: 'VModel',
+    component: () => import('@/views/chapters/directives/VModel.vue'),
+    meta: { title: 'v-model 双向绑定', chapter: 4 }
+  },
+  {
+    path: '/directives/v-if-show',
+    name: 'VIfShow',
+    component: () => import('@/views/chapters/directives/VIfShow.vue'),
+    meta: { title: 'v-if / v-show 条件渲染', chapter: 4 }
+  },
+  {
+    path: '/directives/v-for',
+    name: 'VFor',
+    component: () => import('@/views/chapters/directives/VFor.vue'),
+    meta: { title: 'v-for 列表渲染', chapter: 4 }
+  },
 
   // ==================== 计算属性章节 ====================
   {

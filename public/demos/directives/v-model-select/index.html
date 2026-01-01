@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>v-model 下拉选择</title>
+  <script src="https://cdn.jsdelivr.net/npm/vue@2.7.16/dist/vue.js"></script>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; padding: 20px; background: #f5f5f7; }
+    .demo-container { max-width: 650px; margin: 0 auto; }
+    h3 { color: #1d1d1f; margin-bottom: 16px; font-size: 18px; }
+    .card { background: white; border-radius: 12px; padding: 20px; margin-bottom: 16px; box-shadow: 0 2px 10px rgba(0,0,0,0.08); }
+    .card-title { font-size: 16px; font-weight: 600; color: #1d1d1f; margin-bottom: 12px; display: flex; align-items: center; gap: 8px; }
+    
+    .select-box { width: 100%; padding: 14px 16px; border: 2px solid #e5e5ea; border-radius: 10px; font-size: 16px; background: white; cursor: pointer; appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23666' d='M6 8L1 3h10z'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 16px center; }
+    .select-box:focus { outline: none; border-color: #007AFF; }
+    
+    .result-box { background: #f9fafb; padding: 16px; border-radius: 8px; margin-top: 16px; }
+    .result-label { font-size: 13px; color: #86868b; margin-bottom: 6px; }
+    .result-value { font-size: 14px; color: #1d1d1f; }
+    
+    .code-block { background: #1e1e1e; color: #d4d4d4; padding: 12px; border-radius: 8px; font-family: 'SF Mono', monospace; font-size: 13px; overflow-x: auto; margin-top: 12px; }
+    .code-comment { color: #6a9955; }
+    .code-string { color: #ce9178; }
+    .code-keyword { color: #569cd6; }
+    
+    .tip-box { background: #e3f2fd; border-radius: 8px; padding: 12px; margin-top: 16px; font-size: 13px; color: #1565c0; }
+    
+    .tag { display: inline-block; padding: 4px 12px; background: #007AFF; color: white; border-radius: 20px; font-size: 13px; margin: 2px; }
+    
+    .order-summary { background: linear-gradient(135deg, #667eea, #764ba2); color: white; padding: 20px; border-radius: 12px; margin-top: 16px; }
+    .order-summary h4 { font-size: 16px; margin-bottom: 12px; }
+    .order-item { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid rgba(255,255,255,0.2); }
+    .order-item:last-child { border-bottom: none; font-weight: 600; font-size: 18px; }
+  </style>
+</head>
+<body>
+  <div id="app">
+    <div class="demo-container">
+      <h3>📋 下拉选择框</h3>
+      
+      <!-- 单选下拉 -->
+      <div class="card">
+        <div class="card-title">
+          <span>1️⃣</span>
+          <span>单选下拉框</span>
+        </div>
+        
+        <select class="select-box" v-model="selectedCity">
+          <option value="" disabled>-- 请选择城市 --</option>
+          <option v-for="city in cities" :key="city.value" :value="city.value">
+            {{ city.label }}
+          </option>
+        </select>
+        
+        <div class="result-box">
+          <div class="result-label">选中的城市：</div>
+          <div class="result-value">{{ selectedCity || '（未选择）' }}</div>
+        </div>
+        
+        <div class="code-block">
+          <span class="code-comment">&lt;!-- 单选下拉框 --&gt;</span><br>
+          &lt;select <span class="code-keyword">v-model</span>=<span class="code-string">"selectedCity"</span>&gt;<br>
+          &nbsp;&nbsp;&lt;option <span class="code-keyword">v-for</span>=<span class="code-string">"city in cities"</span> <span class="code-keyword">:value</span>=<span class="code-string">"city.value"</span>&gt;<br>
+          &nbsp;&nbsp;&nbsp;&nbsp;{{ city.label }}<br>
+          &nbsp;&nbsp;&lt;/option&gt;<br>
+          &lt;/select&gt;
+        </div>
+      </div>
+      
+      <!-- 多选下拉 -->
+      <div class="card">
+        <div class="card-title">
+          <span>2️⃣</span>
+          <span>多选下拉框（multiple）</span>
+        </div>
+        
+        <p style="color: #86868b; font-size: 14px; margin-bottom: 12px;">
+          按住 Ctrl/Cmd 可多选
+        </p>
+        
+        <select class="select-box" v-model="selectedSkills" multiple style="height: 150px;">
+          <option v-for="skill in skills" :key="skill" :value="skill">
+            {{ skill }}
+          </option>
+        </select>
+        
+        <div class="result-box">
+          <div class="result-label">选中的技能（数组）：</div>
+          <div class="result-value">
+            <span v-if="selectedSkills.length === 0">（未选择）</span>
+            <span class="tag" v-for="skill in selectedSkills" :key="skill">{{ skill }}</span>
+          </div>
+        </div>
+        
+        <div class="code-block">
+          <span class="code-comment">&lt;!-- 多选下拉框，绑定数组 --&gt;</span><br>
+          &lt;select <span class="code-keyword">v-model</span>=<span class="code-string">"selectedSkills"</span> <span class="code-keyword">multiple</span>&gt;<br>
+          &nbsp;&nbsp;&lt;option <span class="code-keyword">v-for</span>=<span class="code-string">"skill in skills"</span>&gt;{{ skill }}&lt;/option&gt;<br>
+          &lt;/select&gt;<br><br>
+          <span class="code-comment">// data</span><br>
+          selectedSkills: [] <span class="code-comment">// 数组</span>
+        </div>
+      </div>
+      
+      <!-- 实际案例：订单配置 -->
+      <div class="card">
+        <div class="card-title">
+          <span>3️⃣</span>
+          <span>实际案例：商品配置</span>
+        </div>
+        
+        <div style="display: grid; gap: 12px; margin-bottom: 16px;">
+          <div>
+            <label style="color: #86868b; font-size: 13px; display: block; margin-bottom: 4px;">选择产品</label>
+            <select class="select-box" v-model="order.product">
+              <option value="" disabled>-- 选择产品 --</option>
+              <option v-for="product in products" :key="product.id" :value="product">
+                {{ product.name }} - ¥{{ product.price }}
+              </option>
+            </select>
+          </div>
+          
+          <div>
+            <label style="color: #86868b; font-size: 13px; display: block; margin-bottom: 4px;">选择颜色</label>
+            <select class="select-box" v-model="order.color">
+              <option value="" disabled>-- 选择颜色 --</option>
+              <option v-for="color in colors" :key="color" :value="color">
+                {{ color }}
+              </option>
+            </select>
+          </div>
+          
+          <div>
+            <label style="color: #86868b; font-size: 13px; display: block; margin-bottom: 4px;">选择数量</label>
+            <select class="select-box" v-model="order.quantity">
+              <option v-for="n in 10" :key="n" :value="n">{{ n }} 件</option>
+            </select>
+          </div>
+        </div>
+        
+        <div class="order-summary" v-if="order.product">
+          <h4>📦 订单摘要</h4>
+          <div class="order-item">
+            <span>产品</span>
+            <span>{{ order.product.name }}</span>
+          </div>
+          <div class="order-item">
+            <span>颜色</span>
+            <span>{{ order.color || '未选择' }}</span>
+          </div>
+          <div class="order-item">
+            <span>数量</span>
+            <span>{{ order.quantity }} 件</span>
+          </div>
+          <div class="order-item">
+            <span>总价</span>
+            <span>¥{{ order.product.price * order.quantity }}</span>
+          </div>
+        </div>
+      </div>
+      
+      <div class="tip-box">
+        💡 <strong>绑定对象：</strong><br>
+        option 的 value 可以绑定对象：<code>:value="product"</code><br>
+        这样选中后，v-model 绑定的就是整个对象！
+      </div>
+    </div>
+  </div>
+  
+  <script src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>v-model 双向绑定基础</title>
+  <script src="https://cdn.jsdelivr.net/npm/vue@2.7.16/dist/vue.js"></script>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; padding: 20px; background: #f5f5f7; }
+    .demo-container { max-width: 650px; margin: 0 auto; }
+    h3 { color: #1d1d1f; margin-bottom: 16px; font-size: 18px; }
+    .card { background: white; border-radius: 12px; padding: 20px; margin-bottom: 16px; box-shadow: 0 2px 10px rgba(0,0,0,0.08); }
+    .card-title { font-size: 16px; font-weight: 600; color: #1d1d1f; margin-bottom: 12px; display: flex; align-items: center; gap: 8px; }
+    
+    .input-box { padding: 14px 16px; border: 2px solid #e5e5ea; border-radius: 10px; font-size: 16px; width: 100%; transition: border-color 0.2s; }
+    .input-box:focus { outline: none; border-color: #007AFF; }
+    
+    .result-box { background: #f9fafb; padding: 16px; border-radius: 8px; margin-top: 16px; }
+    .result-label { font-size: 13px; color: #86868b; margin-bottom: 6px; }
+    .result-value { font-size: 18px; color: #1d1d1f; font-weight: 500; min-height: 27px; }
+    
+    .code-block { background: #1e1e1e; color: #d4d4d4; padding: 12px; border-radius: 8px; font-family: 'SF Mono', monospace; font-size: 13px; overflow-x: auto; margin-top: 12px; }
+    .code-comment { color: #6a9955; }
+    .code-string { color: #ce9178; }
+    .code-keyword { color: #569cd6; }
+    
+    .tip-box { background: #e3f2fd; border-radius: 8px; padding: 12px; margin-top: 16px; font-size: 13px; color: #1565c0; }
+    
+    .preview-card { background: linear-gradient(135deg, #007AFF, #5AC8FA); color: white; padding: 24px; border-radius: 16px; margin-top: 16px; }
+    .preview-card h4 { font-size: 14px; opacity: 0.8; margin-bottom: 8px; }
+    .preview-card .name { font-size: 28px; font-weight: 700; margin-bottom: 4px; }
+    .preview-card .email { font-size: 16px; opacity: 0.9; }
+    
+    .flow-diagram { display: flex; align-items: center; justify-content: center; gap: 16px; margin: 20px 0; flex-wrap: wrap; }
+    .flow-box { background: #f0f0f5; padding: 12px 20px; border-radius: 10px; font-size: 14px; font-weight: 500; }
+    .flow-arrow { font-size: 20px; color: #007AFF; }
+    
+    textarea.input-box { min-height: 100px; resize: vertical; }
+  </style>
+</head>
+<body>
+  <div id="app">
+    <div class="demo-container">
+      <h3>🔄 v-model 双向绑定</h3>
+      
+      <!-- 什么是双向绑定 -->
+      <div class="card">
+        <div class="card-title">
+          <span>📖</span>
+          <span>什么是双向绑定？</span>
+        </div>
+        
+        <p style="color: #86868b; font-size: 14px; margin-bottom: 12px;">
+          双向绑定 = 数据变 → 视图变 + 视图变 → 数据变
+        </p>
+        
+        <div class="flow-diagram">
+          <div class="flow-box">📊 data 数据</div>
+          <div class="flow-arrow">⟷</div>
+          <div class="flow-box">📝 input 输入框</div>
+        </div>
+        
+        <p style="color: #1d1d1f; font-size: 14px;">
+          <strong>单向绑定</strong>：v-bind 只能 data → 视图<br>
+          <strong>双向绑定</strong>：v-model 可以 data ⟷ 视图
+        </p>
+      </div>
+      
+      <!-- 基本文本输入 -->
+      <div class="card">
+        <div class="card-title">
+          <span>1️⃣</span>
+          <span>文本输入框</span>
+        </div>
+        
+        <input 
+          class="input-box"
+          type="text" 
+          v-model="message"
+          placeholder="输入一些文字..."
+        >
+        
+        <div class="result-box">
+          <div class="result-label">实时同步的数据：</div>
+          <div class="result-value">{{ message || '（空）' }}</div>
+        </div>
+        
+        <div class="code-block">
+          <span class="code-comment">&lt;!-- v-model 双向绑定 --&gt;</span><br>
+          &lt;input <span class="code-keyword">v-model</span>=<span class="code-string">"message"</span>&gt;<br>
+          &lt;p&gt;{{ message }}&lt;/p&gt;<br><br>
+          <span class="code-comment">// data 中定义</span><br>
+          <span class="code-keyword">data</span>() {<br>
+          &nbsp;&nbsp;<span class="code-keyword">return</span> { message: <span class="code-string">''</span> }<br>
+          }
+        </div>
+      </div>
+      
+      <!-- 多行文本 -->
+      <div class="card">
+        <div class="card-title">
+          <span>2️⃣</span>
+          <span>多行文本 textarea</span>
+        </div>
+        
+        <textarea 
+          class="input-box"
+          v-model="bio"
+          placeholder="介绍一下自己..."
+        ></textarea>
+        
+        <div class="result-box">
+          <div class="result-label">自我介绍内容（{{ bio.length }} 字）：</div>
+          <div class="result-value" style="white-space: pre-wrap;">{{ bio || '（空）' }}</div>
+        </div>
+        
+        <div class="code-block">
+          <span class="code-comment">&lt;!-- textarea 同样使用 v-model --&gt;</span><br>
+          &lt;textarea <span class="code-keyword">v-model</span>=<span class="code-string">"bio"</span>&gt;&lt;/textarea&gt;<br><br>
+          <span class="code-comment">⚠️ 注意：不要在 textarea 标签之间插值</span><br>
+          <span class="code-comment">❌ &lt;textarea&gt;{{ bio }}&lt;/textarea&gt;</span>
+        </div>
+      </div>
+      
+      <!-- 实际案例：表单预览 -->
+      <div class="card">
+        <div class="card-title">
+          <span>3️⃣</span>
+          <span>实际案例：名片预览</span>
+        </div>
+        
+        <div style="display: grid; gap: 12px; margin-bottom: 16px;">
+          <input 
+            class="input-box"
+            type="text" 
+            v-model="cardInfo.name"
+            placeholder="输入姓名"
+          >
+          <input 
+            class="input-box"
+            type="email" 
+            v-model="cardInfo.email"
+            placeholder="输入邮箱"
+          >
+        </div>
+        
+        <p style="color: #86868b; font-size: 13px; margin-bottom: 8px;">👇 实时预览</p>
+        
+        <div class="preview-card">
+          <h4>个人名片</h4>
+          <div class="name">{{ cardInfo.name || '你的名字' }}</div>
+          <div class="email">{{ cardInfo.email || 'your@email.com' }}</div>
+        </div>
+      </div>
+      
+      <div class="tip-box">
+        💡 <strong>v-model 本质：</strong><br>
+        v-model 其实是语法糖，等价于：<br>
+        <code>&lt;input :value="msg" @input="msg = $event.target.value"&gt;</code>
+      </div>
+    </div>
+  </div>
+  
+  <script src="app.js"></script>
+</body>
+</html>

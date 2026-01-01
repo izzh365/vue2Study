@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>v-if vs v-show 对比</title>
+  <script src="https://cdn.jsdelivr.net/npm/vue@2.7.16/dist/vue.js"></script>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; padding: 20px; background: #f5f5f7; }
+    .demo-container { max-width: 700px; margin: 0 auto; }
+    h3 { color: #1d1d1f; margin-bottom: 16px; font-size: 18px; }
+    .card { background: white; border-radius: 12px; padding: 20px; margin-bottom: 16px; box-shadow: 0 2px 10px rgba(0,0,0,0.08); }
+    .card-title { font-size: 16px; font-weight: 600; color: #1d1d1f; margin-bottom: 12px; display: flex; align-items: center; gap: 8px; }
+    
+    .btn { padding: 12px 24px; border-radius: 10px; border: none; font-size: 14px; cursor: pointer; transition: all 0.2s; margin: 4px; }
+    .btn-primary { background: #007AFF; color: white; }
+    .btn-success { background: #34C759; color: white; }
+    .btn:hover { transform: scale(1.02); }
+    
+    .demo-box { padding: 20px; border-radius: 12px; text-align: center; font-size: 18px; margin: 8px 0; }
+    .if-box { background: #e3f2fd; color: #1565c0; border: 2px solid #007AFF; }
+    .show-box { background: #e8f5e9; color: #2e7d32; border: 2px solid #34C759; }
+    
+    .compare-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+    .compare-col { text-align: center; }
+    .compare-col h4 { margin-bottom: 12px; }
+    
+    .code-block { background: #1e1e1e; color: #d4d4d4; padding: 12px; border-radius: 8px; font-family: 'SF Mono', monospace; font-size: 13px; overflow-x: auto; margin-top: 12px; }
+    .code-comment { color: #6a9955; }
+    .code-string { color: #ce9178; }
+    .code-keyword { color: #569cd6; }
+    
+    .tip-box { background: #e3f2fd; border-radius: 8px; padding: 12px; margin-top: 16px; font-size: 13px; color: #1565c0; }
+    .warning-box { background: #fff3e0; border-radius: 8px; padding: 12px; margin-top: 16px; font-size: 13px; color: #e65100; }
+    
+    .compare-table { width: 100%; border-collapse: collapse; margin-top: 12px; }
+    .compare-table th, .compare-table td { padding: 12px; text-align: left; border-bottom: 1px solid #e5e5ea; font-size: 14px; }
+    .compare-table th { background: #f9fafb; color: #86868b; font-weight: 500; }
+    
+    .counter { font-size: 14px; color: #86868b; margin-top: 8px; }
+    
+    .dom-preview { background: #1e1e1e; color: #a5d6a7; padding: 12px; border-radius: 8px; font-family: 'SF Mono', monospace; font-size: 12px; margin-top: 12px; min-height: 60px; }
+  </style>
+</head>
+<body>
+  <div id="app">
+    <div class="demo-container">
+      <h3>⚔️ v-if vs v-show 对比</h3>
+      
+      <!-- 并排对比 -->
+      <div class="card">
+        <div class="card-title">
+          <span>🔄</span>
+          <span>切换对比演示</span>
+        </div>
+        
+        <div style="text-align: center; margin-bottom: 16px;">
+          <button class="btn btn-primary" @click="toggleBoth">
+            切换显示状态 (已切换 {{ toggleCount }} 次)
+          </button>
+        </div>
+        
+        <div class="compare-grid">
+          <div class="compare-col">
+            <h4 style="color: #007AFF;">v-if</h4>
+            <div class="demo-box if-box" v-if="showContent">
+              📦 v-if 内容
+            </div>
+            <div class="dom-preview">
+              <div v-if="showContent">
+                &lt;div&gt;v-if 内容&lt;/div&gt;
+              </div>
+              <div v-else style="color: #f44336;">
+                &lt;!-- 元素不存在 --&gt;
+              </div>
+            </div>
+          </div>
+          
+          <div class="compare-col">
+            <h4 style="color: #34C759;">v-show</h4>
+            <div class="demo-box show-box" v-show="showContent">
+              📦 v-show 内容
+            </div>
+            <div class="dom-preview">
+              <span v-if="showContent">
+                &lt;div&gt;v-show 内容&lt;/div&gt;
+              </span>
+              <span v-else>
+                &lt;div <span style="color: #f44336;">style="display: none;"</span>&gt;<br>
+                &nbsp;&nbsp;v-show 内容<br>
+                &lt;/div&gt;
+              </span>
+            </div>
+          </div>
+        </div>
+        
+        <p class="counter">当前状态: {{ showContent ? '显示' : '隐藏' }}</p>
+      </div>
+      
+      <!-- 核心区别 -->
+      <div class="card">
+        <div class="card-title">
+          <span>📊</span>
+          <span>核心区别</span>
+        </div>
+        
+        <table class="compare-table">
+          <tr>
+            <th></th>
+            <th style="color: #007AFF;">v-if</th>
+            <th style="color: #34C759;">v-show</th>
+          </tr>
+          <tr>
+            <td><strong>渲染方式</strong></td>
+            <td>条件为 false 时不渲染 DOM</td>
+            <td>始终渲染，用 CSS 控制显隐</td>
+          </tr>
+          <tr>
+            <td><strong>切换方式</strong></td>
+            <td>销毁/重建 DOM 元素</td>
+            <td>切换 display: none</td>
+          </tr>
+          <tr>
+            <td><strong>初始开销</strong></td>
+            <td>条件为 false 时无开销</td>
+            <td>无论条件如何都会渲染</td>
+          </tr>
+          <tr>
+            <td><strong>切换开销</strong></td>
+            <td>较高（DOM 操作）</td>
+            <td>较低（CSS 切换）</td>
+          </tr>
+          <tr>
+            <td><strong>适用场景</strong></td>
+            <td>条件很少改变</td>
+            <td>频繁切换</td>
+          </tr>
+        </table>
+        
+        <div class="code-block">
+          <span class="code-comment">&lt;!-- v-if: 条件假时，元素不存在于 DOM --&gt;</span><br>
+          &lt;div <span class="code-keyword">v-if</span>=<span class="code-string">"show"</span>&gt;内容&lt;/div&gt;<br><br>
+          <span class="code-comment">&lt;!-- v-show: 元素始终存在，通过 CSS 显隐 --&gt;</span><br>
+          &lt;div <span class="code-keyword">v-show</span>=<span class="code-string">"show"</span>&gt;内容&lt;/div&gt;<br>
+          <span class="code-comment">&lt;!-- 编译后: &lt;div style="display: none;"&gt; --&gt;</span>
+        </div>
+      </div>
+      
+      <!-- 使用建议 -->
+      <div class="card">
+        <div class="card-title">
+          <span>💡</span>
+          <span>如何选择？</span>
+        </div>
+        
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+          <div class="tip-box" style="margin: 0;">
+            <strong style="color: #007AFF;">✓ 使用 v-if</strong><br>
+            • 条件很少改变<br>
+            • 初始条件为 false（节省初始渲染）<br>
+            • 需要 v-else、v-else-if<br>
+            • 切换时需要重新初始化组件
+          </div>
+          
+          <div style="background: #e8f5e9; border-radius: 8px; padding: 12px; font-size: 13px; color: #2e7d32;">
+            <strong>✓ 使用 v-show</strong><br>
+            • 需要频繁切换<br>
+            • Tab 切换、折叠面板<br>
+            • 展开/收起功能<br>
+            • 不需要 v-else 分支
+          </div>
+        </div>
+      </div>
+      
+      <div class="warning-box">
+        ⚠️ <strong>注意：</strong>v-show 不支持 &lt;template&gt; 元素，也不支持 v-else
+      </div>
+    </div>
+  </div>
+  
+  <script src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>v-model 修饰符</title>
+  <script src="https://cdn.jsdelivr.net/npm/vue@2.7.16/dist/vue.js"></script>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; padding: 20px; background: #f5f5f7; }
+    .demo-container { max-width: 650px; margin: 0 auto; }
+    h3 { color: #1d1d1f; margin-bottom: 16px; font-size: 18px; }
+    .card { background: white; border-radius: 12px; padding: 20px; margin-bottom: 16px; box-shadow: 0 2px 10px rgba(0,0,0,0.08); }
+    .card-title { font-size: 16px; font-weight: 600; color: #1d1d1f; margin-bottom: 12px; display: flex; align-items: center; gap: 8px; }
+    
+    .input-box { padding: 14px 16px; border: 2px solid #e5e5ea; border-radius: 10px; font-size: 16px; width: 100%; transition: border-color 0.2s; }
+    .input-box:focus { outline: none; border-color: #007AFF; }
+    
+    .result-box { background: #f9fafb; padding: 16px; border-radius: 8px; margin-top: 16px; }
+    .result-label { font-size: 13px; color: #86868b; margin-bottom: 6px; }
+    .result-value { font-size: 14px; color: #1d1d1f; }
+    .result-type { font-size: 12px; color: #86868b; margin-top: 4px; }
+    
+    .code-block { background: #1e1e1e; color: #d4d4d4; padding: 12px; border-radius: 8px; font-family: 'SF Mono', monospace; font-size: 13px; overflow-x: auto; margin-top: 12px; }
+    .code-comment { color: #6a9955; }
+    .code-string { color: #ce9178; }
+    .code-keyword { color: #569cd6; }
+    
+    .tip-box { background: #e3f2fd; border-radius: 8px; padding: 12px; margin-top: 16px; font-size: 13px; color: #1565c0; }
+    .warning-box { background: #fff3e0; border-radius: 8px; padding: 12px; margin-top: 16px; font-size: 13px; color: #e65100; }
+    
+    .compare-table { width: 100%; border-collapse: collapse; margin-top: 12px; }
+    .compare-table th, .compare-table td { padding: 10px; text-align: left; border-bottom: 1px solid #e5e5ea; font-size: 14px; }
+    .compare-table th { background: #f9fafb; color: #86868b; font-weight: 500; }
+    
+    .modifier-badge { display: inline-block; padding: 4px 10px; background: #007AFF; color: white; border-radius: 20px; font-size: 13px; font-family: 'SF Mono', monospace; }
+  </style>
+</head>
+<body>
+  <div id="app">
+    <div class="demo-container">
+      <h3>🎛️ v-model 修饰符</h3>
+      
+      <!-- .lazy 修饰符 -->
+      <div class="card">
+        <div class="card-title">
+          <span>1️⃣</span>
+          <span class="modifier-badge">.lazy</span>
+          <span>- change 事件时更新</span>
+        </div>
+        
+        <p style="color: #86868b; font-size: 14px; margin-bottom: 12px;">
+          默认：每次输入都会更新（input 事件）<br>
+          .lazy：输入框失焦或按回车时才更新（change 事件）
+        </p>
+        
+        <div style="display: grid; gap: 12px;">
+          <div>
+            <label style="color: #86868b; font-size: 13px;">普通 v-model（实时更新）</label>
+            <input class="input-box" v-model="normalText" placeholder="每输入一个字符都会更新">
+          </div>
+          <div>
+            <label style="color: #86868b; font-size: 13px;">v-model.lazy（失焦后更新）</label>
+            <input class="input-box" v-model.lazy="lazyText" placeholder="输入后点击外部或按回车">
+          </div>
+        </div>
+        
+        <div class="result-box">
+          <div class="result-label">对比结果：</div>
+          <div class="result-value">
+            普通: "{{ normalText }}"<br>
+            .lazy: "{{ lazyText }}"
+          </div>
+        </div>
+        
+        <div class="code-block">
+          <span class="code-comment">&lt;!-- 默认：input 事件更新 --&gt;</span><br>
+          &lt;input <span class="code-keyword">v-model</span>=<span class="code-string">"text"</span>&gt;<br><br>
+          <span class="code-comment">&lt;!-- .lazy：change 事件更新 --&gt;</span><br>
+          &lt;input <span class="code-keyword">v-model.lazy</span>=<span class="code-string">"text"</span>&gt;
+        </div>
+      </div>
+      
+      <!-- .number 修饰符 -->
+      <div class="card">
+        <div class="card-title">
+          <span>2️⃣</span>
+          <span class="modifier-badge">.number</span>
+          <span>- 自动转为数字</span>
+        </div>
+        
+        <p style="color: #86868b; font-size: 14px; margin-bottom: 12px;">
+          表单输入值默认是字符串，使用 .number 可自动转换
+        </p>
+        
+        <div style="display: grid; gap: 12px;">
+          <div>
+            <label style="color: #86868b; font-size: 13px;">普通 v-model</label>
+            <input class="input-box" type="number" v-model="normalNumber" placeholder="输入数字">
+          </div>
+          <div>
+            <label style="color: #86868b; font-size: 13px;">v-model.number</label>
+            <input class="input-box" type="number" v-model.number="typedNumber" placeholder="输入数字">
+          </div>
+        </div>
+        
+        <div class="result-box">
+          <div class="result-label">数据类型对比：</div>
+          <div class="result-value">
+            普通: {{ normalNumber }} 
+            <span class="result-type">({{ typeof normalNumber }})</span><br>
+            .number: {{ typedNumber }} 
+            <span class="result-type">({{ typeof typedNumber }})</span>
+          </div>
+        </div>
+        
+        <p style="color: #34C759; font-size: 14px; margin-top: 12px;">
+          ✓ 计算测试：.number 的值 × 2 = <strong>{{ typedNumber * 2 }}</strong>
+        </p>
+        
+        <div class="code-block">
+          <span class="code-comment">&lt;!-- 自动转为数字类型 --&gt;</span><br>
+          &lt;input <span class="code-keyword">v-model.number</span>=<span class="code-string">"age"</span> type=<span class="code-string">"number"</span>&gt;<br><br>
+          <span class="code-comment">// 如果输入 "25"，age 是 number 25，不是 string "25"</span>
+        </div>
+      </div>
+      
+      <!-- .trim 修饰符 -->
+      <div class="card">
+        <div class="card-title">
+          <span>3️⃣</span>
+          <span class="modifier-badge">.trim</span>
+          <span>- 去除首尾空格</span>
+        </div>
+        
+        <div style="display: grid; gap: 12px;">
+          <div>
+            <label style="color: #86868b; font-size: 13px;">普通 v-model</label>
+            <input class="input-box" v-model="normalSpace" placeholder="试试输入 '  hello  '">
+          </div>
+          <div>
+            <label style="color: #86868b; font-size: 13px;">v-model.trim</label>
+            <input class="input-box" v-model.trim="trimmedSpace" placeholder="试试输入 '  hello  '">
+          </div>
+        </div>
+        
+        <div class="result-box">
+          <div class="result-label">对比结果（用引号显示空格）：</div>
+          <div class="result-value" style="font-family: 'SF Mono', monospace;">
+            普通: "{{ normalSpace }}" ({{ normalSpace.length }}字符)<br>
+            .trim: "{{ trimmedSpace }}" ({{ trimmedSpace.length }}字符)
+          </div>
+        </div>
+        
+        <div class="code-block">
+          <span class="code-comment">&lt;!-- 自动去除首尾空格 --&gt;</span><br>
+          &lt;input <span class="code-keyword">v-model.trim</span>=<span class="code-string">"username"</span>&gt;
+        </div>
+      </div>
+      
+      <!-- 修饰符组合 -->
+      <div class="card">
+        <div class="card-title">
+          <span>4️⃣</span>
+          <span>修饰符可以组合使用</span>
+        </div>
+        
+        <input class="input-box" v-model.lazy.trim="combined" placeholder="组合使用 .lazy.trim">
+        
+        <div class="result-box">
+          <div class="result-value">"{{ combined }}"</div>
+        </div>
+        
+        <div class="code-block">
+          <span class="code-comment">&lt;!-- 组合多个修饰符 --&gt;</span><br>
+          &lt;input <span class="code-keyword">v-model.lazy.trim</span>=<span class="code-string">"text"</span>&gt;<br>
+          &lt;input <span class="code-keyword">v-model.number.lazy</span>=<span class="code-string">"num"</span>&gt;
+        </div>
+      </div>
+      
+      <!-- 修饰符总结 -->
+      <div class="tip-box">
+        💡 <strong>v-model 修饰符总结：</strong>
+        <table class="compare-table">
+          <tr>
+            <th>修饰符</th>
+            <th>作用</th>
+            <th>场景</th>
+          </tr>
+          <tr>
+            <td><code>.lazy</code></td>
+            <td>change 事件时同步</td>
+            <td>避免频繁更新</td>
+          </tr>
+          <tr>
+            <td><code>.number</code></td>
+            <td>转为 number 类型</td>
+            <td>数字输入、计算</td>
+          </tr>
+          <tr>
+            <td><code>.trim</code></td>
+            <td>去除首尾空格</td>
+            <td>用户名、搜索框</td>
+          </tr>
+        </table>
+      </div>
+    </div>
+  </div>
+  
+  <script src="app.js"></script>
+</body>
+</html>

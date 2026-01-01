@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>v-if 条件渲染</title>
+  <script src="https://cdn.jsdelivr.net/npm/vue@2.7.16/dist/vue.js"></script>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; padding: 20px; background: #f5f5f7; }
+    .demo-container { max-width: 650px; margin: 0 auto; }
+    h3 { color: #1d1d1f; margin-bottom: 16px; font-size: 18px; }
+    .card { background: white; border-radius: 12px; padding: 20px; margin-bottom: 16px; box-shadow: 0 2px 10px rgba(0,0,0,0.08); }
+    .card-title { font-size: 16px; font-weight: 600; color: #1d1d1f; margin-bottom: 12px; display: flex; align-items: center; gap: 8px; }
+    
+    .btn { padding: 12px 24px; border-radius: 10px; border: none; font-size: 14px; cursor: pointer; transition: all 0.2s; margin: 4px; }
+    .btn-primary { background: #007AFF; color: white; }
+    .btn:hover { transform: scale(1.02); }
+    
+    .switch { position: relative; width: 50px; height: 28px; display: inline-block; vertical-align: middle; }
+    .switch input { opacity: 0; width: 0; height: 0; }
+    .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #e5e5ea; transition: 0.3s; border-radius: 28px; }
+    .slider:before { position: absolute; content: ""; height: 22px; width: 22px; left: 3px; bottom: 3px; background-color: white; transition: 0.3s; border-radius: 50%; box-shadow: 0 2px 4px rgba(0,0,0,0.2); }
+    input:checked + .slider { background-color: #34C759; }
+    input:checked + .slider:before { transform: translateX(22px); }
+    
+    .demo-box { padding: 20px; border-radius: 12px; text-align: center; font-size: 24px; margin: 16px 0; }
+    .success-box { background: #d4edda; color: #155724; }
+    .danger-box { background: #f8d7da; color: #721c24; }
+    .warning-box { background: #fff3cd; color: #856404; }
+    .info-box { background: #d1ecf1; color: #0c5460; }
+    
+    .code-block { background: #1e1e1e; color: #d4d4d4; padding: 12px; border-radius: 8px; font-family: 'SF Mono', monospace; font-size: 13px; overflow-x: auto; margin-top: 12px; }
+    .code-comment { color: #6a9955; }
+    .code-string { color: #ce9178; }
+    .code-keyword { color: #569cd6; }
+    
+    .tip-box { background: #e3f2fd; border-radius: 8px; padding: 12px; margin-top: 16px; font-size: 13px; color: #1565c0; }
+    
+    .score-input { padding: 10px; border: 2px solid #e5e5ea; border-radius: 8px; font-size: 18px; width: 100px; text-align: center; }
+    
+    .login-box { background: linear-gradient(135deg, #007AFF, #5AC8FA); color: white; padding: 24px; border-radius: 16px; text-align: center; }
+    .welcome-box { background: linear-gradient(135deg, #34C759, #7ED957); color: white; padding: 24px; border-radius: 16px; text-align: center; }
+    .avatar { width: 60px; height: 60px; background: rgba(255,255,255,0.3); border-radius: 50%; margin: 0 auto 12px; display: flex; align-items: center; justify-content: center; font-size: 28px; }
+  </style>
+</head>
+<body>
+  <div id="app">
+    <div class="demo-container">
+      <h3>🔀 v-if 条件渲染</h3>
+      
+      <!-- v-if 基础 -->
+      <div class="card">
+        <div class="card-title">
+          <span>1️⃣</span>
+          <span>v-if 基本用法</span>
+        </div>
+        
+        <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 16px;">
+          <span>显示消息：</span>
+          <label class="switch">
+            <input type="checkbox" v-model="showMessage">
+            <span class="slider"></span>
+          </label>
+          <span>{{ showMessage ? 'ON' : 'OFF' }}</span>
+        </div>
+        
+        <!-- v-if：条件为 false 时，元素不会渲染到 DOM -->
+        <div class="demo-box success-box" v-if="showMessage">
+          ✅ 我被渲染了！
+        </div>
+        
+        <p style="color: #86868b; font-size: 14px;">
+          💡 打开开发者工具，观察 DOM：v-if 为 false 时，元素<strong>完全不存在</strong>
+        </p>
+        
+        <div class="code-block">
+          <span class="code-comment">&lt;!-- v-if: 条件为 true 时渲染 --&gt;</span><br>
+          &lt;div <span class="code-keyword">v-if</span>=<span class="code-string">"showMessage"</span>&gt;显示内容&lt;/div&gt;
+        </div>
+      </div>
+      
+      <!-- v-if / v-else -->
+      <div class="card">
+        <div class="card-title">
+          <span>2️⃣</span>
+          <span>v-if / v-else</span>
+        </div>
+        
+        <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 16px;">
+          <span>用户状态：</span>
+          <label class="switch">
+            <input type="checkbox" v-model="isLoggedIn">
+            <span class="slider"></span>
+          </label>
+          <span>{{ isLoggedIn ? '已登录' : '未登录' }}</span>
+        </div>
+        
+        <div class="login-box" v-if="!isLoggedIn">
+          <div class="avatar">👤</div>
+          <h4>请先登录</h4>
+          <p style="opacity: 0.8; margin-top: 8px;">登录后可查看更多内容</p>
+        </div>
+        
+        <div class="welcome-box" v-else>
+          <div class="avatar">😊</div>
+          <h4>欢迎回来！</h4>
+          <p style="opacity: 0.8; margin-top: 8px;">今天也要加油哦</p>
+        </div>
+        
+        <div class="code-block">
+          <span class="code-comment">&lt;!-- v-if / v-else 二选一 --&gt;</span><br>
+          &lt;div <span class="code-keyword">v-if</span>=<span class="code-string">"isLoggedIn"</span>&gt;欢迎回来&lt;/div&gt;<br>
+          &lt;div <span class="code-keyword">v-else</span>&gt;请先登录&lt;/div&gt;
+        </div>
+      </div>
+      
+      <!-- v-else-if 多分支 -->
+      <div class="card">
+        <div class="card-title">
+          <span>3️⃣</span>
+          <span>v-else-if 多分支</span>
+        </div>
+        
+        <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 16px;">
+          <span>输入分数：</span>
+          <input type="number" class="score-input" v-model.number="score" min="0" max="100">
+          <span>分</span>
+        </div>
+        
+        <div class="demo-box success-box" v-if="score >= 90">
+          🏆 优秀！A 等级
+        </div>
+        <div class="demo-box info-box" v-else-if="score >= 80">
+          👍 良好！B 等级
+        </div>
+        <div class="demo-box warning-box" v-else-if="score >= 60">
+          📖 及格！C 等级
+        </div>
+        <div class="demo-box danger-box" v-else>
+          😢 不及格！需要努力
+        </div>
+        
+        <div class="code-block">
+          <span class="code-comment">&lt;!-- v-else-if 多条件分支 --&gt;</span><br>
+          &lt;div <span class="code-keyword">v-if</span>=<span class="code-string">"score >= 90"</span>&gt;优秀&lt;/div&gt;<br>
+          &lt;div <span class="code-keyword">v-else-if</span>=<span class="code-string">"score >= 80"</span>&gt;良好&lt;/div&gt;<br>
+          &lt;div <span class="code-keyword">v-else-if</span>=<span class="code-string">"score >= 60"</span>&gt;及格&lt;/div&gt;<br>
+          &lt;div <span class="code-keyword">v-else</span>&gt;不及格&lt;/div&gt;
+        </div>
+      </div>
+      
+      <div class="tip-box">
+        💡 <strong>v-if 特点：</strong><br>
+        • 条件为 false 时，元素<strong>不会渲染到 DOM</strong><br>
+        • v-else、v-else-if 必须紧跟在 v-if 后面<br>
+        • 适合条件<strong>很少改变</strong>的场景（切换开销较大）
+      </div>
+    </div>
+  </div>
+  
+  <script src="app.js"></script>
+</body>
+</html>

@@ -12,11 +12,11 @@
 
 | 序号 | 知识点 | 页面文件 | Demo 数量 | 状态 |
 |------|--------|----------|-----------|------|
-| 4.1 | v-bind 属性绑定 | VBind.vue | 8 | ⬜ |
-| 4.2 | v-on 事件绑定 | VOn.vue | 8 | ⬜ |
-| 4.3 | v-model 双向绑定 | VModel.vue | 8 | ⬜ |
-| 4.4 | v-if / v-show | VIfShow.vue | 6 | ⬜ |
-| 4.5 | v-for 列表渲染 | VFor.vue | 8 | ⬜ |
+| 4.1 | v-bind 属性绑定 | VBind.vue | 4 | ✅ |
+| 4.2 | v-on 事件绑定 | VOn.vue | 4 | ✅ |
+| 4.3 | v-model 双向绑定 | VModel.vue | 4 | ✅ |
+| 4.4 | v-if / v-show | VIfShow.vue | 2 | ✅ |
+| 4.5 | v-for 列表渲染 | VFor.vue | 2 | ✅ |
 | 4.6 | 其他指令 | OtherDirectives.vue | 4 | ⬜ |
 
 ---

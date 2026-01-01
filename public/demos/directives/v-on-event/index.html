@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>v-on $event 事件对象</title>
+  <script src="https://cdn.jsdelivr.net/npm/vue@2.7.16/dist/vue.js"></script>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; padding: 20px; background: #f5f5f7; }
+    .demo-container { max-width: 650px; margin: 0 auto; }
+    h3 { color: #1d1d1f; margin-bottom: 16px; font-size: 18px; }
+    .card { background: white; border-radius: 12px; padding: 20px; margin-bottom: 16px; box-shadow: 0 2px 10px rgba(0,0,0,0.08); }
+    .card-title { font-size: 16px; font-weight: 600; color: #1d1d1f; margin-bottom: 12px; display: flex; align-items: center; gap: 8px; }
+    
+    .btn { padding: 12px 24px; border-radius: 10px; border: none; font-size: 14px; cursor: pointer; transition: all 0.2s; margin: 4px; }
+    .btn-primary { background: #007AFF; color: white; }
+    .btn:hover { transform: scale(1.02); }
+    
+    .click-area { width: 100%; height: 200px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 12px; cursor: crosshair; display: flex; align-items: center; justify-content: center; color: white; font-size: 14px; position: relative; overflow: hidden; }
+    .click-marker { position: absolute; width: 20px; height: 20px; background: rgba(255,255,255,0.8); border-radius: 50%; transform: translate(-50%, -50%); pointer-events: none; animation: pulse 0.5s ease-out; }
+    @keyframes pulse { 0% { transform: translate(-50%, -50%) scale(0); opacity: 1; } 100% { transform: translate(-50%, -50%) scale(3); opacity: 0; } }
+    
+    .result-box { background: #f9fafb; padding: 16px; border-radius: 8px; margin-top: 16px; }
+    .result-label { font-size: 13px; color: #86868b; margin-bottom: 6px; }
+    .result-value { font-size: 14px; color: #1d1d1f; font-family: 'SF Mono', monospace; }
+    
+    .code-block { background: #1e1e1e; color: #d4d4d4; padding: 12px; border-radius: 8px; font-family: 'SF Mono', monospace; font-size: 13px; overflow-x: auto; margin-top: 12px; }
+    .code-comment { color: #6a9955; }
+    .code-string { color: #ce9178; }
+    .code-keyword { color: #569cd6; }
+    
+    .tip-box { background: #e3f2fd; border-radius: 8px; padding: 12px; margin-top: 16px; font-size: 13px; color: #1565c0; }
+    .warning-box { background: #fff3e0; border-radius: 8px; padding: 12px; margin-top: 16px; font-size: 13px; color: #e65100; }
+    
+    .input-box { padding: 14px 16px; border: 2px solid #e5e5ea; border-radius: 10px; font-size: 16px; width: 100%; transition: border-color 0.2s; }
+    .input-box:focus { outline: none; border-color: #007AFF; }
+    
+    .key-display { display: inline-block; padding: 4px 10px; background: #e5e5ea; border-radius: 6px; font-family: 'SF Mono', monospace; font-size: 14px; margin: 2px; }
+  </style>
+</head>
+<body>
+  <div id="app">
+    <div class="demo-container">
+      <h3>🎯 $event 事件对象</h3>
+      
+      <!-- 获取事件对象 -->
+      <div class="card">
+        <div class="card-title">
+          <span>1️⃣</span>
+          <span>获取原生事件对象</span>
+        </div>
+        
+        <button class="btn btn-primary" @click="handleClick($event)">点击获取事件信息</button>
+        
+        <div class="result-box" v-if="eventInfo">
+          <div class="result-label">事件对象信息：</div>
+          <div class="result-value">
+            类型: {{ eventInfo.type }}<br>
+            目标: {{ eventInfo.target }}<br>
+            时间戳: {{ eventInfo.timeStamp }}
+          </div>
+        </div>
+        
+        <div class="code-block">
+          <span class="code-comment">&lt;!-- $event 是原生 DOM 事件对象 --&gt;</span><br>
+          &lt;button <span class="code-keyword">@click</span>=<span class="code-string">"handleClick($event)"</span>&gt;<br><br>
+          <span class="code-comment">// 方法中接收事件对象</span><br>
+          <span class="code-keyword">handleClick</span>(event) {<br>
+          &nbsp;&nbsp;console.log(event.type)   <span class="code-comment">// 'click'</span><br>
+          &nbsp;&nbsp;console.log(event.target) <span class="code-comment">// button 元素</span><br>
+          }
+        </div>
+      </div>
+      
+      <!-- 同时传参和事件对象 -->
+      <div class="card">
+        <div class="card-title">
+          <span>2️⃣</span>
+          <span>同时传递参数和事件对象</span>
+        </div>
+        
+        <div>
+          <button class="btn" style="background: #FF3B30; color: white;" @click="handleBtnClick('危险', $event)">危险按钮</button>
+          <button class="btn" style="background: #FF9500; color: white;" @click="handleBtnClick('警告', $event)">警告按钮</button>
+          <button class="btn" style="background: #34C759; color: white;" @click="handleBtnClick('成功', $event)">成功按钮</button>
+        </div>
+        
+        <div class="result-box" v-if="btnInfo">
+          <div class="result-label">按钮信息：</div>
+          <div class="result-value">
+            类型: {{ btnInfo.type }}<br>
+            按钮文字: {{ btnInfo.text }}<br>
+            按钮宽度: {{ btnInfo.width }}px
+          </div>
+        </div>
+        
+        <div class="code-block">
+          <span class="code-comment">&lt;!-- 自定义参数 + $event --&gt;</span><br>
+          &lt;button <span class="code-keyword">@click</span>=<span class="code-string">"handleBtnClick('危险', $event)"</span>&gt;<br><br>
+          <span class="code-comment">// 接收两个参数</span><br>
+          <span class="code-keyword">handleBtnClick</span>(type, event) {<br>
+          &nbsp;&nbsp;console.log(type)         <span class="code-comment">// '危险'</span><br>
+          &nbsp;&nbsp;console.log(event.target) <span class="code-comment">// button</span><br>
+          }
+        </div>
+      </div>
+      
+      <!-- 鼠标位置追踪 -->
+      <div class="card">
+        <div class="card-title">
+          <span>3️⃣</span>
+          <span>实际案例：鼠标位置追踪</span>
+        </div>
+        
+        <div 
+          class="click-area" 
+          @click="trackClick($event)"
+          @mousemove="trackMouse($event)"
+        >
+          <span v-if="!mousePos">点击或移动鼠标</span>
+          <span v-else>X: {{ mousePos.x }}, Y: {{ mousePos.y }}</span>
+          <div 
+            v-for="(marker, index) in clickMarkers" 
+            :key="index"
+            class="click-marker"
+            :style="{ left: marker.x + 'px', top: marker.y + 'px' }"
+          ></div>
+        </div>
+        
+        <div class="code-block">
+          <span class="code-comment">// 从事件对象获取鼠标位置</span><br>
+          <span class="code-keyword">trackMouse</span>(event) {<br>
+          &nbsp;&nbsp;<span class="code-keyword">this</span>.mousePos = {<br>
+          &nbsp;&nbsp;&nbsp;&nbsp;x: event.offsetX,<br>
+          &nbsp;&nbsp;&nbsp;&nbsp;y: event.offsetY<br>
+          &nbsp;&nbsp;}<br>
+          }
+        </div>
+      </div>
+      
+      <!-- 键盘事件 -->
+      <div class="card">
+        <div class="card-title">
+          <span>4️⃣</span>
+          <span>键盘事件</span>
+        </div>
+        
+        <input 
+          class="input-box"
+          type="text" 
+          placeholder="在这里输入，观察按键信息"
+          @keydown="handleKeyDown($event)"
+        >
+        
+        <div class="result-box" v-if="keyInfo">
+          <div class="result-label">按键信息：</div>
+          <div class="result-value">
+            按键: <span class="key-display">{{ keyInfo.key }}</span><br>
+            键码: {{ keyInfo.keyCode }}<br>
+            Ctrl: {{ keyInfo.ctrlKey ? '✓' : '✗' }} | 
+            Shift: {{ keyInfo.shiftKey ? '✓' : '✗' }} | 
+            Alt: {{ keyInfo.altKey ? '✓' : '✗' }}
+          </div>
+        </div>
+      </div>
+      
+      <div class="warning-box">
+        ⚠️ <strong>注意：</strong>当需要同时传递自定义参数和事件对象时，必须显式传递 <code>$event</code>
+      </div>
+    </div>
+  </div>
+  
+  <script src="app.js"></script>
+</body>
+</html>

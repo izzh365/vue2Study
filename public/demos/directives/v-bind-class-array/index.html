@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>v-bind 绑定 class（数组语法）</title>
+  <script src="https://cdn.jsdelivr.net/npm/vue@2.7.16/dist/vue.js"></script>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; padding: 20px; background: #f5f5f7; }
+    .demo-container { max-width: 600px; margin: 0 auto; }
+    h3 { color: #1d1d1f; margin-bottom: 16px; font-size: 18px; }
+    .card { background: white; border-radius: 12px; padding: 20px; margin-bottom: 16px; box-shadow: 0 2px 10px rgba(0,0,0,0.08); }
+    .card-title { font-size: 16px; font-weight: 600; color: #1d1d1f; margin-bottom: 12px; display: flex; align-items: center; gap: 8px; }
+    
+    /* Demo 样式 */
+    .box { padding: 20px; border-radius: 12px; text-align: center; margin-bottom: 16px; transition: all 0.3s; background: #e5e5ea; }
+    .primary { background: #007AFF; color: white; }
+    .success { background: #34C759; color: white; }
+    .warning { background: #FF9500; color: white; }
+    .danger { background: #FF3B30; color: white; }
+    .bold { font-weight: 700; }
+    .italic { font-style: italic; }
+    .underline { text-decoration: underline; }
+    .large-text { font-size: 20px; }
+    
+    .controls { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 16px; }
+    .btn { padding: 8px 16px; border-radius: 8px; border: none; cursor: pointer; font-size: 14px; transition: all 0.2s; }
+    .btn-primary { background: #007AFF; color: white; }
+    .btn-success { background: #34C759; color: white; }
+    .btn-warning { background: #FF9500; color: white; }
+    .btn-danger { background: #FF3B30; color: white; }
+    .btn-outline { background: white; border: 2px solid #e5e5ea; }
+    .btn-outline.selected { border-color: #007AFF; background: #e3f2fd; }
+    
+    .code-block { background: #1e1e1e; color: #d4d4d4; padding: 12px; border-radius: 8px; font-family: 'SF Mono', monospace; font-size: 13px; overflow-x: auto; margin-top: 12px; }
+    .code-comment { color: #6a9955; }
+    .code-string { color: #ce9178; }
+    .code-keyword { color: #569cd6; }
+    
+    .class-display { background: #f9fafb; padding: 12px; border-radius: 8px; font-family: 'SF Mono', monospace; font-size: 14px; color: #007AFF; }
+  </style>
+</head>
+<body>
+  <div id="app">
+    <div class="demo-container">
+      <h3>📚 v-bind:class 数组语法</h3>
+      
+      <!-- 基础数组语法 -->
+      <div class="card">
+        <div class="card-title">
+          <span>1️⃣</span>
+          <span>基础数组语法</span>
+        </div>
+        
+        <div class="box" :class="[activeClass, sizeClass]">
+          数组语法绑定 class
+        </div>
+        
+        <div class="controls">
+          <button class="btn btn-primary" @click="activeClass = 'primary'">Primary</button>
+          <button class="btn btn-success" @click="activeClass = 'success'">Success</button>
+          <button class="btn btn-warning" @click="activeClass = 'warning'">Warning</button>
+          <button class="btn btn-danger" @click="activeClass = 'danger'">Danger</button>
+        </div>
+        
+        <div class="class-display">
+          当前 class：[ '{{ activeClass }}', '{{ sizeClass }}' ]
+        </div>
+        
+        <div class="code-block">
+          <span class="code-comment">&lt;!-- 数组语法：直接使用变量 --&gt;</span><br>
+          &lt;div <span class="code-keyword">:class</span>=<span class="code-string">"[activeClass, sizeClass]"</span>&gt;&lt;/div&gt;<br><br>
+          <span class="code-comment">// data 中定义</span><br>
+          activeClass: <span class="code-string">'primary'</span>,<br>
+          sizeClass: <span class="code-string">'large-text'</span>
+        </div>
+      </div>
+      
+      <!-- 数组 + 对象混合 -->
+      <div class="card">
+        <div class="card-title">
+          <span>2️⃣</span>
+          <span>数组 + 对象混合语法</span>
+        </div>
+        
+        <div class="box" :class="[colorClass, { bold: isBold, italic: isItalic, underline: isUnderline }]">
+          混合语法绑定 class
+        </div>
+        
+        <div class="controls">
+          <button class="btn btn-primary" @click="colorClass = 'primary'">蓝色</button>
+          <button class="btn btn-success" @click="colorClass = 'success'">绿色</button>
+        </div>
+        <div class="controls">
+          <button class="btn btn-outline" :class="{ selected: isBold }" @click="isBold = !isBold">粗体 Bold</button>
+          <button class="btn btn-outline" :class="{ selected: isItalic }" @click="isItalic = !isItalic">斜体 Italic</button>
+          <button class="btn btn-outline" :class="{ selected: isUnderline }" @click="isUnderline = !isUnderline">下划线 Underline</button>
+        </div>
+        
+        <div class="code-block">
+          <span class="code-comment">&lt;!-- 数组中可以混合对象语法 --&gt;</span><br>
+          &lt;div <span class="code-keyword">:class</span>=<span class="code-string">"[</span><br>
+          &nbsp;&nbsp;<span class="code-string">colorClass,</span><br>
+          &nbsp;&nbsp;<span class="code-string">{ bold: isBold, italic: isItalic }</span><br>
+          <span class="code-string">]"</span>&gt;&lt;/div&gt;
+        </div>
+      </div>
+      
+      <!-- 三元表达式 -->
+      <div class="card">
+        <div class="card-title">
+          <span>3️⃣</span>
+          <span>数组中使用三元表达式</span>
+        </div>
+        
+        <div class="box" :class="[isSuccess ? 'success' : 'danger', 'large-text']">
+          {{ isSuccess ? '✓ 操作成功' : '✗ 操作失败' }}
+        </div>
+        
+        <div class="controls">
+          <button class="btn btn-success" @click="isSuccess = true">设为成功</button>
+          <button class="btn btn-danger" @click="isSuccess = false">设为失败</button>
+        </div>
+        
+        <div class="code-block">
+          <span class="code-comment">&lt;!-- 数组中使用三元表达式 --&gt;</span><br>
+          &lt;div <span class="code-keyword">:class</span>=<span class="code-string">"[isSuccess ? 'success' : 'danger', 'base']"</span>&gt;&lt;/div&gt;
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <script src="app.js"></script>
+</body>
+</html>

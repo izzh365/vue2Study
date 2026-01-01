@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>v-bind 基本用法</title>
+  <script src="https://cdn.jsdelivr.net/npm/vue@2.7.16/dist/vue.js"></script>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; padding: 20px; background: #f5f5f7; }
+    .demo-container { max-width: 600px; margin: 0 auto; }
+    h3 { color: #1d1d1f; margin-bottom: 16px; font-size: 18px; }
+    .card { background: white; border-radius: 12px; padding: 20px; margin-bottom: 16px; box-shadow: 0 2px 10px rgba(0,0,0,0.08); }
+    .card-title { font-size: 16px; font-weight: 600; color: #1d1d1f; margin-bottom: 12px; display: flex; align-items: center; gap: 8px; }
+    .demo-item { background: #f9fafb; border-radius: 8px; padding: 16px; margin-bottom: 12px; }
+    .demo-label { font-size: 14px; color: #86868b; margin-bottom: 8px; }
+    .demo-result { font-size: 16px; color: #1d1d1f; }
+    .demo-result a { color: #007AFF; text-decoration: underline; }
+    .code-block { background: #1e1e1e; color: #d4d4d4; padding: 12px; border-radius: 8px; font-family: 'SF Mono', monospace; font-size: 13px; overflow-x: auto; margin-top: 8px; }
+    .code-comment { color: #6a9955; }
+    .code-string { color: #ce9178; }
+    .code-keyword { color: #569cd6; }
+    .input-group { margin-top: 16px; }
+    .input-group input { width: 100%; padding: 10px 14px; border: 2px solid #e5e5ea; border-radius: 8px; font-size: 14px; outline: none; transition: border-color 0.2s; }
+    .input-group input:focus { border-color: #007AFF; }
+    .input-label { font-size: 13px; color: #86868b; margin-bottom: 6px; }
+    .tip-box { background: #e3f2fd; border-radius: 8px; padding: 12px; margin-top: 16px; font-size: 13px; color: #1565c0; display: flex; align-items: flex-start; gap: 8px; }
+  </style>
+</head>
+<body>
+  <div id="app">
+    <div class="demo-container">
+      <h3>🔗 v-bind 基本用法</h3>
+      
+      <!-- 基础绑定 -->
+      <div class="card">
+        <div class="card-title">
+          <span>1️⃣</span>
+          <span>基础属性绑定</span>
+        </div>
+        
+        <div class="demo-item">
+          <div class="demo-label">绑定 href 属性：</div>
+          <div class="demo-result">
+            <a v-bind:href="websiteUrl" target="_blank">{{ websiteName }}</a>
+          </div>
+          <div class="code-block">
+            <span class="code-comment">&lt;!-- 完整语法 --&gt;</span><br>
+            &lt;a <span class="code-keyword">v-bind:href</span>=<span class="code-string">"websiteUrl"</span>&gt;链接&lt;/a&gt;
+          </div>
+        </div>
+        
+        <div class="demo-item">
+          <div class="demo-label">使用简写语法（推荐）：</div>
+          <div class="demo-result">
+            <a :href="websiteUrl" target="_blank">{{ websiteName }}</a>
+          </div>
+          <div class="code-block">
+            <span class="code-comment">&lt;!-- 简写语法（推荐） --&gt;</span><br>
+            &lt;a <span class="code-keyword">:href</span>=<span class="code-string">"websiteUrl"</span>&gt;链接&lt;/a&gt;
+          </div>
+        </div>
+      </div>
+      
+      <!-- 动态属性 -->
+      <div class="card">
+        <div class="card-title">
+          <span>2️⃣</span>
+          <span>动态修改绑定值</span>
+        </div>
+        
+        <div class="demo-item">
+          <div class="demo-label">当前绑定的 title 属性：</div>
+          <div class="demo-result">
+            <span :title="dynamicTitle" style="cursor: help; border-bottom: 1px dashed #007AFF;">
+              鼠标悬停查看 title
+            </span>
+          </div>
+        </div>
+        
+        <div class="input-group">
+          <div class="input-label">修改 title 内容：</div>
+          <input type="text" v-model="dynamicTitle" placeholder="输入新的 title...">
+        </div>
+        
+        <div class="code-block">
+          <span class="code-comment">&lt;!-- title 属性会随 data 变化而更新 --&gt;</span><br>
+          &lt;span <span class="code-keyword">:title</span>=<span class="code-string">"dynamicTitle"</span>&gt;悬停查看&lt;/span&gt;
+        </div>
+      </div>
+      
+      <!-- 布尔属性 -->
+      <div class="card">
+        <div class="card-title">
+          <span>3️⃣</span>
+          <span>布尔属性绑定</span>
+        </div>
+        
+        <div class="demo-item">
+          <div class="demo-label">绑定 disabled 属性：</div>
+          <div class="demo-result">
+            <button :disabled="isDisabled" style="padding: 8px 16px; border-radius: 6px; border: none; background: #007AFF; color: white; cursor: pointer;" :style="{ opacity: isDisabled ? 0.5 : 1 }">
+              {{ isDisabled ? '已禁用' : '可点击' }}
+            </button>
+            <button @click="isDisabled = !isDisabled" style="margin-left: 10px; padding: 8px 16px; border-radius: 6px; border: 1px solid #007AFF; background: white; color: #007AFF; cursor: pointer;">
+              切换状态
+            </button>
+          </div>
+        </div>
+        
+        <div class="code-block">
+          <span class="code-comment">&lt;!-- 布尔值为 false 时不渲染该属性 --&gt;</span><br>
+          &lt;button <span class="code-keyword">:disabled</span>=<span class="code-string">"isDisabled"</span>&gt;按钮&lt;/button&gt;
+        </div>
+      </div>
+      
+      <div class="tip-box">
+        <span>💡</span>
+        <div>
+          <strong>v-bind 核心要点：</strong><br>
+          1. 完整写法：<code>v-bind:属性="表达式"</code><br>
+          2. 简写（推荐）：<code>:属性="表达式"</code><br>
+          3. 表达式可以是 data、computed、methods 返回值
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <script src="app.js"></script>
+</body>
+</html>

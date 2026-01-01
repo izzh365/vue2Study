@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>v-on 事件修饰符</title>
+  <script src="https://cdn.jsdelivr.net/npm/vue@2.7.16/dist/vue.js"></script>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; padding: 20px; background: #f5f5f7; }
+    .demo-container { max-width: 650px; margin: 0 auto; }
+    h3 { color: #1d1d1f; margin-bottom: 16px; font-size: 18px; }
+    .card { background: white; border-radius: 12px; padding: 20px; margin-bottom: 16px; box-shadow: 0 2px 10px rgba(0,0,0,0.08); }
+    .card-title { font-size: 16px; font-weight: 600; color: #1d1d1f; margin-bottom: 12px; display: flex; align-items: center; gap: 8px; }
+    
+    .btn { padding: 12px 24px; border-radius: 10px; border: none; font-size: 14px; cursor: pointer; transition: all 0.2s; margin: 4px; }
+    .btn-primary { background: #007AFF; color: white; }
+    .btn:hover { transform: scale(1.02); }
+    
+    .outer-box { background: #ff9500; padding: 20px; border-radius: 12px; color: white; cursor: pointer; }
+    .inner-box { background: #007AFF; padding: 20px; border-radius: 8px; margin-top: 10px; cursor: pointer; }
+    
+    .result-box { background: #f9fafb; padding: 16px; border-radius: 8px; margin-top: 16px; }
+    .result-label { font-size: 13px; color: #86868b; margin-bottom: 6px; }
+    .result-value { font-size: 14px; color: #1d1d1f; }
+    
+    .code-block { background: #1e1e1e; color: #d4d4d4; padding: 12px; border-radius: 8px; font-family: 'SF Mono', monospace; font-size: 13px; overflow-x: auto; margin-top: 12px; }
+    .code-comment { color: #6a9955; }
+    .code-string { color: #ce9178; }
+    .code-keyword { color: #569cd6; }
+    
+    .tip-box { background: #e3f2fd; border-radius: 8px; padding: 12px; margin-top: 16px; font-size: 13px; color: #1565c0; }
+    
+    .log-box { background: #1e1e1e; border-radius: 8px; padding: 12px; max-height: 120px; overflow-y: auto; margin-top: 12px; }
+    .log-item { font-family: 'SF Mono', monospace; font-size: 12px; color: #a5d6a7; padding: 2px 0; }
+    
+    .input-box { padding: 14px 16px; border: 2px solid #e5e5ea; border-radius: 10px; font-size: 16px; width: 100%; transition: border-color 0.2s; margin-bottom: 12px; }
+    .input-box:focus { outline: none; border-color: #007AFF; }
+    
+    .link-demo { display: inline-block; padding: 12px 20px; background: #34C759; color: white; border-radius: 10px; text-decoration: none; margin: 4px; }
+    
+    .modifier-badge { display: inline-block; padding: 4px 10px; background: #007AFF; color: white; border-radius: 20px; font-size: 12px; font-family: 'SF Mono', monospace; margin: 2px; }
+    
+    .counter { display: flex; align-items: center; gap: 10px; }
+    .count-display { font-size: 24px; font-weight: 600; color: #007AFF; min-width: 40px; text-align: center; }
+  </style>
+</head>
+<body>
+  <div id="app">
+    <div class="demo-container">
+      <h3>🎛️ 事件修饰符</h3>
+      
+      <!-- .stop 阻止冒泡 -->
+      <div class="card">
+        <div class="card-title">
+          <span>1️⃣</span>
+          <span>.stop - 阻止事件冒泡</span>
+        </div>
+        
+        <p style="margin-bottom: 12px; color: #86868b; font-size: 14px;">对比：不加 .stop 和 加了 .stop 的区别</p>
+        
+        <div style="display: flex; gap: 16px;">
+          <!-- 不加 .stop -->
+          <div class="outer-box" @click="addLog('外层点击')">
+            外层（橙色）
+            <div class="inner-box" @click="addLog('内层点击（会冒泡）')">
+              内层（蓝色）- 会冒泡
+            </div>
+          </div>
+          
+          <!-- 加了 .stop -->
+          <div class="outer-box" @click="addLog('外层点击')">
+            外层（橙色）
+            <div class="inner-box" @click.stop="addLog('内层点击（阻止冒泡）')">
+              内层（蓝色）- .stop
+            </div>
+          </div>
+        </div>
+        
+        <div class="log-box">
+          <div class="log-item" v-for="(log, index) in logs" :key="index">{{ log }}</div>
+          <div class="log-item" v-if="logs.length === 0" style="color: #666;">点击上方区域观察冒泡...</div>
+        </div>
+        <button class="btn" style="background: #e5e5ea; margin-top: 8px;" @click="logs = []">清空日志</button>
+        
+        <div class="code-block">
+          <span class="code-comment">&lt;!-- .stop 阻止事件冒泡 --&gt;</span><br>
+          &lt;div <span class="code-keyword">@click.stop</span>=<span class="code-string">"handleClick"</span>&gt;&lt;/div&gt;<br><br>
+          <span class="code-comment">// 等同于</span><br>
+          event.stopPropagation()
+        </div>
+      </div>
+      
+      <!-- .prevent 阻止默认行为 -->
+      <div class="card">
+        <div class="card-title">
+          <span>2️⃣</span>
+          <span>.prevent - 阻止默认行为</span>
+        </div>
+        
+        <div style="margin-bottom: 12px;">
+          <!-- 不加 .prevent -->
+          <a href="https://vuejs.org" class="link-demo">普通链接（会跳转）</a>
+          <!-- 加了 .prevent -->
+          <a href="https://vuejs.org" class="link-demo" @click.prevent="handleLinkClick">
+            .prevent（不跳转）
+          </a>
+        </div>
+        
+        <form @submit.prevent="handleSubmit">
+          <input class="input-box" type="text" v-model="formText" placeholder="输入后按回车提交">
+          <button class="btn btn-primary" type="submit">提交表单</button>
+          <span style="color: #34C759; margin-left: 10px;" v-if="submitted">✓ 已提交（页面未刷新！）</span>
+        </form>
+        
+        <div class="code-block">
+          <span class="code-comment">&lt;!-- .prevent 阻止默认行为 --&gt;</span><br>
+          &lt;a <span class="code-keyword">@click.prevent</span>=<span class="code-string">"handleClick"</span>&gt;&lt;/a&gt;<br>
+          &lt;form <span class="code-keyword">@submit.prevent</span>=<span class="code-string">"handleSubmit"</span>&gt;&lt;/form&gt;<br><br>
+          <span class="code-comment">// 等同于</span><br>
+          event.preventDefault()
+        </div>
+      </div>
+      
+      <!-- .once 只触发一次 -->
+      <div class="card">
+        <div class="card-title">
+          <span>3️⃣</span>
+          <span>.once - 只触发一次</span>
+        </div>
+        
+        <div class="counter">
+          <button class="btn btn-primary" @click="normalCount++">普通按钮</button>
+          <span class="count-display">{{ normalCount }}</span>
+          <span style="color: #86868b;">（可多次点击）</span>
+        </div>
+        
+        <div class="counter" style="margin-top: 12px;">
+          <button class="btn" style="background: #34C759; color: white;" @click.once="onceCount++">
+            .once 按钮
+          </button>
+          <span class="count-display">{{ onceCount }}</span>
+          <span style="color: #86868b;">（只能点击一次）</span>
+        </div>
+        
+        <div class="code-block">
+          <span class="code-comment">&lt;!-- .once 事件只触发一次 --&gt;</span><br>
+          &lt;button <span class="code-keyword">@click.once</span>=<span class="code-string">"handleClick"</span>&gt;&lt;/button&gt;
+        </div>
+      </div>
+      
+      <!-- 按键修饰符 -->
+      <div class="card">
+        <div class="card-title">
+          <span>4️⃣</span>
+          <span>按键修饰符</span>
+        </div>
+        
+        <input 
+          class="input-box"
+          type="text" 
+          v-model="keyInput"
+          placeholder="按 Enter 提交，按 Esc 清空"
+          @keyup.enter="handleEnter"
+          @keyup.esc="keyInput = ''"
+        >
+        
+        <p style="color: #86868b; font-size: 14px; margin-bottom: 12px;">
+          提交的内容：<strong>{{ submittedKey || '无' }}</strong>
+        </p>
+        
+        <div style="margin-bottom: 12px;">
+          <span style="color: #1d1d1f; font-size: 14px;">常用按键修饰符：</span><br>
+          <span class="modifier-badge">.enter</span>
+          <span class="modifier-badge">.tab</span>
+          <span class="modifier-badge">.delete</span>
+          <span class="modifier-badge">.esc</span>
+          <span class="modifier-badge">.space</span>
+          <span class="modifier-badge">.up</span>
+          <span class="modifier-badge">.down</span>
+          <span class="modifier-badge">.left</span>
+          <span class="modifier-badge">.right</span>
+        </div>
+        
+        <div class="code-block">
+          <span class="code-comment">&lt;!-- 按键修饰符 --&gt;</span><br>
+          &lt;input <span class="code-keyword">@keyup.enter</span>=<span class="code-string">"submit"</span>&gt;<br>
+          &lt;input <span class="code-keyword">@keyup.esc</span>=<span class="code-string">"clear"</span>&gt;<br><br>
+          <span class="code-comment">&lt;!-- 系统修饰符 --&gt;</span><br>
+          &lt;button <span class="code-keyword">@click.ctrl</span>=<span class="code-string">"..."</span>&gt; Ctrl + 点击<br>
+          &lt;input <span class="code-keyword">@keyup.ctrl.enter</span>=<span class="code-string">"..."</span>&gt; Ctrl + Enter
+        </div>
+      </div>
+      
+      <!-- 修饰符总结 -->
+      <div class="tip-box">
+        💡 <strong>常用修饰符总结：</strong><br>
+        <code>.stop</code> 阻止冒泡 | 
+        <code>.prevent</code> 阻止默认 | 
+        <code>.once</code> 只触发一次 | 
+        <code>.self</code> 只当 event.target 是当前元素<br>
+        <strong>按键：</strong><code>.enter</code> <code>.esc</code> <code>.tab</code> <code>.delete</code> <code>.space</code> <code>.up</code> <code>.down</code>
+      </div>
+    </div>
+  </div>
+  
+  <script src="app.js"></script>
+</body>
+</html>

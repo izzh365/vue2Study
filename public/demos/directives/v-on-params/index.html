@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>v-on 传递参数</title>
+  <script src="https://cdn.jsdelivr.net/npm/vue@2.7.16/dist/vue.js"></script>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; padding: 20px; background: #f5f5f7; }
+    .demo-container { max-width: 650px; margin: 0 auto; }
+    h3 { color: #1d1d1f; margin-bottom: 16px; font-size: 18px; }
+    .card { background: white; border-radius: 12px; padding: 20px; margin-bottom: 16px; box-shadow: 0 2px 10px rgba(0,0,0,0.08); }
+    .card-title { font-size: 16px; font-weight: 600; color: #1d1d1f; margin-bottom: 12px; display: flex; align-items: center; gap: 8px; }
+    
+    .btn { padding: 12px 20px; border-radius: 10px; border: none; font-size: 14px; cursor: pointer; transition: all 0.2s; margin: 4px; }
+    .btn-primary { background: #007AFF; color: white; }
+    .btn-success { background: #34C759; color: white; }
+    .btn-danger { background: #FF3B30; color: white; }
+    .btn-warning { background: #FF9500; color: white; }
+    .btn:hover { transform: scale(1.02); opacity: 0.9; }
+    
+    .result-box { background: #f9fafb; padding: 16px; border-radius: 8px; margin-top: 16px; }
+    .result-label { font-size: 13px; color: #86868b; margin-bottom: 6px; }
+    .result-value { font-size: 18px; color: #1d1d1f; font-weight: 500; }
+    
+    .code-block { background: #1e1e1e; color: #d4d4d4; padding: 12px; border-radius: 8px; font-family: 'SF Mono', monospace; font-size: 13px; overflow-x: auto; margin-top: 12px; }
+    .code-comment { color: #6a9955; }
+    .code-string { color: #ce9178; }
+    .code-keyword { color: #569cd6; }
+    
+    .tip-box { background: #e3f2fd; border-radius: 8px; padding: 12px; margin-top: 16px; font-size: 13px; color: #1565c0; }
+    .warning-box { background: #fff3e0; border-radius: 8px; padding: 12px; margin-top: 16px; font-size: 13px; color: #e65100; }
+    
+    .product-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 12px; margin-bottom: 16px; }
+    .product-card { background: #f9fafb; border-radius: 10px; padding: 16px; text-align: center; cursor: pointer; transition: all 0.2s; }
+    .product-card:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+    .product-card.selected { background: #e3f2fd; border: 2px solid #007AFF; }
+    .product-emoji { font-size: 32px; margin-bottom: 8px; }
+    .product-name { font-size: 14px; color: #1d1d1f; font-weight: 500; }
+    .product-price { font-size: 12px; color: #007AFF; margin-top: 4px; }
+  </style>
+</head>
+<body>
+  <div id="app">
+    <div class="demo-container">
+      <h3>📤 v-on 传递参数</h3>
+      
+      <!-- 传递简单参数 -->
+      <div class="card">
+        <div class="card-title">
+          <span>1️⃣</span>
+          <span>传递简单参数</span>
+        </div>
+        
+        <div>
+          <button class="btn btn-primary" @click="greet('张三')">问候 张三</button>
+          <button class="btn btn-success" @click="greet('李四')">问候 李四</button>
+          <button class="btn btn-warning" @click="greet('王五')">问候 王五</button>
+        </div>
+        
+        <div class="result-box">
+          <div class="result-label">问候结果：</div>
+          <div class="result-value">{{ greeting }}</div>
+        </div>
+        
+        <div class="code-block">
+          <span class="code-comment">&lt;!-- 调用方法时传递参数 --&gt;</span><br>
+          &lt;button <span class="code-keyword">@click</span>=<span class="code-string">"greet('张三')"</span>&gt;问候&lt;/button&gt;<br><br>
+          <span class="code-comment">// 方法接收参数</span><br>
+          <span class="code-keyword">greet</span>(name) {<br>
+          &nbsp;&nbsp;<span class="code-keyword">this</span>.greeting = <span class="code-string">`你好，${name}！`</span><br>
+          }
+        </div>
+      </div>
+      
+      <!-- 传递多个参数 -->
+      <div class="card">
+        <div class="card-title">
+          <span>2️⃣</span>
+          <span>传递多个参数</span>
+        </div>
+        
+        <div>
+          <button class="btn btn-primary" @click="calculate('+', 10, 5)">10 + 5</button>
+          <button class="btn btn-success" @click="calculate('-', 10, 5)">10 - 5</button>
+          <button class="btn btn-warning" @click="calculate('×', 10, 5)">10 × 5</button>
+          <button class="btn btn-danger" @click="calculate('÷', 10, 5)">10 ÷ 5</button>
+        </div>
+        
+        <div class="result-box">
+          <div class="result-label">计算结果：</div>
+          <div class="result-value">{{ calcResult }}</div>
+        </div>
+        
+        <div class="code-block">
+          <span class="code-comment">&lt;!-- 传递多个参数 --&gt;</span><br>
+          &lt;button <span class="code-keyword">@click</span>=<span class="code-string">"calculate('+', 10, 5)"</span>&gt;&lt;/button&gt;<br><br>
+          <span class="code-comment">// 方法接收多个参数</span><br>
+          <span class="code-keyword">calculate</span>(operator, a, b) {<br>
+          &nbsp;&nbsp;<span class="code-comment">// operator: '+', a: 10, b: 5</span><br>
+          }
+        </div>
+      </div>
+      
+      <!-- 实际案例：商品选择 -->
+      <div class="card">
+        <div class="card-title">
+          <span>3️⃣</span>
+          <span>实际案例：商品选择</span>
+        </div>
+        
+        <div class="product-grid">
+          <div 
+            class="product-card"
+            v-for="product in products"
+            :key="product.id"
+            :class="{ selected: selectedProduct && selectedProduct.id === product.id }"
+            @click="selectProduct(product)"
+          >
+            <div class="product-emoji">{{ product.emoji }}</div>
+            <div class="product-name">{{ product.name }}</div>
+            <div class="product-price">¥{{ product.price }}</div>
+          </div>
+        </div>
+        
+        <div class="result-box" v-if="selectedProduct">
+          <div class="result-label">已选择商品：</div>
+          <div class="result-value">
+            {{ selectedProduct.emoji }} {{ selectedProduct.name }} - ¥{{ selectedProduct.price }}
+          </div>
+        </div>
+        
+        <div class="code-block">
+          <span class="code-comment">&lt;!-- 传递对象参数 --&gt;</span><br>
+          &lt;div <span class="code-keyword">v-for</span>=<span class="code-string">"product in products"</span><br>
+          &nbsp;&nbsp;&nbsp;&nbsp; <span class="code-keyword">@click</span>=<span class="code-string">"selectProduct(product)"</span>&gt;<br>
+          &lt;/div&gt;<br><br>
+          <span class="code-comment">// 接收整个对象</span><br>
+          <span class="code-keyword">selectProduct</span>(product) {<br>
+          &nbsp;&nbsp;<span class="code-keyword">this</span>.selectedProduct = product<br>
+          }
+        </div>
+      </div>
+      
+      <div class="tip-box">
+        💡 <strong>参数传递总结：</strong><br>
+        1. 方法名后加括号 <code>method()</code> 即可传参<br>
+        2. 可以传递任意类型：字符串、数字、对象、数组<br>
+        3. 可以传递多个参数，用逗号分隔
+      </div>
+    </div>
+  </div>
+  
+  <script src="app.js"></script>
+</body>
+</html>

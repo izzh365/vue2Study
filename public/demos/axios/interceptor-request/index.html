@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>请求拦截器 - 添加 Token</title>
+  <script src="https://cdn.jsdelivr.net/npm/vue@2.7.16/dist/vue.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/axios@1.6.0/dist/axios.min.js"></script>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; padding: 20px; background: #f5f5f7; min-height: 100vh; }
+    #app { max-width: 600px; margin: 0 auto; }
+    .demo-card { background: #fff; border-radius: 12px; padding: 24px; box-shadow: 0 2px 12px rgba(0,0,0,0.08); }
+    h3 { color: #1d1d1f; margin-bottom: 16px; font-size: 18px; }
+    .token-input { display: flex; gap: 8px; margin-bottom: 16px; }
+    .token-input input { flex: 1; padding: 10px 12px; border: 1px solid #e5e5ea; border-radius: 8px; font-size: 14px; }
+    .btn { padding: 10px 20px; border: none; border-radius: 8px; font-size: 14px; cursor: pointer; transition: all 0.2s; }
+    .btn-primary { background: #007aff; color: white; }
+    .btn-secondary { background: #e5e5ea; color: #1d1d1f; }
+    .btn:hover { opacity: 0.9; }
+    .btn:disabled { background: #ccc; cursor: not-allowed; }
+    .log-area { margin-top: 16px; padding: 16px; background: #1d1d1f; border-radius: 8px; max-height: 250px; overflow-y: auto; }
+    .log-item { font-family: 'SF Mono', Monaco, monospace; font-size: 12px; padding: 4px 0; border-bottom: 1px solid #333; }
+    .log-item:last-child { border-bottom: none; }
+    .log-item.request { color: #5ac8fa; }
+    .log-item.response { color: #30d158; }
+    .log-item.info { color: #ffd60a; }
+    .log-item.error { color: #ff453a; }
+    .status-bar { display: flex; align-items: center; gap: 8px; margin-bottom: 16px; padding: 12px; background: #f9fafb; border-radius: 8px; }
+    .status-dot { width: 10px; height: 10px; border-radius: 50%; }
+    .status-dot.active { background: #30d158; }
+    .status-dot.inactive { background: #ff453a; }
+  </style>
+</head>
+<body>
+  <div id="app">
+    <div class="demo-card">
+      <h3>🔐 请求拦截器 - 添加 Token</h3>
+      
+      <div class="status-bar">
+        <span class="status-dot" :class="token ? 'active' : 'inactive'"></span>
+        <span>{{ token ? '已设置 Token: ' + token : '未设置 Token' }}</span>
+      </div>
+      
+      <div class="token-input">
+        <input 
+          type="text" 
+          v-model="tokenInput" 
+          placeholder="输入 Token（如：abc123）"
+        >
+        <button class="btn btn-secondary" @click="setToken">设置</button>
+        <button class="btn btn-secondary" @click="clearToken">清除</button>
+      </div>
+      
+      <button class="btn btn-primary" @click="sendRequest" :disabled="loading">
+        {{ loading ? '请求中...' : '发送请求' }}
+      </button>
+      
+      <div class="log-area">
+        <div 
+          v-for="(log, index) in logs" 
+          :key="index" 
+          class="log-item"
+          :class="log.type"
+        >
+          {{ log.message }}
+        </div>
+      </div>
+    </div>
+  </div>
+  <script src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>仪表盘数据并发加载</title>
+  <script src="https://cdn.jsdelivr.net/npm/vue@2.7.16/dist/vue.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/axios@1.6.0/dist/axios.min.js"></script>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; padding: 20px; background: #f5f5f7; min-height: 100vh; }
+    #app { max-width: 600px; margin: 0 auto; }
+    .demo-card { background: #fff; border-radius: 12px; padding: 24px; box-shadow: 0 2px 12px rgba(0,0,0,0.08); }
+    h3 { color: #1d1d1f; margin-bottom: 16px; font-size: 18px; }
+    .btn { padding: 10px 20px; border: none; border-radius: 8px; font-size: 14px; cursor: pointer; transition: all 0.2s; background: #007aff; color: white; }
+    .btn:hover { background: #0056b3; }
+    .btn:disabled { background: #ccc; cursor: not-allowed; }
+    .dashboard { margin-top: 20px; display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
+    .stat-card { padding: 16px; border-radius: 12px; color: white; }
+    .stat-card.users { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
+    .stat-card.posts { background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%); }
+    .stat-card.comments { background: linear-gradient(135deg, #fc4a1a 0%, #f7b733 100%); }
+    .stat-card.todos { background: linear-gradient(135deg, #ee0979 0%, #ff6a00 100%); }
+    .stat-icon { font-size: 24px; margin-bottom: 8px; }
+    .stat-value { font-size: 28px; font-weight: 700; margin-bottom: 4px; }
+    .stat-label { font-size: 12px; opacity: 0.9; }
+    .stat-card.loading { opacity: 0.6; }
+    .skeleton { background: rgba(255,255,255,0.3); border-radius: 4px; animation: pulse 1.5s infinite; }
+    @keyframes pulse { 0%, 100% { opacity: 0.6; } 50% { opacity: 0.3; } }
+    .load-time { margin-top: 16px; text-align: center; font-size: 13px; color: #86868b; }
+  </style>
+</head>
+<body>
+  <div id="app">
+    <div class="demo-card">
+      <h3>📊 仪表盘数据并发加载</h3>
+      
+      <button class="btn" @click="loadDashboard" :disabled="loading">
+        {{ loading ? '加载中...' : '加载仪表盘' }}
+      </button>
+      
+      <div class="dashboard">
+        <div class="stat-card users" :class="{ loading: !stats.users }">
+          <div class="stat-icon">👥</div>
+          <div class="stat-value">
+            <span v-if="stats.users">{{ stats.users }}</span>
+            <div v-else class="skeleton" style="width: 60px; height: 32px;"></div>
+          </div>
+          <div class="stat-label">用户数</div>
+        </div>
+        
+        <div class="stat-card posts" :class="{ loading: !stats.posts }">
+          <div class="stat-icon">📝</div>
+          <div class="stat-value">
+            <span v-if="stats.posts">{{ stats.posts }}</span>
+            <div v-else class="skeleton" style="width: 60px; height: 32px;"></div>
+          </div>
+          <div class="stat-label">文章数</div>
+        </div>
+        
+        <div class="stat-card comments" :class="{ loading: !stats.comments }">
+          <div class="stat-icon">💬</div>
+          <div class="stat-value">
+            <span v-if="stats.comments">{{ stats.comments }}</span>
+            <div v-else class="skeleton" style="width: 60px; height: 32px;"></div>
+          </div>
+          <div class="stat-label">评论数</div>
+        </div>
+        
+        <div class="stat-card todos" :class="{ loading: !stats.todos }">
+          <div class="stat-icon">✅</div>
+          <div class="stat-value">
+            <span v-if="stats.todos">{{ stats.todos }}</span>
+            <div v-else class="skeleton" style="width: 60px; height: 32px;"></div>
+          </div>
+          <div class="stat-label">待办数</div>
+        </div>
+      </div>
+      
+      <div class="load-time" v-if="loadTime">
+        ⚡ 4 个接口并发加载，总耗时 {{ loadTime }}ms
+      </div>
+    </div>
+  </div>
+  <script src="app.js"></script>
+</body>
+</html>

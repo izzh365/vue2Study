@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>取消请求</title>
+  <script src="https://cdn.jsdelivr.net/npm/vue@2.7.16/dist/vue.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/axios@1.6.0/dist/axios.min.js"></script>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; padding: 20px; background: #f5f5f7; min-height: 100vh; }
+    #app { max-width: 600px; margin: 0 auto; }
+    .demo-card { background: #fff; border-radius: 12px; padding: 24px; box-shadow: 0 2px 12px rgba(0,0,0,0.08); }
+    h3 { color: #1d1d1f; margin-bottom: 16px; font-size: 18px; }
+    .info-box { padding: 12px; border-radius: 8px; margin-bottom: 16px; font-size: 13px; }
+    .info-box.blue { background: #e8f4fd; color: #0066cc; }
+    .btn-row { display: flex; gap: 8px; margin-bottom: 16px; }
+    .btn { padding: 10px 20px; border: none; border-radius: 8px; font-size: 14px; cursor: pointer; transition: all 0.2s; }
+    .btn-primary { background: #007aff; color: white; }
+    .btn-danger { background: #ff3b30; color: white; }
+    .btn:hover { opacity: 0.9; }
+    .btn:disabled { background: #ccc; cursor: not-allowed; }
+    .status-box { padding: 16px; border-radius: 8px; margin-top: 16px; }
+    .status-box.loading { background: #fffbeb; border: 1px solid #fbbf24; }
+    .status-box.success { background: #ecfdf5; border: 1px solid #34c759; }
+    .status-box.cancelled { background: #fef3c7; border: 1px solid #f59e0b; }
+    .status-box.error { background: #fef2f2; border: 1px solid #ff3b30; }
+    .status-header { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
+    .status-icon { font-size: 24px; }
+    .status-text { font-weight: 600; }
+    .status-detail { font-size: 13px; color: #666; }
+    .log-list { margin-top: 16px; padding: 12px; background: #f9fafb; border-radius: 8px; max-height: 150px; overflow-y: auto; }
+    .log-item { font-size: 12px; color: #666; padding: 4px 0; border-bottom: 1px dashed #e5e5ea; }
+    .log-item:last-child { border-bottom: none; }
+  </style>
+</head>
+<body>
+  <div id="app">
+    <div class="demo-card">
+      <h3>🛑 取消请求演示</h3>
+      
+      <div class="info-box blue">
+        使用 <code>AbortController</code> 可以取消正在进行的请求，适用于：
+        用户取消操作、组件卸载、防止竞态条件等场景。
+      </div>
+      
+      <div class="btn-row">
+        <button 
+          class="btn btn-primary" 
+          @click="startRequest" 
+          :disabled="loading"
+        >
+          发送慢速请求
+        </button>
+        <button 
+          class="btn btn-danger" 
+          @click="cancelRequest" 
+          :disabled="!loading"
+        >
+          取消请求
+        </button>
+      </div>
+      
+      <div class="status-box" :class="statusClass" v-if="status">
+        <div class="status-header">
+          <span class="status-icon">{{ statusIcon }}</span>
+          <span class="status-text">{{ status }}</span>
+        </div>
+        <div class="status-detail">{{ statusDetail }}</div>
+      </div>
+      
+      <div class="log-list" v-if="logs.length">
+        <div v-for="(log, index) in logs" :key="index" class="log-item">
+          {{ log }}
+        </div>
+      </div>
+    </div>
+  </div>
+  <script src="app.js"></script>
+</body>
+</html>

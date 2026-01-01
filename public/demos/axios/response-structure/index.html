@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>响应结构解析</title>
+  <script src="https://cdn.jsdelivr.net/npm/vue@2.7.16/dist/vue.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/axios@1.6.0/dist/axios.min.js"></script>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; padding: 20px; background: #f5f5f7; min-height: 100vh; }
+    #app { max-width: 600px; margin: 0 auto; }
+    .demo-card { background: #fff; border-radius: 12px; padding: 24px; box-shadow: 0 2px 12px rgba(0,0,0,0.08); }
+    h3 { color: #1d1d1f; margin-bottom: 16px; font-size: 18px; }
+    .btn { padding: 10px 20px; border: none; border-radius: 8px; font-size: 14px; cursor: pointer; transition: all 0.2s; background: #007aff; color: white; }
+    .btn:hover { background: #0056b3; }
+    .btn:disabled { background: #ccc; cursor: not-allowed; }
+    .response-parts { margin-top: 16px; }
+    .part-item { margin-bottom: 12px; padding: 12px; background: #f9fafb; border-radius: 8px; border-left: 4px solid #007aff; }
+    .part-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+    .part-name { font-weight: 600; color: #1d1d1f; font-size: 14px; }
+    .part-type { font-size: 11px; color: #86868b; background: #e5e5ea; padding: 2px 8px; border-radius: 4px; }
+    .part-value { font-size: 12px; color: #333; font-family: 'SF Mono', Monaco, monospace; }
+    pre { white-space: pre-wrap; background: #1d1d1f; color: #f5f5f7; padding: 8px; border-radius: 4px; margin-top: 4px; font-size: 11px; max-height: 100px; overflow-y: auto; }
+    .important { border-left-color: #34c759; background: #ecfdf5; }
+    .info-box { background: #e8f4fd; padding: 12px; border-radius: 8px; margin-bottom: 16px; font-size: 13px; color: #0066cc; }
+  </style>
+</head>
+<body>
+  <div id="app">
+    <div class="demo-card">
+      <h3>📦 响应对象结构解析</h3>
+      
+      <div class="info-box">
+        点击按钮发送请求，查看完整的响应对象结构
+      </div>
+      
+      <button class="btn" @click="fetchData" :disabled="loading">
+        {{ loading ? '请求中...' : '发送请求' }}
+      </button>
+      
+      <div class="response-parts" v-if="parts.length">
+        <div 
+          v-for="part in parts" 
+          :key="part.name"
+          class="part-item"
+          :class="{ important: part.important }"
+        >
+          <div class="part-header">
+            <span class="part-name">{{ part.name }}</span>
+            <span class="part-type">{{ part.type }}</span>
+          </div>
+          <div class="part-value">
+            {{ part.desc }}
+            <pre v-if="part.value">{{ part.value }}</pre>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script src="app.js"></script>
+</body>
+</html>

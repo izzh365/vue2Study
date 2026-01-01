@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Promise.allSettled 容错处理</title>
+  <script src="https://cdn.jsdelivr.net/npm/vue@2.7.16/dist/vue.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/axios@1.6.0/dist/axios.min.js"></script>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; padding: 20px; background: #f5f5f7; min-height: 100vh; }
+    #app { max-width: 600px; margin: 0 auto; }
+    .demo-card { background: #fff; border-radius: 12px; padding: 24px; box-shadow: 0 2px 12px rgba(0,0,0,0.08); }
+    h3 { color: #1d1d1f; margin-bottom: 16px; font-size: 18px; }
+    .info-box { padding: 12px; border-radius: 8px; margin-bottom: 16px; font-size: 13px; }
+    .info-box.green { background: #ecfdf5; color: #166534; }
+    .btn { padding: 10px 20px; border: none; border-radius: 8px; font-size: 14px; cursor: pointer; transition: all 0.2s; background: #007aff; color: white; }
+    .btn:hover { background: #0056b3; }
+    .btn:disabled { background: #ccc; cursor: not-allowed; }
+    .result-grid { display: grid; gap: 12px; margin-top: 16px; }
+    .result-item { padding: 16px; border-radius: 8px; border: 1px solid #e5e5ea; }
+    .result-item.fulfilled { background: #ecfdf5; border-color: #86efac; }
+    .result-item.rejected { background: #fef2f2; border-color: #fecaca; }
+    .result-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+    .result-name { font-weight: 600; font-size: 14px; }
+    .result-status { padding: 4px 8px; border-radius: 4px; font-size: 11px; font-weight: 600; color: white; }
+    .result-status.fulfilled { background: #34c759; }
+    .result-status.rejected { background: #ff3b30; }
+    .result-value { font-size: 12px; color: #666; }
+    pre { font-size: 11px; background: #f5f5f7; padding: 8px; border-radius: 4px; margin-top: 8px; overflow-x: auto; }
+    .compare-box { margin-top: 16px; padding: 16px; background: #fffbeb; border: 1px solid #fbbf24; border-radius: 8px; }
+    .compare-title { font-weight: 600; color: #92400e; margin-bottom: 8px; }
+    .compare-text { font-size: 13px; color: #78350f; }
+  </style>
+</head>
+<body>
+  <div id="app">
+    <div class="demo-card">
+      <h3>🛡️ Promise.allSettled 容错处理</h3>
+      
+      <div class="info-box green">
+        无论成功失败都返回结果，不会因为一个失败而影响其他请求！
+      </div>
+      
+      <button class="btn" @click="fetchAllSettled" :disabled="loading">
+        {{ loading ? '请求中...' : '发送请求（含一个故意失败）' }}
+      </button>
+      
+      <div class="result-grid" v-if="results.length">
+        <div 
+          v-for="(result, index) in results" 
+          :key="index"
+          class="result-item"
+          :class="result.status"
+        >
+          <div class="result-header">
+            <span class="result-name">请求 {{ index + 1 }}: {{ result.name }}</span>
+            <span class="result-status" :class="result.status">
+              {{ result.status === 'fulfilled' ? '成功' : '失败' }}
+            </span>
+          </div>
+          <div class="result-value">
+            <template v-if="result.status === 'fulfilled'">
+              <pre>{{ result.preview }}</pre>
+            </template>
+            <template v-else>
+              原因: {{ result.reason }}
+            </template>
+          </div>
+        </div>
+      </div>
+      
+      <div class="compare-box" v-if="results.length">
+        <div class="compare-title">💡 与 Promise.all 的区别</div>
+        <div class="compare-text">
+          如果用 Promise.all，请求 2 失败会导致整体进入 catch，<br>
+          无法获取请求 1 和 3 的结果。<br><br>
+          Promise.allSettled 则让每个请求独立，互不影响！
+        </div>
+      </div>
+    </div>
+  </div>
+  <script src="app.js"></script>
+</body>
+</html>

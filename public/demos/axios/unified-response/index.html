@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>统一响应处理</title>
+  <script src="https://cdn.jsdelivr.net/npm/vue@2.7.16/dist/vue.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/axios@1.6.0/dist/axios.min.js"></script>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; padding: 20px; background: #f5f5f7; min-height: 100vh; }
+    #app { max-width: 600px; margin: 0 auto; }
+    .demo-card { background: #fff; border-radius: 12px; padding: 24px; box-shadow: 0 2px 12px rgba(0,0,0,0.08); }
+    h3 { color: #1d1d1f; margin-bottom: 16px; font-size: 18px; }
+    .info-box { padding: 12px; border-radius: 8px; margin-bottom: 16px; font-size: 13px; }
+    .info-box.green { background: #ecfdf5; color: #166534; }
+    .compare-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 16px; }
+    .compare-box { padding: 16px; border-radius: 8px; }
+    .compare-box.before { background: #fef2f2; border: 1px solid #fecaca; }
+    .compare-box.after { background: #ecfdf5; border: 1px solid #86efac; }
+    .compare-title { font-size: 12px; font-weight: 600; margin-bottom: 8px; }
+    .compare-title.bad { color: #991b1b; }
+    .compare-title.good { color: #166534; }
+    .btn { padding: 10px 20px; border: none; border-radius: 8px; font-size: 14px; cursor: pointer; transition: all 0.2s; }
+    .btn-primary { background: #007aff; color: white; }
+    .btn:hover { opacity: 0.9; }
+    .btn:disabled { background: #ccc; cursor: not-allowed; }
+    .result-box { margin-top: 16px; padding: 16px; background: #f9fafb; border-radius: 8px; }
+    .result-item { padding: 8px 0; border-bottom: 1px solid #e5e5ea; font-size: 13px; }
+    .result-item:last-child { border-bottom: none; }
+    .code-box { background: #1d1d1f; color: #f5f5f7; padding: 12px; border-radius: 6px; font-size: 11px; margin-top: 8px; overflow-x: auto; }
+    pre { white-space: pre-wrap; }
+  </style>
+</head>
+<body>
+  <div id="app">
+    <div class="demo-card">
+      <h3>📋 统一响应处理</h3>
+      
+      <div class="info-box green">
+        封装统一的请求函数，自动处理响应和错误，让业务代码更简洁！
+      </div>
+      
+      <div class="compare-grid">
+        <div class="compare-box before">
+          <div class="compare-title bad">❌ 每次都要处理</div>
+          <div class="code-box">
+            <pre>try {
+  const res = await axios.get(url)
+  const data = res.data
+  // 处理业务...
+} catch (err) {
+  // 处理错误...
+}</pre>
+          </div>
+        </div>
+        <div class="compare-box after">
+          <div class="compare-title good">✅ 统一封装后</div>
+          <div class="code-box">
+            <pre>// 直接获取数据
+const data = await request.get(url)
+// 错误已自动处理</pre>
+          </div>
+        </div>
+      </div>
+      
+      <button class="btn btn-primary" @click="testRequest" :disabled="loading">
+        {{ loading ? '请求中...' : '测试统一请求' }}
+      </button>
+      
+      <button class="btn btn-primary" @click="testError" :disabled="loading" style="margin-left: 8px;">
+        测试错误处理
+      </button>
+      
+      <div class="result-box" v-if="results.length">
+        <div v-for="(item, index) in results" :key="index" class="result-item">
+          <strong>{{ item.label }}:</strong> {{ item.value }}
+        </div>
+      </div>
+    </div>
+  </div>
+  <script src="app.js"></script>
+</body>
+</html>

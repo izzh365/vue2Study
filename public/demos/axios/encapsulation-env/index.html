@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>多环境配置</title>
+  <script src="https://cdn.jsdelivr.net/npm/vue@2.7.16/dist/vue.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/axios@1.6.0/dist/axios.min.js"></script>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; padding: 20px; background: #f5f5f7; min-height: 100vh; }
+    #app { max-width: 650px; margin: 0 auto; }
+    .demo-card { background: #fff; border-radius: 12px; padding: 24px; box-shadow: 0 2px 12px rgba(0,0,0,0.08); }
+    h3 { color: #1d1d1f; margin-bottom: 16px; font-size: 18px; }
+    .info-box { padding: 12px; border-radius: 8px; margin-bottom: 16px; font-size: 13px; background: #f0f9ff; color: #0369a1; }
+    .env-switcher { display: flex; gap: 8px; margin-bottom: 20px; }
+    .env-btn { flex: 1; padding: 16px; border: 2px solid #e5e5ea; border-radius: 12px; background: white; cursor: pointer; transition: all 0.2s; text-align: center; }
+    .env-btn:hover { border-color: #007aff; }
+    .env-btn.active { border-color: #007aff; background: #f0f9ff; }
+    .env-icon { font-size: 24px; margin-bottom: 8px; }
+    .env-name { font-size: 14px; font-weight: 600; color: #1d1d1f; }
+    .env-label { font-size: 11px; color: #86868b; margin-top: 4px; }
+    
+    .config-display { background: #1d1d1f; border-radius: 8px; padding: 16px; margin-bottom: 16px; }
+    .config-title { color: #86868b; font-size: 12px; margin-bottom: 12px; }
+    .config-item { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #333; font-size: 13px; }
+    .config-item:last-child { border-bottom: none; }
+    .config-key { color: #ff7b72; }
+    .config-value { color: #a5d6ff; font-family: 'SF Mono', monospace; }
+    
+    .btn { padding: 12px 24px; border: none; border-radius: 8px; font-size: 14px; cursor: pointer; background: #007aff; color: white; width: 100%; margin-bottom: 16px; transition: all 0.2s; }
+    .btn:hover { background: #0056b3; }
+    .btn:disabled { opacity: 0.5; cursor: not-allowed; }
+    
+    .result-box { padding: 16px; background: #f5f5f7; border-radius: 8px; }
+    .result-title { font-size: 14px; font-weight: 600; margin-bottom: 12px; color: #1d1d1f; }
+    pre { background: #fff; padding: 12px; border-radius: 6px; font-size: 11px; overflow-x: auto; border: 1px solid #e5e5ea; }
+    
+    .file-structure { margin-top: 16px; padding: 16px; background: #f9fafb; border-radius: 8px; border: 1px solid #e5e5ea; }
+    .file-structure pre { background: transparent; border: none; font-size: 12px; color: #1d1d1f; }
+  </style>
+</head>
+<body>
+  <div id="app">
+    <div class="demo-card">
+      <h3>🌍 多环境配置</h3>
+      
+      <div class="info-box">
+        通过环境变量切换不同环境的 API 地址，实现开发/测试/生产环境隔离
+      </div>
+      
+      <!-- 环境切换 -->
+      <div class="env-switcher">
+        <div 
+          v-for="env in environments" 
+          :key="env.key"
+          class="env-btn"
+          :class="{ active: currentEnv === env.key }"
+          @click="switchEnv(env.key)"
+        >
+          <div class="env-icon">{{ env.icon }}</div>
+          <div class="env-name">{{ env.name }}</div>
+          <div class="env-label">{{ env.label }}</div>
+        </div>
+      </div>
+      
+      <!-- 配置展示 -->
+      <div class="config-display">
+        <div class="config-title">📋 当前环境配置</div>
+        <div class="config-item">
+          <span class="config-key">NODE_ENV</span>
+          <span class="config-value">"{{ currentConfig.NODE_ENV }}"</span>
+        </div>
+        <div class="config-item">
+          <span class="config-key">VUE_APP_API_URL</span>
+          <span class="config-value">"{{ currentConfig.VUE_APP_API_URL }}"</span>
+        </div>
+        <div class="config-item">
+          <span class="config-key">VUE_APP_TIMEOUT</span>
+          <span class="config-value">{{ currentConfig.VUE_APP_TIMEOUT }}</span>
+        </div>
+      </div>
+      
+      <button class="btn" @click="testRequest" :disabled="loading">
+        🧪 测试当前环境请求
+      </button>
+      
+      <div class="result-box" v-if="result">
+        <div class="result-title">📋 请求结果</div>
+        <pre>{{ result }}</pre>
+      </div>
+      
+      <div class="file-structure">
+        <pre># Vue CLI 环境文件结构
+.env                 # 所有环境通用
+.env.development     # 开发环境
+.env.staging         # 测试环境
+.env.production      # 生产环境
+
+# 使用方式
+process.env.VUE_APP_API_URL</pre>
+      </div>
+    </div>
+  </div>
+  <script src="app.js"></script>
+</body>
+</html>

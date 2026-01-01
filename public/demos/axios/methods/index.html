@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HTTP 方法对比</title>
+  <script src="https://cdn.jsdelivr.net/npm/vue@2.7.16/dist/vue.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/axios@1.6.0/dist/axios.min.js"></script>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; padding: 20px; background: #f5f5f7; min-height: 100vh; }
+    #app { max-width: 600px; margin: 0 auto; }
+    .demo-card { background: #fff; border-radius: 12px; padding: 24px; box-shadow: 0 2px 12px rgba(0,0,0,0.08); }
+    h3 { color: #1d1d1f; margin-bottom: 16px; font-size: 18px; }
+    .method-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; margin-bottom: 16px; }
+    .method-btn { padding: 12px; border: 2px solid #e5e5ea; border-radius: 8px; font-size: 14px; font-weight: 600; cursor: pointer; transition: all 0.2s; background: white; }
+    .method-btn:hover { transform: translateY(-2px); }
+    .method-btn.get { border-color: #34c759; color: #34c759; }
+    .method-btn.get:hover, .method-btn.get.active { background: #34c759; color: white; }
+    .method-btn.post { border-color: #007aff; color: #007aff; }
+    .method-btn.post:hover, .method-btn.post.active { background: #007aff; color: white; }
+    .method-btn.put { border-color: #ff9500; color: #ff9500; }
+    .method-btn.put:hover, .method-btn.put.active { background: #ff9500; color: white; }
+    .method-btn.delete { border-color: #ff3b30; color: #ff3b30; }
+    .method-btn.delete:hover, .method-btn.delete.active { background: #ff3b30; color: white; }
+    .method-btn.patch { border-color: #af52de; color: #af52de; }
+    .method-btn.patch:hover, .method-btn.patch.active { background: #af52de; color: white; }
+    .method-btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+    .result-box { margin-top: 16px; padding: 16px; background: #f9fafb; border-radius: 8px; border: 1px solid #e5e5ea; }
+    .result-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+    .method-tag { padding: 4px 12px; border-radius: 4px; font-size: 12px; font-weight: 600; color: white; }
+    .method-tag.get { background: #34c759; }
+    .method-tag.post { background: #007aff; }
+    .method-tag.put { background: #ff9500; }
+    .method-tag.delete { background: #ff3b30; }
+    .method-tag.patch { background: #af52de; }
+    pre { font-size: 11px; line-height: 1.4; color: #333; white-space: pre-wrap; max-height: 200px; overflow-y: auto; }
+    .info-table { width: 100%; margin-top: 16px; border-collapse: collapse; font-size: 12px; }
+    .info-table th, .info-table td { padding: 8px; text-align: left; border-bottom: 1px solid #e5e5ea; }
+    .info-table th { color: #86868b; font-weight: 500; }
+    .error { color: #ff3b30; font-size: 13px; }
+  </style>
+</head>
+<body>
+  <div id="app">
+    <div class="demo-card">
+      <h3>🔧 HTTP 方法对比</h3>
+      
+      <div class="method-grid">
+        <button 
+          class="method-btn get" 
+          :class="{ active: lastMethod === 'GET' }"
+          @click="testGet" 
+          :disabled="loading"
+        >
+          GET 获取
+        </button>
+        <button 
+          class="method-btn post" 
+          :class="{ active: lastMethod === 'POST' }"
+          @click="testPost" 
+          :disabled="loading"
+        >
+          POST 创建
+        </button>
+        <button 
+          class="method-btn put" 
+          :class="{ active: lastMethod === 'PUT' }"
+          @click="testPut" 
+          :disabled="loading"
+        >
+          PUT 替换
+        </button>
+        <button 
+          class="method-btn patch" 
+          :class="{ active: lastMethod === 'PATCH' }"
+          @click="testPatch" 
+          :disabled="loading"
+        >
+          PATCH 更新
+        </button>
+        <button 
+          class="method-btn delete" 
+          :class="{ active: lastMethod === 'DELETE' }"
+          @click="testDelete" 
+          :disabled="loading"
+        >
+          DELETE 删除
+        </button>
+      </div>
+      
+      <div class="result-box" v-if="result || error">
+        <div class="result-header">
+          <span class="method-tag" :class="lastMethod.toLowerCase()">{{ lastMethod }}</span>
+          <span style="font-size: 12px; color: #86868b;">{{ lastUrl }}</span>
+        </div>
+        <p v-if="error" class="error">❌ {{ error }}</p>
+        <pre v-else>{{ formattedResult }}</pre>
+      </div>
+      
+      <table class="info-table">
+        <tr>
+          <th>方法</th>
+          <th>用途</th>
+          <th>幂等性</th>
+        </tr>
+        <tr>
+          <td><strong>GET</strong></td>
+          <td>获取资源</td>
+          <td>✅ 是</td>
+        </tr>
+        <tr>
+          <td><strong>POST</strong></td>
+          <td>创建资源</td>
+          <td>❌ 否</td>
+        </tr>
+        <tr>
+          <td><strong>PUT</strong></td>
+          <td>替换整个资源</td>
+          <td>✅ 是</td>
+        </tr>
+        <tr>
+          <td><strong>PATCH</strong></td>
+          <td>部分更新资源</td>
+          <td>❌ 否</td>
+        </tr>
+        <tr>
+          <td><strong>DELETE</strong></td>
+          <td>删除资源</td>
+          <td>✅ 是</td>
+        </tr>
+      </table>
+    </div>
+  </div>
+  <script src="app.js"></script>
+</body>
+</html>

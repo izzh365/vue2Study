@@ -12,11 +12,11 @@
 
 | 序号 | 知识点 | 页面文件 | Demo 数量 | 状态 |
 |------|--------|----------|-----------|------|
-| 10.1 | 基础请求 | AxiosBasic.vue | 5 | ⬜ |
-| 10.2 | 响应处理 | Response.vue | 4 | ⬜ |
-| 10.3 | 并发请求 | Concurrent.vue | 4 | ⬜ |
-| 10.4 | 拦截器 | Interceptors.vue | 5 | ⬜ |
-| 10.5 | 封装实践 | Encapsulation.vue | 5 | ⬜ |
+| 10.1 | 基础请求 | AxiosBasic.vue | 5 | ✅ |
+| 10.2 | 响应处理 | Response.vue | 5 | ✅ |
+| 10.3 | 并发请求 | Concurrent.vue | 5 | ✅ |
+| 10.4 | 拦截器 | Interceptors.vue | 5 | ✅ |
+| 10.5 | 封装实践 | Encapsulation.vue | 5 | ✅ |
 
 ---
 
@@ -127,4 +127,4 @@ src/
 
 ---
 
-*任务状态：⬜ 待开始*
+*任务状态：✅ 已完成*

@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>拦截器执行顺序</title>
+  <script src="https://cdn.jsdelivr.net/npm/vue@2.7.16/dist/vue.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/axios@1.6.0/dist/axios.min.js"></script>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; padding: 20px; background: #f5f5f7; min-height: 100vh; }
+    #app { max-width: 700px; margin: 0 auto; }
+    .demo-card { background: #fff; border-radius: 12px; padding: 24px; box-shadow: 0 2px 12px rgba(0,0,0,0.08); }
+    h3 { color: #1d1d1f; margin-bottom: 16px; font-size: 18px; }
+    .info-box { padding: 12px; border-radius: 8px; margin-bottom: 16px; font-size: 13px; }
+    .info-box.highlight { background: #fef3c7; color: #92400e; }
+    .btn-group { display: flex; gap: 8px; margin-bottom: 16px; }
+    .btn { padding: 12px 24px; border: none; border-radius: 8px; font-size: 14px; cursor: pointer; background: #007aff; color: white; transition: all 0.2s; }
+    .btn:hover { background: #0056b3; }
+    .btn:disabled { opacity: 0.5; cursor: not-allowed; }
+    
+    .flow-diagram { margin: 20px 0; padding: 20px; background: #f9fafb; border-radius: 12px; border: 1px solid #e5e5ea; }
+    .flow-title { font-size: 14px; font-weight: 600; margin-bottom: 16px; text-align: center; color: #1d1d1f; }
+    .flow-steps { display: flex; flex-direction: column; gap: 8px; }
+    .flow-step { display: flex; align-items: center; gap: 12px; padding: 10px 16px; border-radius: 8px; font-size: 13px; }
+    .flow-step.request { background: #dbeafe; color: #1e40af; }
+    .flow-step.response { background: #dcfce7; color: #166534; }
+    .flow-step.actual { background: #fef3c7; color: #92400e; }
+    .flow-order { font-weight: 700; width: 24px; height: 24px; background: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; }
+    .flow-arrow { text-align: center; color: #86868b; font-size: 18px; }
+    
+    .timeline { margin-top: 20px; }
+    .timeline-title { font-size: 14px; font-weight: 600; margin-bottom: 12px; color: #1d1d1f; }
+    .timeline-container { position: relative; padding-left: 20px; }
+    .timeline-container::before { content: ''; position: absolute; left: 8px; top: 0; bottom: 0; width: 2px; background: #e5e5ea; }
+    .timeline-item { position: relative; padding: 8px 0 8px 24px; font-size: 13px; }
+    .timeline-item::before { content: ''; position: absolute; left: -12px; top: 12px; width: 10px; height: 10px; border-radius: 50%; }
+    .timeline-item.request::before { background: #007aff; }
+    .timeline-item.response::before { background: #34c759; }
+    .timeline-item .time { color: #86868b; font-size: 11px; margin-right: 8px; }
+    
+    .key-point { margin-top: 16px; padding: 16px; background: #fef2f2; border-radius: 8px; border-left: 4px solid #ff3b30; }
+    .key-point strong { color: #ff3b30; }
+    .key-point p { font-size: 13px; margin-top: 8px; color: #1d1d1f; }
+  </style>
+</head>
+<body>
+  <div id="app">
+    <div class="demo-card">
+      <h3>📊 拦截器执行顺序</h3>
+      
+      <div class="info-box highlight">
+        ⚠️ <strong>关键点：</strong>请求拦截器后添加的先执行（栈），响应拦截器先添加的先执行（队列）
+      </div>
+      
+      <div class="btn-group">
+        <button class="btn" @click="testOrder" :disabled="loading">
+          🚀 测试执行顺序
+        </button>
+      </div>
+      
+      <div class="flow-diagram">
+        <div class="flow-title">🔄 拦截器执行流程</div>
+        <div class="flow-steps">
+          <div class="flow-step request">
+            <span class="flow-order">3</span>
+            <span>请求拦截器 A（先添加）</span>
+          </div>
+          <div class="flow-arrow">↑</div>
+          <div class="flow-step request">
+            <span class="flow-order">2</span>
+            <span>请求拦截器 B（后添加）</span>
+          </div>
+          <div class="flow-arrow">↑</div>
+          <div class="flow-step request">
+            <span class="flow-order">1</span>
+            <span>请求拦截器 C（最后添加） ← 最先执行</span>
+          </div>
+          <div class="flow-arrow">↓</div>
+          <div class="flow-step actual">
+            <span class="flow-order">●</span>
+            <span><strong>发送请求 → 接收响应</strong></span>
+          </div>
+          <div class="flow-arrow">↓</div>
+          <div class="flow-step response">
+            <span class="flow-order">1</span>
+            <span>响应拦截器 A（先添加） ← 最先执行</span>
+          </div>
+          <div class="flow-arrow">↓</div>
+          <div class="flow-step response">
+            <span class="flow-order">2</span>
+            <span>响应拦截器 B（后添加）</span>
+          </div>
+          <div class="flow-arrow">↓</div>
+          <div class="flow-step response">
+            <span class="flow-order">3</span>
+            <span>响应拦截器 C（最后添加）</span>
+          </div>
+        </div>
+      </div>
+      
+      <div class="timeline" v-if="timeline.length">
+        <div class="timeline-title">⏱️ 实际执行时间线</div>
+        <div class="timeline-container">
+          <div 
+            v-for="(item, index) in timeline" 
+            :key="index"
+            class="timeline-item"
+            :class="item.type"
+          >
+            <span class="time">{{ item.time }}</span>
+            {{ item.message }}
+          </div>
+        </div>
+      </div>
+      
+      <div class="key-point">
+        <strong>💡 记忆口诀</strong>
+        <p>请求拦截器像"套娃"，后添加的在外层，先执行；</p>
+        <p>响应拦截器像"排队"，先添加的排前面，先执行。</p>
+      </div>
+    </div>
+  </div>
+  <script src="app.js"></script>
+</body>
+</html>

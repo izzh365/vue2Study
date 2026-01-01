@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Promise.all 并发请求</title>
+  <script src="https://cdn.jsdelivr.net/npm/vue@2.7.16/dist/vue.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/axios@1.6.0/dist/axios.min.js"></script>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; padding: 20px; background: #f5f5f7; min-height: 100vh; }
+    #app { max-width: 600px; margin: 0 auto; }
+    .demo-card { background: #fff; border-radius: 12px; padding: 24px; box-shadow: 0 2px 12px rgba(0,0,0,0.08); }
+    h3 { color: #1d1d1f; margin-bottom: 16px; font-size: 18px; }
+    .info-box { padding: 12px; border-radius: 8px; margin-bottom: 16px; font-size: 13px; background: #e8f4fd; color: #0066cc; }
+    .btn { padding: 10px 20px; border: none; border-radius: 8px; font-size: 14px; cursor: pointer; transition: all 0.2s; background: #007aff; color: white; }
+    .btn:hover { background: #0056b3; }
+    .btn:disabled { background: #ccc; cursor: not-allowed; }
+    .progress-area { margin-top: 16px; }
+    .request-item { display: flex; align-items: center; padding: 12px; border-radius: 8px; margin-bottom: 8px; background: #f9fafb; border: 1px solid #e5e5ea; }
+    .request-icon { font-size: 20px; margin-right: 12px; }
+    .request-info { flex: 1; }
+    .request-name { font-weight: 600; font-size: 14px; color: #1d1d1f; }
+    .request-status { font-size: 12px; color: #86868b; margin-top: 2px; }
+    .request-item.loading { border-color: #fbbf24; background: #fffbeb; }
+    .request-item.success { border-color: #34c759; background: #ecfdf5; }
+    .request-item.error { border-color: #ff3b30; background: #fef2f2; }
+    .summary-box { margin-top: 16px; padding: 16px; background: #f0f7ff; border-radius: 8px; }
+    .summary-title { font-weight: 600; margin-bottom: 8px; color: #1d1d1f; }
+    .summary-time { font-size: 24px; font-weight: 700; color: #007aff; }
+    .summary-note { font-size: 12px; color: #86868b; margin-top: 4px; }
+  </style>
+</head>
+<body>
+  <div id="app">
+    <div class="demo-card">
+      <h3>⚡ Promise.all 并发请求</h3>
+      
+      <div class="info-box">
+        同时发送 3 个请求，全部完成后返回结果。总耗时 ≈ 最慢的那个请求。
+      </div>
+      
+      <button class="btn" @click="fetchAll" :disabled="loading">
+        {{ loading ? '请求中...' : '开始并发请求' }}
+      </button>
+      
+      <div class="progress-area">
+        <div 
+          v-for="req in requests" 
+          :key="req.name"
+          class="request-item"
+          :class="req.status"
+        >
+          <span class="request-icon">{{ req.icon }}</span>
+          <div class="request-info">
+            <div class="request-name">{{ req.name }}</div>
+            <div class="request-status">{{ req.message }}</div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="summary-box" v-if="totalTime">
+        <div class="summary-title">总耗时</div>
+        <div class="summary-time">{{ totalTime }} ms</div>
+        <div class="summary-note">
+          ✨ 并发请求只需等待最慢的那个，比串行快 {{ savedTime }} ms
+        </div>
+      </div>
+    </div>
+  </div>
+  <script src="app.js"></script>
+</body>
+</html>

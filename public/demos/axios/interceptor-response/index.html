@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>响应拦截器 - 统一处理</title>
+  <script src="https://cdn.jsdelivr.net/npm/vue@2.7.16/dist/vue.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/axios@1.6.0/dist/axios.min.js"></script>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; padding: 20px; background: #f5f5f7; min-height: 100vh; }
+    #app { max-width: 600px; margin: 0 auto; }
+    .demo-card { background: #fff; border-radius: 12px; padding: 24px; box-shadow: 0 2px 12px rgba(0,0,0,0.08); }
+    h3 { color: #1d1d1f; margin-bottom: 16px; font-size: 18px; }
+    .info-box { padding: 12px; border-radius: 8px; margin-bottom: 16px; font-size: 13px; background: #ecfdf5; color: #166534; }
+    .btn-group { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 16px; }
+    .btn { padding: 10px 16px; border: none; border-radius: 8px; font-size: 13px; cursor: pointer; transition: all 0.2s; }
+    .btn-success { background: #34c759; color: white; }
+    .btn-warning { background: #ff9500; color: white; }
+    .btn-error { background: #ff3b30; color: white; }
+    .btn:hover { opacity: 0.9; }
+    .btn:disabled { opacity: 0.5; cursor: not-allowed; }
+    .result-box { margin-top: 16px; padding: 16px; border-radius: 8px; }
+    .result-box.success { background: #ecfdf5; border: 1px solid #86efac; }
+    .result-box.error { background: #fef2f2; border: 1px solid #fecaca; }
+    .result-title { font-weight: 600; margin-bottom: 8px; font-size: 14px; }
+    .result-content { font-size: 13px; }
+    pre { background: #f5f5f7; padding: 12px; border-radius: 6px; font-size: 11px; margin-top: 8px; overflow-x: auto; }
+    .compare-section { margin-top: 20px; padding-top: 16px; border-top: 1px solid #e5e5ea; }
+    .compare-title { font-size: 14px; font-weight: 600; margin-bottom: 12px; color: #1d1d1f; }
+    .compare-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .compare-item { padding: 12px; border-radius: 8px; font-size: 12px; }
+    .compare-item.before { background: #fef2f2; }
+    .compare-item.after { background: #ecfdf5; }
+  </style>
+</head>
+<body>
+  <div id="app">
+    <div class="demo-card">
+      <h3>📥 响应拦截器 - 统一处理</h3>
+      
+      <div class="info-box">
+        响应拦截器自动：1. 解包 response.data  2. 统一错误提示
+      </div>
+      
+      <div class="btn-group">
+        <button class="btn btn-success" @click="testSuccess" :disabled="loading">
+          成功请求 (200)
+        </button>
+        <button class="btn btn-warning" @click="test404" :disabled="loading">
+          404 错误
+        </button>
+        <button class="btn btn-error" @click="test500" :disabled="loading">
+          500 错误
+        </button>
+      </div>
+      
+      <div 
+        v-if="result" 
+        class="result-box"
+        :class="result.success ? 'success' : 'error'"
+      >
+        <div class="result-title">{{ result.title }}</div>
+        <div class="result-content">
+          <p>{{ result.message }}</p>
+          <pre v-if="result.data">{{ result.data }}</pre>
+        </div>
+      </div>
+      
+      <div class="compare-section">
+        <div class="compare-title">💡 使用拦截器前后对比</div>
+        <div class="compare-grid">
+          <div class="compare-item before">
+            <strong>❌ 没有拦截器：</strong>
+            <pre>const res = await axios.get(url)
+const data = res.data
+// 每次都要取 .data</pre>
+          </div>
+          <div class="compare-item after">
+            <strong>✅ 使用拦截器：</strong>
+            <pre>const data = await api.get(url)
+// 直接就是数据！</pre>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script src="app.js"></script>
+</body>
+</html>

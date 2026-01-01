@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GET 请求基础</title>
+  <script src="https://cdn.jsdelivr.net/npm/vue@2.7.16/dist/vue.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/axios@1.6.0/dist/axios.min.js"></script>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; padding: 20px; background: #f5f5f7; min-height: 100vh; }
+    #app { max-width: 600px; margin: 0 auto; }
+    .demo-card { background: #fff; border-radius: 12px; padding: 24px; box-shadow: 0 2px 12px rgba(0,0,0,0.08); }
+    h3 { color: #1d1d1f; margin-bottom: 16px; font-size: 18px; }
+    .input-group { margin-bottom: 16px; }
+    .input-group label { display: block; margin-bottom: 6px; font-size: 14px; color: #86868b; }
+    .input-group input { width: 100%; padding: 10px 14px; border: 1px solid #e5e5ea; border-radius: 8px; font-size: 14px; }
+    .input-group input:focus { outline: none; border-color: #007aff; }
+    .btn { padding: 10px 20px; border: none; border-radius: 8px; font-size: 14px; cursor: pointer; transition: all 0.2s; margin-right: 8px; margin-bottom: 8px; }
+    .btn-primary { background: #007aff; color: white; }
+    .btn-primary:hover { background: #0056b3; }
+    .btn-primary:disabled { background: #ccc; cursor: not-allowed; }
+    .result-box { margin-top: 16px; padding: 16px; background: #f9fafb; border-radius: 8px; border: 1px solid #e5e5ea; }
+    .result-box pre { font-size: 12px; line-height: 1.5; color: #333; white-space: pre-wrap; word-break: break-all; }
+    .loading { color: #007aff; font-size: 14px; }
+    .error { color: #ff3b30; font-size: 14px; }
+    .success { color: #34c759; font-size: 14px; }
+    .code-hint { background: #f0f0f5; padding: 12px; border-radius: 8px; margin-bottom: 16px; font-family: monospace; font-size: 13px; color: #6e6e73; }
+  </style>
+</head>
+<body>
+  <div id="app">
+    <div class="demo-card">
+      <h3>📡 GET 请求基础演示</h3>
+      
+      <div class="code-hint">
+        axios.get(url, { params: { ... } })
+      </div>
+      
+      <div class="input-group">
+        <label>用户 ID（1-10）</label>
+        <input type="number" v-model.number="userId" placeholder="输入用户 ID" min="1" max="10">
+      </div>
+      
+      <button class="btn btn-primary" @click="fetchUser" :disabled="loading">
+        {{ loading ? '请求中...' : '获取用户信息' }}
+      </button>
+      
+      <button class="btn btn-primary" @click="fetchPosts" :disabled="loading">
+        {{ loading ? '请求中...' : '获取用户文章' }}
+      </button>
+      
+      <div class="result-box" v-if="result || error">
+        <p v-if="loading" class="loading">⏳ 正在请求数据...</p>
+        <p v-else-if="error" class="error">❌ {{ error }}</p>
+        <template v-else>
+          <p class="success">✅ 请求成功！状态码：{{ status }}</p>
+          <pre>{{ formattedResult }}</pre>
+        </template>
+      </div>
+    </div>
+  </div>
+  <script src="app.js"></script>
+</body>
+</html>

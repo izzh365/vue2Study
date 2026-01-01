@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Axios 基础封装</title>
+  <script src="https://cdn.jsdelivr.net/npm/vue@2.7.16/dist/vue.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/axios@1.6.0/dist/axios.min.js"></script>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; padding: 20px; background: #f5f5f7; min-height: 100vh; }
+    #app { max-width: 700px; margin: 0 auto; }
+    .demo-card { background: #fff; border-radius: 12px; padding: 24px; box-shadow: 0 2px 12px rgba(0,0,0,0.08); }
+    h3 { color: #1d1d1f; margin-bottom: 16px; font-size: 18px; }
+    .info-box { padding: 12px; border-radius: 8px; margin-bottom: 16px; font-size: 13px; background: #ecfdf5; color: #166534; }
+    .code-block { background: #1d1d1f; color: #e5e5ea; padding: 16px; border-radius: 8px; font-family: 'SF Mono', monospace; font-size: 12px; line-height: 1.6; overflow-x: auto; margin-bottom: 16px; }
+    .code-block .comment { color: #6a737d; }
+    .code-block .keyword { color: #ff7b72; }
+    .code-block .string { color: #a5d6ff; }
+    .code-block .function { color: #d2a8ff; }
+    .btn-group { display: flex; gap: 8px; margin-bottom: 16px; }
+    .btn { padding: 10px 20px; border: none; border-radius: 8px; font-size: 13px; cursor: pointer; background: #007aff; color: white; transition: all 0.2s; }
+    .btn:hover { background: #0056b3; }
+    .btn:disabled { opacity: 0.5; cursor: not-allowed; }
+    .result-box { padding: 16px; background: #f5f5f7; border-radius: 8px; margin-top: 16px; }
+    .result-title { font-size: 14px; font-weight: 600; margin-bottom: 12px; color: #1d1d1f; }
+    .result-content { font-size: 13px; }
+    pre { background: #fff; padding: 12px; border-radius: 6px; font-size: 11px; overflow-x: auto; border: 1px solid #e5e5ea; }
+    .features { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-bottom: 16px; }
+    .feature { padding: 12px; background: #f0f9ff; border-radius: 8px; font-size: 13px; color: #0369a1; }
+    .feature strong { display: block; margin-bottom: 4px; }
+  </style>
+</head>
+<body>
+  <div id="app">
+    <div class="demo-card">
+      <h3>📦 Axios 基础封装</h3>
+      
+      <div class="info-box">
+        封装核心：创建 axios 实例 + 配置拦截器 + 统一导出
+      </div>
+      
+      <div class="features">
+        <div class="feature">
+          <strong>✅ 统一 baseURL</strong>
+          不用每次都写完整地址
+        </div>
+        <div class="feature">
+          <strong>✅ 统一超时时间</strong>
+          防止请求无限等待
+        </div>
+        <div class="feature">
+          <strong>✅ 统一请求头</strong>
+          自动添加 Token
+        </div>
+        <div class="feature">
+          <strong>✅ 统一错误处理</strong>
+          一处处理，全局生效
+        </div>
+      </div>
+      
+      <div class="code-block">
+<span class="comment">// utils/request.js - 封装的核心代码</span>
+
+<span class="keyword">const</span> request = axios.<span class="function">create</span>({
+  <span class="comment">// 1. 统一配置</span>
+  baseURL: <span class="string">'https://api.example.com'</span>,
+  timeout: <span class="string">10000</span>
+})
+
+<span class="comment">// 2. 请求拦截器</span>
+request.interceptors.request.<span class="function">use</span>(config => {
+  config.headers.Authorization = <span class="string">`Bearer ${token}`</span>
+  <span class="keyword">return</span> config
+})
+
+<span class="comment">// 3. 响应拦截器</span>
+request.interceptors.response.<span class="function">use</span>(
+  res => res.data,
+  err => <span class="function">handleError</span>(err)
+)
+
+<span class="keyword">export default</span> request
+      </div>
+      
+      <div class="btn-group">
+        <button class="btn" @click="testRequest" :disabled="loading">
+          🧪 测试封装效果
+        </button>
+      </div>
+      
+      <div class="result-box" v-if="result">
+        <div class="result-title">{{ result.title }}</div>
+        <div class="result-content">
+          <p>{{ result.message }}</p>
+          <pre v-if="result.data">{{ result.data }}</pre>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script src="app.js"></script>
+</body>
+</html>

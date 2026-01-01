@@ -263,6 +263,36 @@ const routes = [
     component: () => import('@/views/chapters/axios/Index.vue'),
     meta: { title: 'Axios 网络请求', chapter: 10 }
   },
+  {
+    path: '/axios/basic',
+    name: 'AxiosBasic',
+    component: () => import('@/views/chapters/axios/AxiosBasic.vue'),
+    meta: { title: '基础请求', chapter: 10 }
+  },
+  {
+    path: '/axios/response',
+    name: 'AxiosResponse',
+    component: () => import('@/views/chapters/axios/Response.vue'),
+    meta: { title: '响应处理', chapter: 10 }
+  },
+  {
+    path: '/axios/concurrent',
+    name: 'AxiosConcurrent',
+    component: () => import('@/views/chapters/axios/Concurrent.vue'),
+    meta: { title: '并发请求', chapter: 10 }
+  },
+  {
+    path: '/axios/interceptors',
+    name: 'AxiosInterceptors',
+    component: () => import('@/views/chapters/axios/Interceptors.vue'),
+    meta: { title: '拦截器', chapter: 10 }
+  },
+  {
+    path: '/axios/encapsulation',
+    name: 'AxiosEncapsulation',
+    component: () => import('@/views/chapters/axios/Encapsulation.vue'),
+    meta: { title: '封装实践', chapter: 10 }
+  },
 
   // 404 页面
   {

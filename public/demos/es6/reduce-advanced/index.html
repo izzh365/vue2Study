@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>reduce 高级用法</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; padding: 20px; background: #f5f5f7; }
+    .demo-container { max-width: 700px; margin: 0 auto; }
+    h3 { color: #1d1d1f; margin-bottom: 16px; font-size: 18px; }
+    .demo-section { background: white; border-radius: 12px; padding: 20px; margin-bottom: 16px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
+    .section-title { font-size: 14px; color: #86868b; margin-bottom: 12px; font-weight: 500; }
+    .btn { padding: 10px 20px; border: none; border-radius: 8px; cursor: pointer; font-size: 14px; font-weight: 500; transition: all 0.2s; margin-right: 8px; margin-bottom: 8px; }
+    .btn-primary { background: #007aff; color: white; }
+    .btn-primary:hover { background: #0056b3; }
+    .tag-list { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 12px; }
+    .tag { padding: 6px 12px; border-radius: 16px; font-size: 13px; }
+    .tag-fruit { background: #ffecb3; color: #f57c00; }
+    .result-box { background: #f5f5f7; border-radius: 8px; padding: 16px; margin-top: 12px; }
+    .result-item { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #e5e5ea; }
+    .result-item:last-child { border-bottom: none; }
+    pre { background: #1d1d1f; color: #f5f5f7; padding: 16px; border-radius: 8px; font-size: 13px; overflow-x: auto; font-family: 'SF Mono', monospace; }
+  </style>
+</head>
+<body>
+  <div id="app" class="demo-container">
+    <h3>📊 reduce 高级用法</h3>
+    
+    <!-- 数组去重 -->
+    <div class="demo-section">
+      <div class="section-title">1️⃣ 数组去重</div>
+      <div class="tag-list">
+        <span v-for="(item, index) in fruits" :key="index" class="tag tag-fruit">{{ item }}</span>
+      </div>
+      <button class="btn btn-primary" @click="removeDuplicates">去重</button>
+      <div v-if="uniqueFruits.length" class="result-box">
+        <strong>去重结果：</strong>
+        <div class="tag-list" style="margin-top: 8px; margin-bottom: 0;">
+          <span v-for="(item, index) in uniqueFruits" :key="index" class="tag tag-fruit">{{ item }}</span>
+        </div>
+      </div>
+    </div>
+    
+    <!-- 分组统计 -->
+    <div class="demo-section">
+      <div class="section-title">2️⃣ 分组统计（计算每种水果数量）</div>
+      <button class="btn btn-primary" @click="countFruits">统计数量</button>
+      <div v-if="fruitCounts" class="result-box">
+        <div v-for="(count, fruit) in fruitCounts" :key="fruit" class="result-item">
+          <span>{{ fruit }}</span>
+          <strong>{{ count }} 个</strong>
+        </div>
+      </div>
+    </div>
+    
+    <!-- 数组扁平化 -->
+    <div class="demo-section">
+      <div class="section-title">3️⃣ 数组扁平化</div>
+      <pre>{{ JSON.stringify(nestedArray, null, 2) }}</pre>
+      <button class="btn btn-primary" @click="flattenArray" style="margin-top: 12px;">扁平化</button>
+      <div v-if="flatArray.length" class="result-box">
+        <strong>扁平化结果：</strong> [{{ flatArray.join(', ') }}]
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/vue@2.7.16/dist/vue.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

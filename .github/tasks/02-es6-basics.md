@@ -12,9 +12,9 @@
 
 | 序号 | 知识点 | 页面文件 | Demo 数量 | 状态 |
 |------|--------|----------|-----------|------|
-| 2.1 | const 与 let | ConstLet.vue | 6 | ⬜ |
-| 2.2 | 对象增强写法 | ObjectEnhance.vue | 5 | ⬜ |
-| 2.3 | 高阶函数 | HigherOrder.vue | 8 | ⬜ |
+| 2.1 | const 与 let | ConstLet.vue | 6 | ✅ |
+| 2.2 | 对象增强写法 | ObjectEnhance.vue | 5 | ✅ |
+| 2.3 | 高阶函数 | HigherOrder.vue | 8 | ✅ |
 | 2.4 | 箭头函数 | ArrowFunction.vue | 6 | ⬜ |
 | 2.5 | Promise 与异步 | PromiseAsync.vue | 8 | ⬜ |
 

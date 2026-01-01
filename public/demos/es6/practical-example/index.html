@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>购物车实战</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; padding: 20px; background: #f5f5f7; }
+    .demo-container { max-width: 700px; margin: 0 auto; }
+    h3 { color: #1d1d1f; margin-bottom: 16px; font-size: 18px; display: flex; align-items: center; gap: 8px; }
+    .cart-count { background: #ff3b30; color: white; font-size: 12px; padding: 2px 8px; border-radius: 10px; }
+    .demo-section { background: white; border-radius: 12px; padding: 20px; margin-bottom: 16px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
+    .section-title { font-size: 14px; color: #86868b; margin-bottom: 12px; font-weight: 500; }
+    .cart-item { display: flex; align-items: center; padding: 16px; border-radius: 12px; background: #f9fafb; margin-bottom: 12px; }
+    .cart-item:last-child { margin-bottom: 0; }
+    .item-checkbox { width: 20px; height: 20px; margin-right: 12px; cursor: pointer; }
+    .item-image { width: 60px; height: 60px; background: #e5e5ea; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 24px; margin-right: 16px; }
+    .item-info { flex: 1; }
+    .item-name { font-weight: 600; color: #1d1d1f; margin-bottom: 4px; }
+    .item-price { color: #ff9500; font-weight: 600; font-size: 15px; }
+    .item-quantity { display: flex; align-items: center; gap: 8px; }
+    .qty-btn { width: 28px; height: 28px; border: 1px solid #e5e5ea; background: white; border-radius: 6px; cursor: pointer; font-size: 16px; display: flex; align-items: center; justify-content: center; }
+    .qty-btn:hover { background: #f5f5f7; }
+    .qty-value { width: 32px; text-align: center; font-weight: 500; }
+    .item-subtotal { min-width: 80px; text-align: right; }
+    .subtotal-label { font-size: 12px; color: #86868b; }
+    .subtotal-value { font-weight: 600; color: #34c759; }
+    .cart-summary { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 12px; padding: 20px; color: white; }
+    .summary-row { display: flex; justify-content: space-between; margin-bottom: 12px; }
+    .summary-row:last-child { margin-bottom: 0; padding-top: 12px; border-top: 1px solid rgba(255,255,255,0.2); }
+    .summary-label { opacity: 0.8; }
+    .summary-value { font-weight: 600; }
+    .summary-total { font-size: 24px; }
+    .toolbar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
+    .btn { padding: 8px 16px; border: none; border-radius: 6px; cursor: pointer; font-size: 13px; font-weight: 500; }
+    .btn-link { background: transparent; color: #007aff; }
+  </style>
+</head>
+<body>
+  <div id="app" class="demo-container">
+    <h3>
+      🛒 购物车实战
+      <span class="cart-count">{{ selectedCount }}</span>
+    </h3>
+    
+    <div class="demo-section">
+      <div class="toolbar">
+        <label>
+          <input type="checkbox" v-model="selectAll" @change="toggleSelectAll"> 全选
+        </label>
+        <button class="btn btn-link" @click="removeSelected">删除选中</button>
+      </div>
+      
+      <div v-for="item in cartItems" :key="item.id" class="cart-item">
+        <input type="checkbox" class="item-checkbox" v-model="item.selected">
+        <div class="item-image">{{ item.emoji }}</div>
+        <div class="item-info">
+          <div class="item-name">{{ item.name }}</div>
+          <div class="item-price">¥{{ item.price }}</div>
+        </div>
+        <div class="item-quantity">
+          <button class="qty-btn" @click="decreaseQty(item)">-</button>
+          <span class="qty-value">{{ item.quantity }}</span>
+          <button class="qty-btn" @click="increaseQty(item)">+</button>
+        </div>
+        <div class="item-subtotal">
+          <div class="subtotal-label">小计</div>
+          <div class="subtotal-value">¥{{ item.price * item.quantity }}</div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="cart-summary">
+      <div class="summary-row">
+        <span class="summary-label">已选商品</span>
+        <span class="summary-value">{{ selectedCount }} 件</span>
+      </div>
+      <div class="summary-row">
+        <span class="summary-label">商品总数</span>
+        <span class="summary-value">{{ totalQuantity }} 件</span>
+      </div>
+      <div class="summary-row">
+        <span class="summary-label">合计</span>
+        <span class="summary-value summary-total">¥{{ totalPrice }}</span>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/vue@2.7.16/dist/vue.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

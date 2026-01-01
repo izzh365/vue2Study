@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>map 数据转换</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; padding: 20px; background: #f5f5f7; }
+    .demo-container { max-width: 700px; margin: 0 auto; }
+    h3 { color: #1d1d1f; margin-bottom: 16px; font-size: 18px; }
+    .demo-section { background: white; border-radius: 12px; padding: 20px; margin-bottom: 16px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
+    .section-title { font-size: 14px; color: #86868b; margin-bottom: 12px; font-weight: 500; }
+    .data-table { width: 100%; border-collapse: collapse; margin-bottom: 12px; }
+    .data-table th, .data-table td { padding: 10px 12px; text-align: left; border-bottom: 1px solid #e5e5ea; font-size: 14px; }
+    .data-table th { background: #f5f5f7; font-weight: 500; color: #86868b; }
+    .data-table tr:last-child td { border-bottom: none; }
+    .price { color: #ff9500; font-weight: 600; }
+    .discount { color: #34c759; font-weight: 600; }
+    .arrow-container { text-align: center; padding: 16px 0; }
+    .arrow { font-size: 32px; color: #007aff; }
+    .btn { padding: 10px 20px; border: none; border-radius: 8px; cursor: pointer; font-size: 14px; font-weight: 500; transition: all 0.2s; margin-right: 8px; }
+    .btn-primary { background: #007aff; color: white; }
+    .btn-primary:hover { background: #0056b3; }
+    .tag { display: inline-block; padding: 4px 8px; border-radius: 4px; font-size: 12px; font-weight: 500; }
+    .tag-hot { background: #ff3b30; color: white; }
+    .tag-new { background: #5ac8fa; color: white; }
+  </style>
+</head>
+<body>
+  <div id="app" class="demo-container">
+    <h3>🔄 map 进阶 - 数据转换</h3>
+    
+    <div class="demo-section">
+      <div class="section-title">📦 原始商品数据</div>
+      <table class="data-table">
+        <tr>
+          <th>商品名</th>
+          <th>价格</th>
+          <th>库存</th>
+        </tr>
+        <tr v-for="item in products" :key="item.id">
+          <td>{{ item.name }}</td>
+          <td class="price">¥{{ item.price }}</td>
+          <td>{{ item.stock }}件</td>
+        </tr>
+      </table>
+      
+      <button class="btn btn-primary" @click="transformProducts">执行数据转换</button>
+    </div>
+    
+    <div class="arrow-container" v-if="transformedProducts.length">
+      <span class="arrow">↓ map 转换 ↓</span>
+    </div>
+    
+    <div class="demo-section" v-if="transformedProducts.length">
+      <div class="section-title">✨ 转换后的数据（新增字段 + 格式化）</div>
+      <table class="data-table">
+        <tr>
+          <th>商品名</th>
+          <th>原价</th>
+          <th>折扣价</th>
+          <th>状态</th>
+        </tr>
+        <tr v-for="item in transformedProducts" :key="item.id">
+          <td>
+            {{ item.name }}
+            <span v-if="item.isHot" class="tag tag-hot">热销</span>
+          </td>
+          <td style="text-decoration: line-through; color: #86868b;">{{ item.originalPrice }}</td>
+          <td class="discount">{{ item.discountPrice }}</td>
+          <td>{{ item.stockStatus }}</td>
+        </tr>
+      </table>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/vue@2.7.16/dist/vue.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

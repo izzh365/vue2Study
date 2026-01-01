@@ -10,18 +10,72 @@
     <KnowledgeCard title="📖 概念说明（是什么）">
       <div class="concept-content">
         <h4>🎯 通俗比喻</h4>
-        <p>就像说话时的省略一样：</p>
+        <p>想象你在填写一张表格：</p>
+        <div class="analogy-box">
+          <p>📝 <strong>传统方式（ES5）</strong>：姓名栏写"姓名：张三"，年龄栏写"年龄：18"</p>
+          <p>✨ <strong>简洁方式（ES6）</strong>：姓名栏直接写"张三"，年龄栏直接写"18"（栏位名已经说明了）</p>
+        </div>
+        <p class="mt-md">代码对比：</p>
         <ul>
-          <li>完整说法："我的名字是张三" → 简洁说法："我叫张三"</li>
-          <li>ES5 写法：<code>{ name: name }</code> → ES6 简写：<code>{ name }</code></li>
+          <li>ES5 写法：<code>{ name: name, age: age }</code> → 重复写两遍变量名</li>
+          <li>ES6 简写：<code>{ name, age }</code> → 变量名和属性名相同时，只写一个</li>
         </ul>
         
         <h4>📚 三种增强写法</h4>
+        <div class="feature-grid">
+          <div class="feature-item">
+            <span class="feature-icon">1️⃣</span>
+            <div>
+              <strong>属性简写</strong>
+              <p>变量名和属性名相同时，可以只写一个</p>
+            </div>
+          </div>
+          <div class="feature-item">
+            <span class="feature-icon">2️⃣</span>
+            <div>
+              <strong>方法简写</strong>
+              <p>省略 <code>function</code> 关键字，更简洁</p>
+            </div>
+          </div>
+          <div class="feature-item">
+            <span class="feature-icon">3️⃣</span>
+            <div>
+              <strong>计算属性名</strong>
+              <p>用 <code>[]</code> 包裹表达式动态设置属性名</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </KnowledgeCard>
+
+    <!-- 1.5 为什么需要 -->
+    <KnowledgeCard title="💡 为什么需要对象增强写法">
+      <div class="why-content">
+        <h4>😤 ES5 的痛点</h4>
         <ul>
-          <li><strong>属性简写</strong>：变量名和属性名相同时，可以只写一个</li>
-          <li><strong>方法简写</strong>：省略 function 关键字</li>
-          <li><strong>计算属性名</strong>：用 [] 包裹表达式作为属性名</li>
+          <li><strong>重复代码多</strong>：<code>{ name: name, age: age }</code> 变量名要写两遍</li>
+          <li><strong>方法定义繁琐</strong>：每次都要写 <code>function</code> 关键字</li>
+          <li><strong>属性名不灵活</strong>：无法动态设置属性名</li>
         </ul>
+        
+        <h4>✅ ES6 解决方案</h4>
+        <ul>
+          <li>代码更简洁，减少重复</li>
+          <li>Vue 组件中大量使用，必须掌握</li>
+          <li>配合解构赋值，数据处理更方便</li>
+        </ul>
+        
+        <h4>📊 实际效果对比</h4>
+        <div class="compare-block">
+          <div class="compare-item bad">
+            <span class="label">❌ ES5 - 38个字符</span>
+            <code>{ name: name, age: age, city: city }</code>
+          </div>
+          <div class="compare-item good">
+            <span class="label">✅ ES6 - 18个字符</span>
+            <code>{ name, age, city }</code>
+          </div>
+        </div>
       </div>
     </KnowledgeCard>
 
@@ -84,12 +138,22 @@
     </KnowledgeCard>
 
     <!-- 注意事项 -->
-    <TipBox type="info" title="💡 在 Vue 中的应用">
+    <TipBox type="info" title="💡 在 Vue 中的应用场景">
+      <p>Vue 组件中几乎每处都在使用 ES6 对象增强写法：</p>
       <ul>
-        <li><strong>data() 返回值</strong>：经常使用属性简写</li>
-        <li><strong>methods</strong>：使用方法简写定义</li>
-        <li><strong>computed</strong>：getter/setter 使用方法简写</li>
-        <li><strong>组件导入</strong>：components: { MyComponent } 属性简写</li>
+        <li><strong>data() 返回值</strong>：<code>return { username, level }</code> 属性简写</li>
+        <li><strong>methods 定义</strong>：<code>handleClick() { ... }</code> 方法简写</li>
+        <li><strong>computed 定义</strong>：<code>fullName() { return ... }</code> 方法简写</li>
+        <li><strong>components 注册</strong>：<code>components: { Avatar, Button }</code> 属性简写</li>
+        <li><strong>props 解构</strong>：<code>const { name, age } = this.user</code> 解构赋值</li>
+      </ul>
+    </TipBox>
+
+    <TipBox type="warning" title="⚠️ 注意事项">
+      <ul>
+        <li><strong>方法简写中的 this</strong>：方法简写和传统写法的 this 指向相同，都指向 Vue 实例</li>
+        <li><strong>不要用箭头函数替代方法简写</strong>：箭头函数的 this 不会指向 Vue 实例</li>
+        <li><strong>计算属性名的性能</strong>：复杂表达式作为属性名会影响可读性，适度使用</li>
       </ul>
     </TipBox>
 
@@ -160,39 +224,83 @@ const data = {
   ['pre_' + key]: 'prefixed'   // { pre_dynamicKey: 'prefixed' }
 }`,
 
-      vueExampleCode: `// Vue 组件中大量使用 ES6 增强写法
+      vueExampleCode: `// =====================================================
+// Vue 组件中大量使用 ES6 增强写法 - 这是你每天都会写的代码！
+// =====================================================
+
 export default {
-  name: 'UserCard',
+  name: 'UserProfile',
   
-  // 组件注册 - 属性简写
+  // ✅ 组件注册 - 属性简写
+  // 当导入的组件名和注册名相同时
   components: {
     Avatar,      // 等同于 Avatar: Avatar
-    Button       // 等同于 Button: Button
+    Button,      // 等同于 Button: Button
+    UserCard     // 等同于 UserCard: UserCard
   },
   
+  // ✅ data 函数 - 方法简写 + 属性简写
   data() {
     const username = '张三'
     const level = 5
+    const isVip = true
     
-    // 返回对象 - 属性简写
-    return { username, level }
-  },
-  
-  // 方法 - 方法简写（自动省略 function）
-  methods: {
-    handleClick() {
-      console.log('clicked')
-    },
-    
-    fetchData() {
-      // ...
+    // 返回对象使用属性简写
+    return { 
+      username,  // 等同于 username: username
+      level,     // 等同于 level: level
+      isVip      // 等同于 isVip: isVip
     }
   },
   
-  // 计算属性 - 方法简写
+  // ✅ computed - 方法简写
   computed: {
+    // getter 方法简写
     fullName() {
-      return this.firstName + this.lastName
+      return this.firstName + ' ' + this.lastName
+    },
+    
+    // getter + setter 完整写法
+    displayName: {
+      get() {
+        return this.firstName + ' ' + this.lastName
+      },
+      set(newValue) {
+        const names = newValue.split(' ')
+        this.firstName = names[0]
+        this.lastName = names[names.length - 1]
+      }
+    },
+    
+    // 过滤列表（Vue 官方示例）
+    evenNumbers() {
+      return this.numbers.filter(number => number % 2 === 0)
+    }
+  },
+  
+  // ✅ methods - 方法简写
+  methods: {
+    // 不需要写 function 关键字
+    handleClick() {
+      console.log('按钮被点击')
+    },
+    
+    async fetchUserData() {
+      const response = await fetch('/api/user')
+      this.userData = await response.json()
+    },
+    
+    // 带参数的方法
+    updateProfile(name, age) {
+      this.name = name
+      this.age = age
+    }
+  },
+  
+  // ✅ watch - 方法简写
+  watch: {
+    username(newVal, oldVal) {
+      console.log(\`用户名从 \${oldVal} 变为 \${newVal}\`)
     }
   }
 }`
@@ -233,7 +341,8 @@ export default {
   margin-bottom: $spacing-md;
 }
 
-.concept-content {
+.concept-content,
+.why-content {
   h4 {
     color: $color-primary;
     margin: $spacing-md 0 $spacing-sm;
@@ -259,5 +368,91 @@ export default {
     font-family: $font-family-code;
     color: $color-primary;
   }
+}
+
+// 比喻说明框
+.analogy-box {
+  background: linear-gradient(135deg, #f0f7ff 0%, #e8f4fd 100%);
+  border-radius: $radius-md;
+  padding: $spacing-md;
+  margin: $spacing-sm 0;
+  
+  p {
+    margin: $spacing-xs 0;
+    line-height: 1.8;
+  }
+}
+
+// 特性网格
+.feature-grid {
+  display: grid;
+  gap: $spacing-md;
+  margin-top: $spacing-md;
+  
+  .feature-item {
+    display: flex;
+    align-items: flex-start;
+    gap: $spacing-sm;
+    background: $color-card;
+    border: 1px solid $color-border;
+    border-radius: $radius-md;
+    padding: $spacing-md;
+    
+    .feature-icon {
+      font-size: 24px;
+      flex-shrink: 0;
+    }
+    
+    strong {
+      display: block;
+      color: $color-text;
+      margin-bottom: 4px;
+    }
+    
+    p {
+      margin: 0;
+      color: $color-text-secondary;
+      font-size: $font-size-sm;
+    }
+  }
+}
+
+// 对比块
+.compare-block {
+  margin-top: $spacing-md;
+  
+  .compare-item {
+    padding: $spacing-sm $spacing-md;
+    border-radius: $radius-sm;
+    margin-bottom: $spacing-sm;
+    
+    .label {
+      display: block;
+      font-size: $font-size-xs;
+      margin-bottom: 4px;
+    }
+    
+    code {
+      background: rgba(255, 255, 255, 0.8);
+      padding: 4px 8px;
+      border-radius: 4px;
+      font-family: $font-family-code;
+      font-size: $font-size-sm;
+    }
+    
+    &.bad {
+      background: #ffebee;
+      .label { color: $color-error; }
+    }
+    
+    &.good {
+      background: #e8f5e9;
+      .label { color: $color-success; }
+    }
+  }
+}
+
+.mt-md {
+  margin-top: $spacing-md;
 }
 </style>

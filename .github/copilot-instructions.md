@@ -12,6 +12,34 @@
 
 ---
 
+## ⚡ 重要开发规范
+
+### 🌐 Context7 文档集成（必须遵守）
+
+**后续所有章节内容都必须结合 Context7 获取官方文档，使内容更详细、通俗易懂！**
+
+| 技术 | Context7 ID | 用途 |
+|------|-------------|------|
+| Vue 2 | `/vuejs/v2.vuejs.org` | Vue 2 官方文档（986 代码片段） |
+| Vue Router 3 | `/vuejs/vue-router` | 路由文档（534 代码片段） |
+| Vuex 3 | `/vuejs/vuex` | 状态管理文档（223 代码片段） |
+
+**使用方式**：
+```
+mcp_io_github_ups_get-library-docs
+- context7CompatibleLibraryID: "/vuejs/v2.vuejs.org"
+- topic: "具体主题，如 computed, v-for, lifecycle"
+```
+
+**内容要求**：
+1. ✅ 每个知识点配合 **通俗比喻**（如苹果工厂流水线解释高阶函数）
+2. ✅ 引用 **Vue 官方推荐写法**（来自 Context7）
+3. ✅ 包含 **Vue 中的实际应用场景**
+4. ✅ 使用 **可视化图表/流程图** 增强理解
+5. ✅ 添加 **常见错误提示** 和 **最佳实践**
+
+---
+
 ## 📖 文档索引
 
 本项目的任务清单被拆分为多个子文档，便于管理和执行：

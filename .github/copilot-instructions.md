@@ -521,7 +521,7 @@ export default {
 | 生命周期 | 03-lifecycle.md | 1 | 6 | ✅ 已完成 | 2025-01-02 |
 | Vue 指令 | 04-directives.md | 6 | 16 | ✅ 已完成 | 2025-01-03 |
 | 计算属性 | 05-computed-watch.md | 2 | 12 | ✅ 已完成 | 2025-01-04 |
-| 自定义指令 | 06-custom-directives.md | 1 | 8 | ⬜ 待开始 | - |
+| 自定义指令 | 06-custom-directives.md | 1 | 8 | ✅ 已完成 | 2025-01-05 |
 | 组件化 | 07-components.md | 5 | ~35 | ⬜ 待开始 | - |
 | Vue-Router | 08-vue-router.md | 6 | ~30 | ⬜ 待开始 | - |
 | Vuex | 09-vuex.md | 5 | ~25 | ⬜ 待开始 | - |

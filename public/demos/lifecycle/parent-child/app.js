@@ -1,16 +1,16 @@
 /**
  * 父子组件生命周期顺序
- * 
+ *
  * 这是理解 Vue 组件化开发的重要知识点
- * 
+ *
  * 挂载顺序：
  * 父 beforeCreate → 父 created → 父 beforeMount
  * → 子 beforeCreate → 子 created → 子 beforeMount → 子 mounted
  * → 父 mounted
- * 
+ *
  * 更新顺序：
  * 父 beforeUpdate → 子 beforeUpdate → 子 updated → 父 updated
- * 
+ *
  * 销毁顺序：
  * 父 beforeDestroy → 子 beforeDestroy → 子 destroyed → 父 destroyed
  */
@@ -23,9 +23,9 @@ Vue.component('child-a', {
       <p style="margin: 4px 0; font-size: 14px;">消息: {{ message }}</p>
     </div>
   `,
-  
+
   props: ['message'],
-  
+
   beforeCreate() {
     this.$parent.$emit('hook-called', { type: 'child', hook: '子A beforeCreate', phase: null })
   },
@@ -39,13 +39,21 @@ Vue.component('child-a', {
     this.$parent.$emit('hook-called', { type: 'child', hook: '子A mounted' })
   },
   beforeUpdate() {
-    this.$parent.$emit('hook-called', { type: 'child', hook: '子A beforeUpdate', phase: '更新阶段' })
+    this.$parent.$emit('hook-called', {
+      type: 'child',
+      hook: '子A beforeUpdate',
+      phase: '更新阶段'
+    })
   },
   updated() {
     this.$parent.$emit('hook-called', { type: 'child', hook: '子A updated' })
   },
   beforeDestroy() {
-    this.$parent.$emit('hook-called', { type: 'child', hook: '子A beforeDestroy', phase: '销毁阶段' })
+    this.$parent.$emit('hook-called', {
+      type: 'child',
+      hook: '子A beforeDestroy',
+      phase: '销毁阶段'
+    })
   },
   destroyed() {
     this.$parent.$emit('hook-called', { type: 'child', hook: '子A destroyed' })
@@ -60,9 +68,9 @@ Vue.component('child-b', {
       <p style="margin: 4px 0; font-size: 14px;">消息: {{ message }}</p>
     </div>
   `,
-  
+
   props: ['message'],
-  
+
   beforeCreate() {
     this.$parent.$emit('hook-called', { type: 'child', hook: '子B beforeCreate' })
   },
@@ -102,9 +110,9 @@ Vue.component('parent-component', {
       <child-b :message="message"></child-b>
     </div>
   `,
-  
+
   props: ['message'],
-  
+
   beforeCreate() {
     // 注意：此时 $emit 还不可用，需要延迟
     this.$nextTick(() => {
@@ -138,31 +146,31 @@ Vue.component('parent-component', {
 // 主 Vue 实例
 new Vue({
   el: '#app',
-  
+
   data() {
     return {
       // 是否挂载组件
       isMounted: false,
-      
+
       // 消息
       message: 'Hello Vue!',
-      
+
       // 时间线
       timeline: [],
-      
+
       // 顺序计数
       order: 0,
-      
+
       // 当前活跃组件
       activeComponent: '',
-      
+
       // 当前钩子
       parentHook: '',
       child1Hook: '',
       child2Hook: ''
     }
   },
-  
+
   methods: {
     /**
      * 挂载组件
@@ -171,20 +179,20 @@ new Vue({
       this.clearTimeline()
       this.isMounted = true
     },
-    
+
     /**
      * 更新数据
      */
     updateComponents() {
       this.message = '更新于 ' + new Date().toLocaleTimeString()
     },
-    
+
     /**
      * 销毁组件
      */
     destroyComponents() {
       this.isMounted = false
-      
+
       // 延迟添加最后的销毁记录
       setTimeout(() => {
         this.timeline.push({
@@ -196,7 +204,7 @@ new Vue({
         })
       }, 100)
     },
-    
+
     /**
      * 清空时间线
      */
@@ -204,13 +212,13 @@ new Vue({
       this.timeline = []
       this.order = 0
     },
-    
+
     /**
      * 钩子被调用时
      */
     onHookCalled(data) {
       this.order++
-      
+
       // 设置活跃组件
       if (data.hook.includes('父')) {
         this.activeComponent = 'parent'
@@ -222,7 +230,7 @@ new Vue({
         this.activeComponent = 'child2'
         this.child2Hook = data.hook.replace('子B ', '')
       }
-      
+
       // 添加到时间线
       this.timeline.push({
         order: this.order,
@@ -231,7 +239,7 @@ new Vue({
         phase: data.phase || null,
         active: true
       })
-      
+
       // 移除活跃状态
       setTimeout(() => {
         const item = this.timeline[this.timeline.length - 1]

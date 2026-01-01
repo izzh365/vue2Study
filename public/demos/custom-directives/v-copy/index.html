@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>v-copy 一键复制指令</title>
+  <script src="https://cdn.jsdelivr.net/npm/vue@2.7.16/dist/vue.js"></script>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { 
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      padding: 20px;
+      background: #f5f5f7;
+    }
+    .container { max-width: 600px; margin: 0 auto; }
+    h3 { color: #1d1d1f; margin-bottom: 16px; }
+    .demo-section {
+      background: white;
+      border-radius: 12px;
+      padding: 20px;
+      margin-bottom: 16px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    }
+    .demo-section h4 {
+      color: #007AFF;
+      font-size: 14px;
+      margin-bottom: 12px;
+    }
+    .copy-box {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      background: #f9fafb;
+      padding: 16px;
+      border-radius: 8px;
+      margin-bottom: 12px;
+    }
+    .copy-text {
+      flex: 1;
+      font-family: 'SF Mono', monospace;
+      font-size: 14px;
+      color: #1d1d1f;
+      word-break: break-all;
+    }
+    .copy-btn {
+      background: #007AFF;
+      color: white;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 14px;
+      transition: all 0.3s;
+      white-space: nowrap;
+    }
+    .copy-btn:hover { background: #0056b3; }
+    .copy-btn.copied {
+      background: #34C759;
+    }
+    .tip {
+      background: #e3f2fd;
+      color: #1565c0;
+      padding: 12px;
+      border-radius: 8px;
+      font-size: 14px;
+      margin-top: 12px;
+    }
+    .code { 
+      background: #f5f5f5; 
+      padding: 2px 6px; 
+      border-radius: 4px; 
+      font-family: monospace;
+    }
+    .toast {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      background: #1d1d1f;
+      color: white;
+      padding: 12px 24px;
+      border-radius: 8px;
+      font-size: 14px;
+      opacity: 0;
+      transform: translateY(-10px);
+      transition: all 0.3s;
+    }
+    .toast.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .code-block {
+      background: #1e1e1e;
+      color: #d4d4d4;
+      padding: 16px;
+      border-radius: 8px;
+      font-family: 'SF Mono', monospace;
+      font-size: 13px;
+      line-height: 1.6;
+      overflow-x: auto;
+      position: relative;
+    }
+    .code-block .copy-btn {
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      padding: 4px 12px;
+      font-size: 12px;
+    }
+    .code-block pre { margin: 0; }
+    .keyword { color: #569cd6; }
+    .string { color: #ce9178; }
+    .function { color: #dcdcaa; }
+  </style>
+</head>
+<body>
+  <div id="app" class="container">
+    <h3>📋 v-copy 一键复制指令</h3>
+    
+    <!-- Toast 提示 -->
+    <div class="toast" :class="{ show: showToast }">{{ toastMessage }}</div>
+    
+    <!-- Demo 1: 基础用法 -->
+    <div class="demo-section">
+      <h4>1. 点击按钮复制文本</h4>
+      <div class="copy-box">
+        <span class="copy-text">{{ inviteCode }}</span>
+        <button 
+          class="copy-btn"
+          :class="{ copied: copied1 }"
+          v-copy="inviteCode"
+          v-copy:callback="onCopySuccess"
+        >
+          {{ copied1 ? '已复制 ✓' : '复制邀请码' }}
+        </button>
+      </div>
+      <div class="tip">
+        💡 <span class="code">v-copy="text"</span> 点击元素即可复制指定文本
+      </div>
+    </div>
+    
+    <!-- Demo 2: 复制链接 -->
+    <div class="demo-section">
+      <h4>2. 复制分享链接</h4>
+      <div class="copy-box">
+        <span class="copy-text">{{ shareLink }}</span>
+        <button 
+          class="copy-btn"
+          :class="{ copied: copied2 }"
+          v-copy="shareLink"
+          @click="handleCopy2"
+        >
+          {{ copied2 ? '已复制 ✓' : '复制链接' }}
+        </button>
+      </div>
+    </div>
+    
+    <!-- Demo 3: 复制代码块 -->
+    <div class="demo-section">
+      <h4>3. 复制代码块</h4>
+      <div class="code-block">
+        <button 
+          class="copy-btn"
+          :class="{ copied: copied3 }"
+          v-copy="codeText"
+          @click="handleCopy3"
+        >
+          {{ copied3 ? '已复制 ✓' : '复制' }}
+        </button>
+        <pre><span class="keyword">const</span> <span class="function">sayHello</span> = (<span class="string">name</span>) => {
+  <span class="keyword">return</span> <span class="string">`Hello, ${name}!`</span>
+}</pre>
+      </div>
+      <div class="tip">
+        💡 常用于代码示例、文档页面的一键复制功能
+      </div>
+    </div>
+  </div>
+  
+  <script src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>指令参数和修饰符详解</title>
+  <script src="https://cdn.jsdelivr.net/npm/vue@2.7.16/dist/vue.js"></script>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { 
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      padding: 20px;
+      background: #f5f5f7;
+    }
+    .container { max-width: 700px; margin: 0 auto; }
+    h3 { color: #1d1d1f; margin-bottom: 16px; }
+    .demo-section {
+      background: white;
+      border-radius: 12px;
+      padding: 20px;
+      margin-bottom: 16px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    }
+    .demo-section h4 {
+      color: #007AFF;
+      font-size: 14px;
+      margin-bottom: 12px;
+    }
+    .tip {
+      background: #e3f2fd;
+      color: #1565c0;
+      padding: 12px;
+      border-radius: 8px;
+      font-size: 14px;
+      margin-top: 12px;
+    }
+    .code { 
+      background: #f5f5f5; 
+      padding: 2px 6px; 
+      border-radius: 4px; 
+      font-family: monospace;
+    }
+    
+    /* 表格样式 */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 16px;
+    }
+    th, td {
+      padding: 12px;
+      text-align: left;
+      border-bottom: 1px solid #e5e5ea;
+    }
+    th {
+      background: #f9fafb;
+      font-weight: 600;
+      color: #86868b;
+      font-size: 12px;
+      text-transform: uppercase;
+    }
+    
+    /* Demo 样式 */
+    .demo-box {
+      padding: 20px;
+      border-radius: 8px;
+      margin-bottom: 12px;
+      text-align: center;
+    }
+    
+    .pin-box {
+      height: 60px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 600;
+    }
+    
+    /* 代码块 */
+    .code-block {
+      background: #1e1e1e;
+      color: #d4d4d4;
+      padding: 16px;
+      border-radius: 8px;
+      font-family: 'SF Mono', monospace;
+      font-size: 13px;
+      line-height: 1.6;
+      overflow-x: auto;
+      margin-bottom: 12px;
+    }
+    .keyword { color: #569cd6; }
+    .string { color: #ce9178; }
+    .function { color: #dcdcaa; }
+    .comment { color: #6a9955; }
+    
+    /* 动态边框 */
+    .border-demo {
+      padding: 20px;
+      border-radius: 8px;
+      text-align: center;
+      transition: all 0.3s;
+    }
+    
+    /* 事件演示 */
+    .event-box {
+      padding: 30px;
+      background: #f9fafb;
+      border-radius: 8px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+    .event-box:hover {
+      background: #e3f2fd;
+    }
+    
+    .log-panel {
+      background: #1e1e1e;
+      color: #d4d4d4;
+      padding: 12px;
+      border-radius: 8px;
+      font-family: 'SF Mono', monospace;
+      font-size: 12px;
+      max-height: 120px;
+      overflow-y: auto;
+      margin-top: 12px;
+    }
+  </style>
+</head>
+<body>
+  <div id="app" class="container">
+    <h3>📝 指令参数和修饰符详解</h3>
+    
+    <!-- 知识点：指令语法 -->
+    <div class="demo-section">
+      <h4>📖 指令完整语法</h4>
+      <div class="code-block">
+        <span class="comment">// 完整语法</span><br>
+        v-指令名:<span class="string">参数</span>.<span class="keyword">修饰符1</span>.<span class="keyword">修饰符2</span>="<span class="function">值</span>"<br><br>
+        <span class="comment">// 示例</span><br>
+        v-on:<span class="string">click</span>.<span class="keyword">stop</span>.<span class="keyword">prevent</span>="<span class="function">handleClick</span>"<br>
+        v-bind:<span class="string">class</span>="<span class="function">{ active: isActive }</span>"<br>
+        v-my-directive:<span class="string">foo</span>.<span class="keyword">bar</span>="<span class="function">someValue</span>"
+      </div>
+      <table>
+        <thead>
+          <tr>
+            <th>组成部分</th>
+            <th>说明</th>
+            <th>获取方式</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>name</td>
+            <td>指令名（不包含 v-）</td>
+            <td>binding.name</td>
+          </tr>
+          <tr>
+            <td>value</td>
+            <td>指令绑定的值</td>
+            <td>binding.value</td>
+          </tr>
+          <tr>
+            <td>oldValue</td>
+            <td>上一次的值（仅 update 可用）</td>
+            <td>binding.oldValue</td>
+          </tr>
+          <tr>
+            <td>arg</td>
+            <td>传给指令的参数</td>
+            <td>binding.arg</td>
+          </tr>
+          <tr>
+            <td>modifiers</td>
+            <td>修饰符对象</td>
+            <td>binding.modifiers</td>
+          </tr>
+          <tr>
+            <td>expression</td>
+            <td>绑定值的字符串形式</td>
+            <td>binding.expression</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    
+    <!-- Demo 1: 参数演示 -->
+    <div class="demo-section">
+      <h4>1. 参数(arg)示例：v-pin</h4>
+      <p style="margin-bottom: 12px; color: #86868b;">使用参数指定固定的方向</p>
+      <div class="pin-box" v-pin:left="50" style="background: #ffebee;">
+        v-pin:left="50" → 距离左侧 50px
+      </div>
+      <div class="pin-box" v-pin:top="20" style="background: #e3f2fd;">
+        v-pin:top="20" → 距离顶部 20px
+      </div>
+      <div class="tip">
+        💡 参数通过 <span class="code">binding.arg</span> 获取，如 <span class="code">v-pin:left</span> 中的 "left"
+      </div>
+    </div>
+    
+    <!-- Demo 2: 修饰符演示 -->
+    <div class="demo-section">
+      <h4>2. 修饰符(modifiers)示例：v-border</h4>
+      <p style="margin-bottom: 12px; color: #86868b;">使用修饰符控制边框样式</p>
+      <div class="border-demo" v-border.dashed="'#007AFF'">
+        v-border.dashed → 虚线边框
+      </div>
+      <div class="border-demo" v-border.thick="'#34C759'" style="margin-top: 8px;">
+        v-border.thick → 粗边框
+      </div>
+      <div class="border-demo" v-border.round.thick="'#FF9500'" style="margin-top: 8px;">
+        v-border.round.thick → 圆角 + 粗边框
+      </div>
+      <div class="tip">
+        💡 修饰符通过 <span class="code">binding.modifiers</span> 获取，返回对象如 <span class="code">{ dashed: true, thick: true }</span>
+      </div>
+    </div>
+    
+    <!-- Demo 3: 综合演示 -->
+    <div class="demo-section">
+      <h4>3. 综合示例：v-log</h4>
+      <p style="margin-bottom: 12px; color: #86868b;">点击下方区域，观察日志输出</p>
+      <div 
+        class="event-box" 
+        v-log:click.once.detail="logMessage"
+      >
+        v-log:click.once.detail="logMessage"<br>
+        <small style="color: #86868b;">（点击我查看效果）</small>
+      </div>
+      <div class="log-panel" v-if="logs.length">
+        <div v-for="(log, i) in logs" :key="i" style="border-bottom: 1px solid #333; padding: 4px 0;">
+          {{ log }}
+        </div>
+      </div>
+      <div class="tip">
+        💡 v-log 指令展示了如何同时使用参数（click）、修饰符（once, detail）和值（logMessage）
+      </div>
+    </div>
+    
+    <!-- Demo 4: binding 对象详解 -->
+    <div class="demo-section">
+      <h4>4. binding 对象完整信息</h4>
+      <div 
+        class="event-box"
+        v-debug:myArg.mod1.mod2="debugValue"
+        style="text-align: left; padding: 16px;"
+      >
+        <div v-if="bindingInfo">
+          <p><strong>name:</strong> {{ bindingInfo.name }}</p>
+          <p><strong>value:</strong> {{ bindingInfo.value }}</p>
+          <p><strong>expression:</strong> {{ bindingInfo.expression }}</p>
+          <p><strong>arg:</strong> {{ bindingInfo.arg }}</p>
+          <p><strong>modifiers:</strong> {{ JSON.stringify(bindingInfo.modifiers) }}</p>
+        </div>
+      </div>
+      <div class="code-block" style="margin-top: 12px;">
+        &lt;div v-debug:<span class="string">myArg</span>.<span class="keyword">mod1</span>.<span class="keyword">mod2</span>="<span class="function">debugValue</span>"&gt;&lt;/div&gt;
+      </div>
+    </div>
+  </div>
+  
+  <script src="app.js"></script>
+</body>
+</html>

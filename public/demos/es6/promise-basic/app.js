@@ -1,18 +1,18 @@
 /**
  * Promise 基本用法演示
- * 
+ *
  * Promise 三种状态：
  * 1. pending（进行中）：初始状态
  * 2. fulfilled（已成功）：操作成功完成
  * 3. rejected（已失败）：操作失败
- * 
+ *
  * 状态特点：
  * - 状态只能从 pending 变为 fulfilled 或 rejected
  * - 状态一旦改变，就不会再变
  */
 new Vue({
   el: '#app',
-  
+
   data() {
     return {
       status: 'pending',
@@ -20,7 +20,7 @@ new Vue({
       result: ''
     }
   },
-  
+
   methods: {
     /**
      * 模拟网络请求（返回 Promise）
@@ -34,7 +34,7 @@ new Vue({
         this.status = 'pending'
         this.statusText = '⏳ pending（请求中...）'
         this.result = ''
-        
+
         // 模拟网络延迟（1秒）
         setTimeout(() => {
           if (shouldSucceed) {
@@ -55,7 +55,7 @@ new Vue({
         }, 1000)
       })
     },
-    
+
     /**
      * 模拟成功的请求
      */
@@ -75,7 +75,7 @@ new Vue({
           this.result = error.message
         })
     },
-    
+
     /**
      * 模拟失败的请求
      */

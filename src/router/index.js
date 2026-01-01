@@ -135,6 +135,12 @@ const routes = [
     component: () => import('@/views/chapters/custom-directives/Index.vue'),
     meta: { title: '自定义指令', chapter: 6 }
   },
+  {
+    path: '/custom-directives/main',
+    name: 'CustomDirectives',
+    component: () => import('@/views/chapters/custom-directives/CustomDirectives.vue'),
+    meta: { title: '自定义指令详解', chapter: 6 }
+  },
 
   // ==================== 组件化章节 ====================
   {

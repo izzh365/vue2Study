@@ -1,23 +1,23 @@
 /**
  * computed 缓存特性对比
- * 
+ *
  * 【核心区别】
  * - computed：有缓存！依赖不变时，直接返回之前的结果
  * - methods：无缓存！每次调用都会重新执行
- * 
+ *
  * 【通俗比喻】
  * computed 像是"备忘录"：
  *   - 第一次计算后把结果记下来
  *   - 下次问同样的问题，直接看备忘录
  *   - 只有相关信息变了，才重新计算
- * 
+ *
  * methods 像是"每次都重新算"：
  *   - 每次问都重新算一遍
  *   - 即使问的是完全相同的问题
  */
 new Vue({
   el: '#app',
-  
+
   data() {
     return {
       message: 'Hello Vue',
@@ -27,7 +27,7 @@ new Vue({
       methodCount: 0
     }
   },
-  
+
   computed: {
     /**
      * 计算属性 - 有缓存
@@ -43,7 +43,7 @@ new Vue({
       return this.message.split('').reverse().join('')
     }
   },
-  
+
   methods: {
     /**
      * 方法 - 无缓存

@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>v-lazy 图片懒加载指令</title>
+  <script src="https://cdn.jsdelivr.net/npm/vue@2.7.16/dist/vue.js"></script>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { 
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      padding: 20px;
+      background: #f5f5f7;
+    }
+    .container { max-width: 600px; margin: 0 auto; }
+    h3 { color: #1d1d1f; margin-bottom: 16px; }
+    .demo-section {
+      background: white;
+      border-radius: 12px;
+      padding: 20px;
+      margin-bottom: 16px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    }
+    .demo-section h4 {
+      color: #007AFF;
+      font-size: 14px;
+      margin-bottom: 12px;
+    }
+    .tip {
+      background: #e3f2fd;
+      color: #1565c0;
+      padding: 12px;
+      border-radius: 8px;
+      font-size: 14px;
+      margin-top: 12px;
+    }
+    .code { 
+      background: #f5f5f5; 
+      padding: 2px 6px; 
+      border-radius: 4px; 
+      font-family: monospace;
+    }
+    .scroll-hint {
+      background: #fff3e0;
+      color: #e65100;
+      padding: 12px;
+      border-radius: 8px;
+      margin-bottom: 16px;
+      font-size: 14px;
+    }
+    .image-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+    }
+    .image-item {
+      aspect-ratio: 4/3;
+      border-radius: 8px;
+      overflow: hidden;
+      background: #f0f0f0;
+      position: relative;
+    }
+    .image-item img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: opacity 0.3s;
+    }
+    .image-item img[data-src] {
+      opacity: 0;
+    }
+    .image-item img.loaded {
+      opacity: 1;
+    }
+    /* 加载占位 */
+    .placeholder {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      color: #86868b;
+      font-size: 12px;
+    }
+    .placeholder::before {
+      content: '🖼️';
+      font-size: 24px;
+    }
+    .log-panel {
+      background: #1e1e1e;
+      color: #d4d4d4;
+      padding: 12px;
+      border-radius: 8px;
+      font-family: 'SF Mono', monospace;
+      font-size: 12px;
+      max-height: 150px;
+      overflow-y: auto;
+      margin-top: 12px;
+    }
+    .log-item {
+      padding: 4px 0;
+      border-bottom: 1px solid #333;
+    }
+    .log-item:last-child { border-bottom: none; }
+    .log-time { color: #6a9955; }
+    .log-msg { color: #ce9178; }
+  </style>
+</head>
+<body>
+  <div id="app" class="container">
+    <h3>🖼️ v-lazy 图片懒加载指令</h3>
+    
+    <div class="scroll-hint">
+      👇 向下滚动查看更多图片，观察控制台和日志面板的加载信息
+    </div>
+    
+    <!-- Demo 1: 图片懒加载 -->
+    <div class="demo-section">
+      <h4>1. 图片列表懒加载</h4>
+      <div class="image-grid">
+        <div class="image-item" v-for="(img, index) in images" :key="index">
+          <div class="placeholder"></div>
+          <img 
+            v-lazy="img.src" 
+            :alt="img.alt"
+            @lazy-loaded="onImageLoaded(index)"
+          >
+        </div>
+      </div>
+      <div class="tip">
+        💡 <span class="code">v-lazy="imageUrl"</span> 当图片进入可视区域时才加载
+      </div>
+      
+      <!-- 加载日志 -->
+      <div class="log-panel" v-if="loadLogs.length">
+        <div class="log-item" v-for="(log, i) in loadLogs" :key="i">
+          <span class="log-time">[{{ log.time }}]</span>
+          <span class="log-msg">{{ log.message }}</span>
+        </div>
+      </div>
+    </div>
+    
+    <!-- 占位区域，用于演示滚动 -->
+    <div class="demo-section" style="height: 300px; display: flex; align-items: center; justify-content: center; color: #86868b;">
+      <p>👆 向上滚动查看懒加载效果</p>
+    </div>
+  </div>
+  
+  <script src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>v-permission 权限控制指令</title>
+  <script src="https://cdn.jsdelivr.net/npm/vue@2.7.16/dist/vue.js"></script>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { 
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      padding: 20px;
+      background: #f5f5f7;
+    }
+    .container { max-width: 600px; margin: 0 auto; }
+    h3 { color: #1d1d1f; margin-bottom: 16px; }
+    .demo-section {
+      background: white;
+      border-radius: 12px;
+      padding: 20px;
+      margin-bottom: 16px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    }
+    .demo-section h4 {
+      color: #007AFF;
+      font-size: 14px;
+      margin-bottom: 12px;
+    }
+    .tip {
+      background: #e3f2fd;
+      color: #1565c0;
+      padding: 12px;
+      border-radius: 8px;
+      font-size: 14px;
+      margin-top: 12px;
+    }
+    .warning {
+      background: #fff3e0;
+      color: #e65100;
+      padding: 12px;
+      border-radius: 8px;
+      font-size: 14px;
+      margin-bottom: 12px;
+    }
+    .code { 
+      background: #f5f5f5; 
+      padding: 2px 6px; 
+      border-radius: 4px; 
+      font-family: monospace;
+    }
+    
+    /* 角色切换 */
+    .role-switcher {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 16px;
+      flex-wrap: wrap;
+    }
+    .role-btn {
+      padding: 8px 16px;
+      border: 2px solid #e5e5ea;
+      border-radius: 20px;
+      background: white;
+      cursor: pointer;
+      font-size: 14px;
+      transition: all 0.3s;
+    }
+    .role-btn:hover { border-color: #007AFF; }
+    .role-btn.active {
+      background: #007AFF;
+      color: white;
+      border-color: #007AFF;
+    }
+    
+    /* 权限信息 */
+    .current-role {
+      background: #f0f0f0;
+      padding: 12px;
+      border-radius: 8px;
+      margin-bottom: 16px;
+    }
+    .role-badge {
+      display: inline-block;
+      padding: 4px 12px;
+      border-radius: 12px;
+      font-size: 12px;
+      font-weight: 600;
+      margin-left: 8px;
+    }
+    .role-admin { background: #ffebee; color: #c62828; }
+    .role-editor { background: #e3f2fd; color: #1565c0; }
+    .role-viewer { background: #e8f5e9; color: #2e7d32; }
+    
+    /* 按钮组 */
+    .btn-group {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-bottom: 12px;
+    }
+    button {
+      padding: 10px 20px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 14px;
+      transition: all 0.3s;
+    }
+    .btn-primary { background: #007AFF; color: white; }
+    .btn-primary:hover { background: #0056b3; }
+    .btn-danger { background: #FF3B30; color: white; }
+    .btn-danger:hover { background: #c82333; }
+    .btn-success { background: #34C759; color: white; }
+    .btn-success:hover { background: #28a745; }
+    .btn-warning { background: #FF9500; color: white; }
+    .btn-warning:hover { background: #e68a00; }
+    
+    /* 菜单列表 */
+    .menu-list {
+      list-style: none;
+    }
+    .menu-item {
+      padding: 12px;
+      border-bottom: 1px solid #e5e5ea;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .menu-item:last-child { border-bottom: none; }
+    .menu-icon { margin-right: 8px; }
+  </style>
+</head>
+<body>
+  <div id="app" class="container">
+    <h3>🔐 v-permission 权限控制指令</h3>
+    
+    <!-- 角色切换 -->
+    <div class="demo-section">
+      <h4>当前角色</h4>
+      <div class="current-role">
+        您当前的角色是：
+        <span class="role-badge" :class="'role-' + currentRole">
+          {{ roleNames[currentRole] }}
+        </span>
+      </div>
+      <div class="role-switcher">
+        <button 
+          class="role-btn" 
+          :class="{ active: currentRole === 'admin' }"
+          @click="switchRole('admin')"
+        >
+          👑 管理员
+        </button>
+        <button 
+          class="role-btn" 
+          :class="{ active: currentRole === 'editor' }"
+          @click="switchRole('editor')"
+        >
+          ✏️ 编辑者
+        </button>
+        <button 
+          class="role-btn" 
+          :class="{ active: currentRole === 'viewer' }"
+          @click="switchRole('viewer')"
+        >
+          👁️ 访客
+        </button>
+      </div>
+    </div>
+    
+    <!-- Demo 1: 按钮权限 -->
+    <div class="demo-section">
+      <h4>1. 按钮权限控制</h4>
+      <div class="warning">
+        💡 切换不同角色，观察哪些按钮可见
+      </div>
+      <div class="btn-group">
+        <button class="btn-primary" v-permission="'view'">
+          👁️ 查看
+        </button>
+        <button class="btn-success" v-permission="'edit'">
+          ✏️ 编辑
+        </button>
+        <button class="btn-warning" v-permission="'publish'">
+          📤 发布
+        </button>
+        <button class="btn-danger" v-permission="'delete'">
+          🗑️ 删除
+        </button>
+      </div>
+      <div class="tip">
+        💡 <span class="code">v-permission="'delete'"</span> 只有拥有该权限的角色才能看到元素
+      </div>
+    </div>
+    
+    <!-- Demo 2: 菜单权限 -->
+    <div class="demo-section">
+      <h4>2. 菜单权限控制</h4>
+      <ul class="menu-list">
+        <li class="menu-item" v-permission="'view'">
+          <span><span class="menu-icon">📊</span>数据看板</span>
+          <span>→</span>
+        </li>
+        <li class="menu-item" v-permission="'edit'">
+          <span><span class="menu-icon">📝</span>内容管理</span>
+          <span>→</span>
+        </li>
+        <li class="menu-item" v-permission="'publish'">
+          <span><span class="menu-icon">📤</span>发布中心</span>
+          <span>→</span>
+        </li>
+        <li class="menu-item" v-permission="'admin'">
+          <span><span class="menu-icon">⚙️</span>系统设置</span>
+          <span>→</span>
+        </li>
+        <li class="menu-item" v-permission="'admin'">
+          <span><span class="menu-icon">👥</span>用户管理</span>
+          <span>→</span>
+        </li>
+      </ul>
+    </div>
+  </div>
+  
+  <script src="app.js"></script>
+</body>
+</html>

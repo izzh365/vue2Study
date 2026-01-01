@@ -3,7 +3,7 @@
     <h1>🛠️ 第6章 自定义指令</h1>
     <p class="chapter-desc">当内置指令无法满足需求时，可以创建自定义指令。</p>
     <div class="section-list">
-      <router-link to="/custom-directives/basic" class="section-item">
+      <router-link to="/custom-directives/main" class="section-item">
         <span class="section-icon">🛠️</span>
         <div class="section-info"><h3>6.1 自定义指令详解</h3><p>钩子函数、参数、实战案例</p></div>
       </router-link>

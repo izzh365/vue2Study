@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>作用域插槽</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+      min-height: 100vh;
+      padding: 40px 20px;
+    }
+
+    #app {
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    h1 {
+      color: white;
+      text-align: center;
+      margin-bottom: 30px;
+      text-shadow: 0 2px 10px rgba(0,0,0,0.2);
+    }
+
+    .demo-section {
+      background: white;
+      border-radius: 16px;
+      padding: 24px;
+      margin-bottom: 24px;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+    }
+
+    .section-title {
+      font-size: 18px;
+      font-weight: 600;
+      color: #1D1D1F;
+      margin-bottom: 16px;
+      padding-bottom: 12px;
+      border-bottom: 2px solid #F5F5F7;
+    }
+
+    /* 列表样式 */
+    .list-item {
+      display: flex;
+      align-items: center;
+      padding: 12px 16px;
+      border-bottom: 1px solid #F5F5F7;
+    }
+
+    .list-item:last-child {
+      border-bottom: none;
+    }
+
+    .list-component {
+      background: #F9FAFB;
+      border-radius: 12px;
+      overflow: hidden;
+      margin: 16px 0;
+    }
+
+    /* 用户卡片 */
+    .user-card {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      padding: 16px;
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+      margin: 8px 0;
+    }
+
+    .user-avatar {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-weight: 600;
+    }
+
+    .user-info {
+      flex: 1;
+    }
+
+    .user-name {
+      font-weight: 600;
+      color: #1D1D1F;
+    }
+
+    .user-email {
+      font-size: 13px;
+      color: #86868B;
+    }
+
+    .user-badge {
+      padding: 4px 12px;
+      border-radius: 12px;
+      font-size: 12px;
+      font-weight: 500;
+    }
+
+    .badge-admin { background: #E8F5E9; color: #2E7D32; }
+    .badge-user { background: #E3F2FD; color: #1976D2; }
+    .badge-guest { background: #FFF3E0; color: #F57C00; }
+
+    /* 表格 */
+    .table-component {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 16px 0;
+    }
+
+    .table-component th,
+    .table-component td {
+      padding: 12px 16px;
+      text-align: left;
+      border-bottom: 1px solid #E5E5EA;
+    }
+
+    .table-component th {
+      background: #F9FAFB;
+      font-weight: 600;
+      color: #1D1D1F;
+    }
+
+    /* 标签 */
+    .tag {
+      display: inline-block;
+      padding: 4px 10px;
+      border-radius: 6px;
+      font-size: 12px;
+      margin: 2px;
+    }
+
+    .tag.tech { background: #E3F2FD; color: #1976D2; }
+    .tag.design { background: #FCE4EC; color: #C2185B; }
+    .tag.other { background: #F5F5F5; color: #666; }
+
+    /* 按钮 */
+    .btn {
+      padding: 6px 12px;
+      border: none;
+      border-radius: 6px;
+      font-size: 12px;
+      cursor: pointer;
+      margin: 2px;
+    }
+
+    .btn.primary {
+      background: #11998e;
+      color: white;
+    }
+
+    .btn.danger {
+      background: #FF3B30;
+      color: white;
+    }
+
+    .btn.secondary {
+      background: #F5F5F7;
+      color: #1D1D1F;
+    }
+
+    /* 代码说明 */
+    .code-note {
+      background: #F9FAFB;
+      border: 1px solid #E5E5EA;
+      border-radius: 8px;
+      padding: 16px;
+      margin-top: 16px;
+    }
+
+    .code-note h4 {
+      color: #1D1D1F;
+      margin-bottom: 8px;
+    }
+
+    .code-note pre {
+      background: #1D1D1F;
+      color: #fff;
+      padding: 12px;
+      border-radius: 6px;
+      overflow-x: auto;
+      font-family: 'SF Mono', Consolas, monospace;
+      font-size: 13px;
+      line-height: 1.6;
+    }
+
+    .tip-box {
+      background: #E8F5E9;
+      border-left: 4px solid #4CAF50;
+      padding: 16px;
+      border-radius: 0 8px 8px 0;
+      margin: 16px 0;
+    }
+
+    .tip-box h4 {
+      color: #2E7D32;
+      margin-bottom: 8px;
+    }
+
+    .diagram {
+      background: #F9FAFB;
+      padding: 20px;
+      border-radius: 12px;
+      text-align: center;
+      margin: 16px 0;
+    }
+
+    .flow-arrow {
+      color: #38ef7d;
+      font-size: 24px;
+      margin: 12px 0;
+    }
+
+    .flow-box {
+      display: inline-block;
+      padding: 12px 24px;
+      background: white;
+      border: 2px solid #11998e;
+      border-radius: 8px;
+      font-weight: 500;
+    }
+  </style>
+</head>
+<body>
+  <div id="app">
+    <h1>🔗 作用域插槽</h1>
+
+    <!-- 概念说明 -->
+    <div class="demo-section">
+      <div class="section-title">📚 什么是作用域插槽？</div>
+      
+      <p style="color: #86868B; margin-bottom: 16px;">
+        作用域插槽让父组件可以访问子组件的数据，从而自定义渲染方式
+      </p>
+
+      <div class="diagram">
+        <div class="flow-box">子组件持有数据</div>
+        <div class="flow-arrow">↓ 通过 slot 暴露给父组件</div>
+        <div class="flow-box">父组件决定如何渲染</div>
+      </div>
+
+      <div class="tip-box">
+        <h4>💡 核心思想</h4>
+        <p style="font-size: 14px;">
+          <strong>数据在子组件</strong>，但<strong>渲染方式由父组件决定</strong>
+        </p>
+      </div>
+    </div>
+
+    <!-- 基础示例 -->
+    <div class="demo-section">
+      <div class="section-title">🎯 基础示例</div>
+      
+      <current-user>
+        <template v-slot:default="slotProps">
+          <p>当前登录用户：<strong>{{ slotProps.user.name }}</strong></p>
+          <p style="color: #86868B;">邮箱：{{ slotProps.user.email }}</p>
+        </template>
+      </current-user>
+
+      <div class="code-note">
+        <h4>作用域插槽语法</h4>
+        <pre>// 子组件暴露数据
+&lt;slot :user="userData"&gt;&lt;/slot&gt;
+
+// 父组件接收数据
+&lt;current-user&gt;
+  &lt;template v-slot:default="slotProps"&gt;
+    {{ slotProps.user.name }}
+  &lt;/template&gt;
+&lt;/current-user&gt;
+
+// 可以使用解构简化
+&lt;template v-slot:default="{ user }"&gt;
+  {{ user.name }}
+&lt;/template&gt;</pre>
+      </div>
+    </div>
+
+    <!-- 列表渲染 -->
+    <div class="demo-section">
+      <div class="section-title">📋 列表渲染 - 自定义每项</div>
+      
+      <p style="color: #86868B; margin-bottom: 16px;">
+        同一份数据，不同的渲染方式
+      </p>
+
+      <h4 style="margin: 16px 0 8px;">渲染方式 1：简单列表</h4>
+      <user-list :users="users">
+        <template #default="{ user }">
+          <span>{{ user.name }} ({{ user.email }})</span>
+        </template>
+      </user-list>
+
+      <h4 style="margin: 16px 0 8px;">渲染方式 2：带头像的卡片</h4>
+      <user-list :users="users">
+        <template #default="{ user, index }">
+          <div class="user-card">
+            <div class="user-avatar">{{ user.name.charAt(0) }}</div>
+            <div class="user-info">
+              <div class="user-name">{{ user.name }}</div>
+              <div class="user-email">{{ user.email }}</div>
+            </div>
+            <span class="user-badge" :class="'badge-' + user.role">{{ user.role }}</span>
+          </div>
+        </template>
+      </user-list>
+    </div>
+
+    <!-- 数据表格 -->
+    <div class="demo-section">
+      <div class="section-title">📊 数据表格 - 自定义列</div>
+      
+      <data-table :data="products" :columns="columns">
+        <!-- 自定义 name 列 -->
+        <template #column-name="{ row }">
+          <strong>{{ row.name }}</strong>
+        </template>
+        
+        <!-- 自定义 price 列 -->
+        <template #column-price="{ row }">
+          <span style="color: #FF3B30; font-weight: 600;">¥{{ row.price }}</span>
+        </template>
+        
+        <!-- 自定义 tags 列 -->
+        <template #column-tags="{ row }">
+          <span v-for="tag in row.tags" :key="tag" class="tag" :class="getTagClass(tag)">
+            {{ tag }}
+          </span>
+        </template>
+        
+        <!-- 自定义操作列 -->
+        <template #column-actions="{ row }">
+          <button class="btn primary" @click="edit(row)">编辑</button>
+          <button class="btn danger" @click="remove(row)">删除</button>
+        </template>
+      </data-table>
+
+      <div class="code-note">
+        <h4>表格组件使用</h4>
+        <pre>// 子组件通过动态插槽名暴露每行数据
+&lt;slot :name="'column-' + col.key" :row="row"&gt;
+  {{ row[col.key] }}
+&lt;/slot&gt;
+
+// 父组件自定义特定列的渲染
+&lt;data-table :data="products" :columns="columns"&gt;
+  &lt;template #column-price="{ row }"&gt;
+    &lt;span style="color: red;"&gt;¥{{ row.price }}&lt;/span&gt;
+  &lt;/template&gt;
+&lt;/data-table&gt;</pre>
+      </div>
+    </div>
+
+    <!-- 解构语法 -->
+    <div class="demo-section">
+      <div class="section-title">✨ 解构和重命名</div>
+      
+      <todo-list :todos="todos">
+        <!-- 解构 + 重命名 + 默认值 -->
+        <template #default="{ todo, index, isFirst = false }">
+          <div style="display: flex; align-items: center; gap: 12px; padding: 12px; border-bottom: 1px solid #F5F5F7;">
+            <input type="checkbox" :checked="todo.done">
+            <span :style="{ textDecoration: todo.done ? 'line-through' : 'none', color: todo.done ? '#86868B' : '#1D1D1F' }">
+              {{ index + 1 }}. {{ todo.text }}
+            </span>
+            <span v-if="isFirst" style="color: #38ef7d; font-size: 12px;">✨ 首项</span>
+          </div>
+        </template>
+      </todo-list>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/vue@2.7.16/dist/vue.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

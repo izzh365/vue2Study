@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>插槽综合案例</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      padding: 40px 20px;
+    }
+
+    #app {
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+
+    h1 {
+      color: white;
+      text-align: center;
+      margin-bottom: 30px;
+      text-shadow: 0 2px 10px rgba(0,0,0,0.2);
+    }
+
+    .demo-section {
+      background: white;
+      border-radius: 16px;
+      padding: 24px;
+      margin-bottom: 24px;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+    }
+
+    .section-title {
+      font-size: 18px;
+      font-weight: 600;
+      color: #1D1D1F;
+      margin-bottom: 16px;
+      padding-bottom: 12px;
+      border-bottom: 2px solid #F5F5F7;
+    }
+
+    /* Tab 组件 */
+    .tabs-component {
+      background: #F9FAFB;
+      border-radius: 12px;
+      overflow: hidden;
+    }
+
+    .tabs-header {
+      display: flex;
+      border-bottom: 1px solid #E5E5EA;
+    }
+
+    .tab-item {
+      padding: 14px 24px;
+      font-size: 14px;
+      font-weight: 500;
+      color: #86868B;
+      cursor: pointer;
+      border-bottom: 2px solid transparent;
+      transition: all 0.3s;
+    }
+
+    .tab-item:hover {
+      color: #667eea;
+    }
+
+    .tab-item.active {
+      color: #667eea;
+      border-bottom-color: #667eea;
+    }
+
+    .tabs-body {
+      padding: 20px;
+    }
+
+    /* 折叠面板 */
+    .accordion {
+      border: 1px solid #E5E5EA;
+      border-radius: 12px;
+      overflow: hidden;
+    }
+
+    .accordion-item {
+      border-bottom: 1px solid #E5E5EA;
+    }
+
+    .accordion-item:last-child {
+      border-bottom: none;
+    }
+
+    .accordion-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 16px 20px;
+      background: #F9FAFB;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+
+    .accordion-header:hover {
+      background: #F0F0F5;
+    }
+
+    .accordion-title {
+      font-weight: 600;
+      color: #1D1D1F;
+    }
+
+    .accordion-icon {
+      font-size: 18px;
+      transition: transform 0.3s;
+    }
+
+    .accordion-icon.open {
+      transform: rotate(180deg);
+    }
+
+    .accordion-body {
+      padding: 20px;
+      line-height: 1.8;
+      color: #1D1D1F;
+    }
+
+    /* 无限滚动列表 */
+    .virtual-list {
+      height: 300px;
+      overflow-y: auto;
+      border: 1px solid #E5E5EA;
+      border-radius: 12px;
+    }
+
+    .list-item {
+      padding: 12px 16px;
+      border-bottom: 1px solid #F5F5F7;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .item-avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-weight: 600;
+    }
+
+    .item-content {
+      flex: 1;
+    }
+
+    .item-title {
+      font-weight: 500;
+      color: #1D1D1F;
+    }
+
+    .item-desc {
+      font-size: 13px;
+      color: #86868B;
+    }
+
+    .item-action {
+      padding: 6px 12px;
+      background: #667eea;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      font-size: 12px;
+      cursor: pointer;
+    }
+
+    /* 模态框 */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0,0,0,0.5);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+    }
+
+    .modal-content {
+      background: white;
+      border-radius: 16px;
+      width: 90%;
+      max-width: 500px;
+      overflow: hidden;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+    }
+
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 16px 20px;
+      border-bottom: 1px solid #E5E5EA;
+    }
+
+    .modal-title {
+      font-weight: 600;
+      font-size: 18px;
+    }
+
+    .modal-close {
+      width: 32px;
+      height: 32px;
+      border: none;
+      background: #F5F5F7;
+      border-radius: 50%;
+      font-size: 18px;
+      cursor: pointer;
+    }
+
+    .modal-body {
+      padding: 24px;
+    }
+
+    .modal-footer {
+      padding: 16px 20px;
+      background: #F9FAFB;
+      display: flex;
+      justify-content: flex-end;
+      gap: 12px;
+    }
+
+    /* 按钮 */
+    .btn {
+      padding: 10px 20px;
+      border: none;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+
+    .btn.primary {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+    }
+
+    .btn.secondary {
+      background: #F5F5F7;
+      color: #1D1D1F;
+    }
+
+    .btn.danger {
+      background: #FF3B30;
+      color: white;
+    }
+
+    /* 卡片网格 */
+    .card-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 16px;
+    }
+
+    .feature-card {
+      background: white;
+      border: 1px solid #E5E5EA;
+      border-radius: 12px;
+      padding: 20px;
+      text-align: center;
+      transition: all 0.3s;
+    }
+
+    .feature-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 8px 30px rgba(0,0,0,0.12);
+    }
+
+    .feature-icon {
+      font-size: 40px;
+      margin-bottom: 12px;
+    }
+
+    .feature-title {
+      font-weight: 600;
+      color: #1D1D1F;
+      margin-bottom: 8px;
+    }
+
+    .feature-desc {
+      font-size: 14px;
+      color: #86868B;
+    }
+  </style>
+</head>
+<body>
+  <div id="app">
+    <h1>🎨 插槽综合案例</h1>
+
+    <!-- Tab 组件 -->
+    <div class="demo-section">
+      <div class="section-title">📑 Tab 选项卡组件</div>
+      
+      <my-tabs v-model="activeTab">
+        <template #tabs>
+          <div 
+            class="tab-item" 
+            :class="{ active: activeTab === 'profile' }"
+            @click="activeTab = 'profile'"
+          >
+            👤 个人资料
+          </div>
+          <div 
+            class="tab-item" 
+            :class="{ active: activeTab === 'settings' }"
+            @click="activeTab = 'settings'"
+          >
+            ⚙️ 设置
+          </div>
+          <div 
+            class="tab-item" 
+            :class="{ active: activeTab === 'messages' }"
+            @click="activeTab = 'messages'"
+          >
+            💬 消息
+          </div>
+        </template>
+
+        <template #content>
+          <div v-if="activeTab === 'profile'">
+            <h4>个人资料</h4>
+            <p style="color: #86868B; margin-top: 8px;">
+              这里是个人资料页面的内容...
+            </p>
+          </div>
+          <div v-if="activeTab === 'settings'">
+            <h4>设置</h4>
+            <p style="color: #86868B; margin-top: 8px;">
+              这里是设置页面的内容...
+            </p>
+          </div>
+          <div v-if="activeTab === 'messages'">
+            <h4>消息中心</h4>
+            <p style="color: #86868B; margin-top: 8px;">
+              您有 3 条未读消息
+            </p>
+          </div>
+        </template>
+      </my-tabs>
+    </div>
+
+    <!-- 折叠面板 -->
+    <div class="demo-section">
+      <div class="section-title">📂 折叠面板组件</div>
+      
+      <my-accordion :items="faqList">
+        <template #header="{ item, isOpen }">
+          <span class="accordion-title">{{ item.title }}</span>
+          <span class="accordion-icon" :class="{ open: isOpen }">▼</span>
+        </template>
+        
+        <template #content="{ item }">
+          <p>{{ item.content }}</p>
+        </template>
+      </my-accordion>
+    </div>
+
+    <!-- 可定制列表 -->
+    <div class="demo-section">
+      <div class="section-title">📋 可定制列表组件</div>
+      
+      <custom-list :items="userList">
+        <template #item="{ item, index }">
+          <div class="list-item">
+            <div 
+              class="item-avatar" 
+              :style="{ background: getAvatarColor(index) }"
+            >
+              {{ item.name.charAt(0) }}
+            </div>
+            <div class="item-content">
+              <div class="item-title">{{ item.name }}</div>
+              <div class="item-desc">{{ item.department }}</div>
+            </div>
+            <button class="item-action" @click="viewUser(item)">查看</button>
+          </div>
+        </template>
+        
+        <template #empty>
+          <div style="text-align: center; padding: 40px; color: #86868B;">
+            😅 暂无数据
+          </div>
+        </template>
+      </custom-list>
+    </div>
+
+    <!-- 模态框 -->
+    <div class="demo-section">
+      <div class="section-title">💬 模态框组件</div>
+      
+      <div style="display: flex; gap: 12px;">
+        <button class="btn primary" @click="showConfirmModal = true">确认对话框</button>
+        <button class="btn secondary" @click="showFormModal = true">表单对话框</button>
+      </div>
+
+      <!-- 确认对话框 -->
+      <my-modal :visible.sync="showConfirmModal">
+        <template #header>
+          确认删除
+        </template>
+        
+        <p>您确定要删除这条记录吗？此操作不可恢复。</p>
+        
+        <template #footer>
+          <button class="btn secondary" @click="showConfirmModal = false">取消</button>
+          <button class="btn danger" @click="handleConfirm">确定删除</button>
+        </template>
+      </my-modal>
+
+      <!-- 表单对话框 -->
+      <my-modal :visible.sync="showFormModal">
+        <template #header>
+          添加用户
+        </template>
+        
+        <div style="margin-bottom: 16px;">
+          <label style="display: block; margin-bottom: 8px; font-weight: 500;">用户名</label>
+          <input type="text" style="width: 100%; padding: 10px; border: 1px solid #E5E5EA; border-radius: 8px;">
+        </div>
+        <div>
+          <label style="display: block; margin-bottom: 8px; font-weight: 500;">邮箱</label>
+          <input type="email" style="width: 100%; padding: 10px; border: 1px solid #E5E5EA; border-radius: 8px;">
+        </div>
+        
+        <template #footer>
+          <button class="btn secondary" @click="showFormModal = false">取消</button>
+          <button class="btn primary" @click="showFormModal = false">保存</button>
+        </template>
+      </my-modal>
+    </div>
+
+    <!-- 特性卡片 -->
+    <div class="demo-section">
+      <div class="section-title">🎴 特性卡片网格</div>
+      
+      <feature-grid :features="features">
+        <template #card="{ feature }">
+          <div class="feature-card">
+            <div class="feature-icon">{{ feature.icon }}</div>
+            <div class="feature-title">{{ feature.title }}</div>
+            <div class="feature-desc">{{ feature.description }}</div>
+          </div>
+        </template>
+      </feature-grid>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/vue@2.7.16/dist/vue.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

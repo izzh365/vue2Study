@@ -12,11 +12,11 @@
 
 | 序号 | 知识点 | 页面文件 | Demo 数量 | 状态 |
 |------|--------|----------|-----------|------|
-| 7.1 | 组件基础 | ComponentBasic.vue | 6 | ⬜ |
-| 7.2 | Props 父传子 | Props.vue | 8 | ⬜ |
-| 7.3 | $emit 子传父 | Emit.vue | 6 | ⬜ |
-| 7.4 | $refs 访问子组件 | Refs.vue | 5 | ⬜ |
-| 7.5 | Slot 插槽 | Slot.vue | 8 | ⬜ |
+| 7.1 | 组件基础 | ComponentBasic.vue | 6 | ✅ |
+| 7.2 | Props 父传子 | Props.vue | 5 | ✅ |
+| 7.3 | $emit 子传父 | Emit.vue | 5 | ✅ |
+| 7.4 | $refs 访问子组件 | Refs.vue | 3 | ✅ |
+| 7.5 | Slot 插槽 | Slot.vue | 4 | ✅ |
 
 ---
 

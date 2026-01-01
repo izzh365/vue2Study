@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>默认插槽</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      padding: 40px 20px;
+    }
+
+    #app {
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    h1 {
+      color: white;
+      text-align: center;
+      margin-bottom: 30px;
+      text-shadow: 0 2px 10px rgba(0,0,0,0.2);
+    }
+
+    .demo-section {
+      background: white;
+      border-radius: 16px;
+      padding: 24px;
+      margin-bottom: 24px;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+    }
+
+    .section-title {
+      font-size: 18px;
+      font-weight: 600;
+      color: #1D1D1F;
+      margin-bottom: 16px;
+      padding-bottom: 12px;
+      border-bottom: 2px solid #F5F5F7;
+    }
+
+    /* 卡片组件样式 */
+    .card-component {
+      background: white;
+      border: 1px solid #E5E5EA;
+      border-radius: 12px;
+      overflow: hidden;
+      margin: 16px 0;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    }
+
+    .card-header {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      padding: 16px 20px;
+      font-size: 16px;
+      font-weight: 600;
+    }
+
+    .card-body {
+      padding: 20px;
+    }
+
+    /* 按钮组件样式 */
+    .my-button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 12px 24px;
+      border: none;
+      border-radius: 10px;
+      font-size: 15px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+
+    .my-button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    }
+
+    .my-button.primary {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+    }
+
+    .my-button.success {
+      background: #34C759;
+      color: white;
+    }
+
+    .my-button.danger {
+      background: #FF3B30;
+      color: white;
+    }
+
+    /* 警告框样式 */
+    .alert-box {
+      padding: 16px 20px;
+      border-radius: 12px;
+      margin: 12px 0;
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+    }
+
+    .alert-box.info {
+      background: #E3F2FD;
+      border-left: 4px solid #2196F3;
+    }
+
+    .alert-box.warning {
+      background: #FFF3E0;
+      border-left: 4px solid #FF9500;
+    }
+
+    .alert-box.error {
+      background: #FFEBEE;
+      border-left: 4px solid #FF3B30;
+    }
+
+    .alert-icon {
+      font-size: 20px;
+    }
+
+    .alert-content {
+      flex: 1;
+    }
+
+    /* 示例容器 */
+    .demo-row {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin: 16px 0;
+    }
+
+    .code-note {
+      background: #F9FAFB;
+      border: 1px solid #E5E5EA;
+      border-radius: 8px;
+      padding: 16px;
+      margin-top: 16px;
+    }
+
+    .code-note h4 {
+      color: #1D1D1F;
+      margin-bottom: 8px;
+    }
+
+    .code-note pre {
+      background: #1D1D1F;
+      color: #fff;
+      padding: 12px;
+      border-radius: 6px;
+      overflow-x: auto;
+      font-family: 'SF Mono', Consolas, monospace;
+      font-size: 13px;
+      line-height: 1.6;
+    }
+
+    .tip-box {
+      background: #EDE7F6;
+      border-left: 4px solid #673AB7;
+      padding: 16px;
+      border-radius: 0 8px 8px 0;
+      margin: 16px 0;
+    }
+
+    .tip-box h4 {
+      color: #512DA8;
+      margin-bottom: 8px;
+    }
+  </style>
+</head>
+<body>
+  <div id="app">
+    <h1>📦 默认插槽 (slot)</h1>
+
+    <!-- 概念说明 -->
+    <div class="demo-section">
+      <div class="section-title">📚 什么是插槽？</div>
+      
+      <p style="color: #86868B; margin-bottom: 16px;">
+        插槽（slot）允许父组件向子组件传递模板内容，实现组件的内容分发
+      </p>
+
+      <div class="tip-box">
+        <h4>💡 通俗理解</h4>
+        <p style="font-size: 14px;">
+          插槽就像一个"占位符"，子组件说"这里留给你"，父组件可以往里面放任何内容
+        </p>
+      </div>
+
+      <div class="code-note">
+        <h4>基本用法</h4>
+        <pre>// 子组件定义插槽
+Vue.component('my-card', {
+  template: \`
+    &lt;div class="card"&gt;
+      &lt;slot&gt;&lt;/slot&gt;  &lt;!-- 插槽占位 --&gt;
+    &lt;/div&gt;
+  \`
+})
+
+// 父组件使用，传入内容
+&lt;my-card&gt;
+  &lt;p&gt;这些内容会被放到 slot 位置&lt;/p&gt;
+&lt;/my-card&gt;</pre>
+      </div>
+    </div>
+
+    <!-- 基础卡片 -->
+    <div class="demo-section">
+      <div class="section-title">🎴 卡片组件</div>
+      
+      <my-card title="用户信息">
+        <p style="margin-bottom: 8px;">👤 姓名：张三</p>
+        <p style="margin-bottom: 8px;">📧 邮箱：zhangsan@example.com</p>
+        <p>📱 电话：138-0000-0000</p>
+      </my-card>
+
+      <my-card title="商品详情">
+        <div style="display: flex; gap: 16px;">
+          <div style="width: 100px; height: 100px; background: #F5F5F7; border-radius: 8px; display: flex; align-items: center; justify-content: center;">📱</div>
+          <div>
+            <h4 style="margin-bottom: 8px;">iPhone 15 Pro</h4>
+            <p style="color: #86868B; margin-bottom: 8px;">256GB 钛金属</p>
+            <p style="color: #FF3B30; font-size: 20px; font-weight: 600;">¥9,999</p>
+          </div>
+        </div>
+      </my-card>
+    </div>
+
+    <!-- 按钮组件 -->
+    <div class="demo-section">
+      <div class="section-title">🔘 按钮组件</div>
+      
+      <div class="demo-row">
+        <my-button type="primary">
+          提交
+        </my-button>
+        
+        <my-button type="success">
+          ✓ 保存成功
+        </my-button>
+        
+        <my-button type="danger">
+          🗑 删除
+        </my-button>
+        
+        <my-button type="primary">
+          <span>📁</span>
+          <span>上传文件</span>
+        </my-button>
+      </div>
+
+      <div class="code-note">
+        <h4>按钮组件使用</h4>
+        <pre>// 可以传入任意内容
+&lt;my-button type="primary"&gt;提交&lt;/my-button&gt;
+
+// 可以传入图标和文字
+&lt;my-button type="success"&gt;
+  ✓ 保存成功
+&lt;/my-button&gt;
+
+// 可以传入多个元素
+&lt;my-button type="primary"&gt;
+  &lt;span&gt;📁&lt;/span&gt;
+  &lt;span&gt;上传文件&lt;/span&gt;
+&lt;/my-button&gt;</pre>
+      </div>
+    </div>
+
+    <!-- 提示框 -->
+    <div class="demo-section">
+      <div class="section-title">📢 提示框组件</div>
+      
+      <alert-box type="info">
+        这是一条普通的提示信息
+      </alert-box>
+
+      <alert-box type="warning">
+        <strong>警告：</strong>您的账户即将过期，请及时续费！
+      </alert-box>
+
+      <alert-box type="error">
+        <div>
+          <strong>错误：</strong>操作失败<br>
+          <small style="color: #86868B;">错误代码：500 Internal Server Error</small>
+        </div>
+      </alert-box>
+    </div>
+
+    <!-- 后备内容 -->
+    <div class="demo-section">
+      <div class="section-title">🔄 后备内容 (Fallback)</div>
+      
+      <p style="color: #86868B; margin-bottom: 16px;">
+        当父组件没有提供内容时，显示插槽的默认内容
+      </p>
+
+      <submit-button></submit-button>
+      <submit-button>自定义文本</submit-button>
+      <submit-button>🚀 立即发布</submit-button>
+
+      <div class="code-note">
+        <h4>后备内容定义</h4>
+        <pre>Vue.component('submit-button', {
+  template: \`
+    &lt;button class="my-button primary"&gt;
+      &lt;slot&gt;默认按钮文本&lt;/slot&gt;  &lt;!-- 后备内容 --&gt;
+    &lt;/button&gt;
+  \`
+})
+
+// 不传内容，显示默认
+&lt;submit-button&gt;&lt;/submit-button&gt;
+// 结果：默认按钮文本
+
+// 传入内容，覆盖默认
+&lt;submit-button&gt;自定义文本&lt;/submit-button&gt;
+// 结果：自定义文本</pre>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/vue@2.7.16/dist/vue.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

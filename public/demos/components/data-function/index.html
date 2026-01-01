@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>data 必须是函数</title>
+  <script src="https://cdn.jsdelivr.net/npm/vue@2.7.16/dist/vue.js"></script>
+  <style>
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; padding: 20px; background: #f5f5f7; }
+    .demo-container { background: white; border-radius: 12px; padding: 24px; max-width: 700px; margin: 0 auto; box-shadow: 0 4px 20px rgba(0,0,0,0.08); }
+    h3 { color: #1d1d1f; margin-top: 0; }
+    .section { margin-bottom: 24px; padding: 16px; background: #f9fafb; border-radius: 8px; }
+    .section-title { font-size: 14px; color: #86868b; margin-bottom: 12px; font-weight: 500; }
+    .counter-group { display: flex; gap: 16px; flex-wrap: wrap; }
+    .counter { background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%); color: white; padding: 20px; border-radius: 12px; text-align: center; min-width: 120px; }
+    .counter-value { font-size: 32px; font-weight: bold; margin: 8px 0; }
+    .counter-label { font-size: 12px; opacity: 0.8; }
+    .counter button { margin-top: 12px; padding: 8px 16px; border: none; border-radius: 6px; background: rgba(255,255,255,0.2); color: white; cursor: pointer; font-size: 14px; }
+    .counter button:hover { background: rgba(255,255,255,0.3); }
+    .warning { background: #fff3cd; border: 1px solid #ffeeba; color: #856404; padding: 12px; border-radius: 8px; margin-top: 16px; }
+    .success { background: #d4edda; border: 1px solid #c3e6cb; color: #155724; padding: 12px; border-radius: 8px; margin-top: 16px; }
+  </style>
+</head>
+<body>
+  <div id="app">
+    <div class="demo-container">
+      <h3>🔄 data 必须是函数</h3>
+      
+      <div class="section">
+        <div class="section-title">三个独立的计数器组件（各自维护自己的状态）</div>
+        <div class="counter-group">
+          <!-- 每个组件实例都有独立的 data -->
+          <counter-box label="计数器 A"></counter-box>
+          <counter-box label="计数器 B"></counter-box>
+          <counter-box label="计数器 C"></counter-box>
+        </div>
+        
+        <div class="success">
+          ✅ <strong>正确：data 是函数</strong><br>
+          每个组件实例都调用 data() 获取一个新对象，互不影响。
+        </div>
+      </div>
+      
+      <div class="section">
+        <div class="section-title">如果 data 是对象会怎样？（错误示范）</div>
+        <div class="counter-group">
+          <!-- 共享同一个 data 对象（错误示范） -->
+          <bad-counter label="共享 A"></bad-counter>
+          <bad-counter label="共享 B"></bad-counter>
+          <bad-counter label="共享 C"></bad-counter>
+        </div>
+        
+        <div class="warning">
+          ⚠️ <strong>错误：data 是对象</strong><br>
+          所有组件实例共享同一个对象，一个变了全都变！
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <script src="app.js"></script>
+</body>
+</html>

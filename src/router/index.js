@@ -149,6 +149,36 @@ const routes = [
     component: () => import('@/views/chapters/components/Index.vue'),
     meta: { title: 'Vue 组件化', chapter: 7 }
   },
+  {
+    path: '/components/basic',
+    name: 'ComponentBasic',
+    component: () => import('@/views/chapters/components/ComponentBasic.vue'),
+    meta: { title: '组件基础', chapter: 7 }
+  },
+  {
+    path: '/components/props',
+    name: 'ComponentProps',
+    component: () => import('@/views/chapters/components/Props.vue'),
+    meta: { title: 'Props 父传子', chapter: 7 }
+  },
+  {
+    path: '/components/emit',
+    name: 'ComponentEmit',
+    component: () => import('@/views/chapters/components/Emit.vue'),
+    meta: { title: '$emit 子传父', chapter: 7 }
+  },
+  {
+    path: '/components/refs',
+    name: 'ComponentRefs',
+    component: () => import('@/views/chapters/components/Refs.vue'),
+    meta: { title: '$refs 访问子组件', chapter: 7 }
+  },
+  {
+    path: '/components/slot',
+    name: 'ComponentSlot',
+    component: () => import('@/views/chapters/components/Slot.vue'),
+    meta: { title: 'Slot 插槽', chapter: 7 }
+  },
 
   // ==================== 路由章节 ====================
   {

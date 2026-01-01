@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>具名插槽</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+      min-height: 100vh;
+      padding: 40px 20px;
+    }
+
+    #app {
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    h1 {
+      color: white;
+      text-align: center;
+      margin-bottom: 30px;
+      text-shadow: 0 2px 10px rgba(0,0,0,0.2);
+    }
+
+    .demo-section {
+      background: white;
+      border-radius: 16px;
+      padding: 24px;
+      margin-bottom: 24px;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+    }
+
+    .section-title {
+      font-size: 18px;
+      font-weight: 600;
+      color: #1D1D1F;
+      margin-bottom: 16px;
+      padding-bottom: 12px;
+      border-bottom: 2px solid #F5F5F7;
+    }
+
+    /* 布局组件样式 */
+    .layout-component {
+      border: 2px solid #E5E5EA;
+      border-radius: 12px;
+      overflow: hidden;
+      margin: 16px 0;
+    }
+
+    .layout-header {
+      background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+      color: white;
+      padding: 16px 20px;
+    }
+
+    .layout-main {
+      display: flex;
+      min-height: 200px;
+    }
+
+    .layout-sidebar {
+      width: 200px;
+      background: #F9FAFB;
+      padding: 16px;
+      border-right: 1px solid #E5E5EA;
+    }
+
+    .layout-content {
+      flex: 1;
+      padding: 16px;
+    }
+
+    .layout-footer {
+      background: #1D1D1F;
+      color: #86868B;
+      padding: 12px 20px;
+      text-align: center;
+      font-size: 13px;
+    }
+
+    /* 对话框样式 */
+    .dialog-component {
+      background: white;
+      border-radius: 16px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.15);
+      overflow: hidden;
+      margin: 16px 0;
+    }
+
+    .dialog-header {
+      background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+      color: white;
+      padding: 16px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .dialog-body {
+      padding: 24px;
+    }
+
+    .dialog-footer {
+      padding: 16px 20px;
+      background: #F9FAFB;
+      display: flex;
+      justify-content: flex-end;
+      gap: 12px;
+    }
+
+    /* 文章组件 */
+    .article-component {
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+      overflow: hidden;
+      margin: 16px 0;
+    }
+
+    .article-header {
+      padding: 24px;
+      border-bottom: 1px solid #E5E5EA;
+    }
+
+    .article-body {
+      padding: 24px;
+      line-height: 1.8;
+      color: #1D1D1F;
+    }
+
+    .article-footer {
+      padding: 16px 24px;
+      background: #F9FAFB;
+      border-top: 1px solid #E5E5EA;
+    }
+
+    /* 按钮 */
+    .btn {
+      padding: 10px 20px;
+      border: none;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+
+    .btn.primary {
+      background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+      color: white;
+    }
+
+    .btn.secondary {
+      background: #F5F5F7;
+      color: #1D1D1F;
+    }
+
+    /* 菜单项 */
+    .menu-item {
+      padding: 10px 12px;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .menu-item:hover {
+      background: #E5E5EA;
+    }
+
+    .menu-item.active {
+      background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+      color: white;
+    }
+
+    .code-note {
+      background: #F9FAFB;
+      border: 1px solid #E5E5EA;
+      border-radius: 8px;
+      padding: 16px;
+      margin-top: 16px;
+    }
+
+    .code-note h4 {
+      color: #1D1D1F;
+      margin-bottom: 8px;
+    }
+
+    .code-note pre {
+      background: #1D1D1F;
+      color: #fff;
+      padding: 12px;
+      border-radius: 6px;
+      overflow-x: auto;
+      font-family: 'SF Mono', Consolas, monospace;
+      font-size: 13px;
+      line-height: 1.6;
+    }
+
+    .tip-box {
+      background: #FCE4EC;
+      border-left: 4px solid #E91E63;
+      padding: 16px;
+      border-radius: 0 8px 8px 0;
+      margin: 16px 0;
+    }
+
+    .tip-box h4 {
+      color: #C2185B;
+      margin-bottom: 8px;
+    }
+  </style>
+</head>
+<body>
+  <div id="app">
+    <h1>🏷️ 具名插槽</h1>
+
+    <!-- 概念说明 -->
+    <div class="demo-section">
+      <div class="section-title">📚 什么是具名插槽？</div>
+      
+      <p style="color: #86868B; margin-bottom: 16px;">
+        具名插槽允许组件定义多个插槽，每个插槽有自己的名字
+      </p>
+
+      <div class="code-note">
+        <h4>基本语法</h4>
+        <pre>// 子组件定义多个具名插槽
+&lt;template&gt;
+  &lt;div&gt;
+    &lt;slot name="header"&gt;&lt;/slot&gt;
+    &lt;slot&gt;&lt;/slot&gt;  &lt;!-- 默认插槽，name="default" --&gt;
+    &lt;slot name="footer"&gt;&lt;/slot&gt;
+  &lt;/div&gt;
+&lt;/template&gt;
+
+// 父组件使用 v-slot 指定插槽
+&lt;my-layout&gt;
+  &lt;template v-slot:header&gt;
+    头部内容
+  &lt;/template&gt;
+  
+  &lt;p&gt;默认插槽内容&lt;/p&gt;
+  
+  &lt;template v-slot:footer&gt;
+    底部内容
+  &lt;/template&gt;
+&lt;/my-layout&gt;</pre>
+      </div>
+    </div>
+
+    <!-- 页面布局 -->
+    <div class="demo-section">
+      <div class="section-title">📐 页面布局组件</div>
+      
+      <page-layout>
+        <template v-slot:header>
+          <h3 style="margin: 0;">🏠 我的应用</h3>
+        </template>
+        
+        <template v-slot:sidebar>
+          <div class="menu-item active">📊 仪表盘</div>
+          <div class="menu-item">👥 用户管理</div>
+          <div class="menu-item">📝 内容管理</div>
+          <div class="menu-item">⚙️ 系统设置</div>
+        </template>
+        
+        <template v-slot:default>
+          <h4>欢迎回来！</h4>
+          <p style="color: #86868B; margin-top: 8px;">这是主内容区域，你可以在这里放置任何内容。</p>
+        </template>
+        
+        <template v-slot:footer>
+          Copyright © 2024 Vue Learning Project
+        </template>
+      </page-layout>
+    </div>
+
+    <!-- 对话框 -->
+    <div class="demo-section">
+      <div class="section-title">💬 对话框组件</div>
+      
+      <my-dialog>
+        <template v-slot:header>
+          确认删除
+        </template>
+        
+        <template v-slot:default>
+          <p>您确定要删除这条记录吗？</p>
+          <p style="color: #86868B; margin-top: 8px;">此操作不可恢复。</p>
+        </template>
+        
+        <template v-slot:footer>
+          <button class="btn secondary">取消</button>
+          <button class="btn primary">确定删除</button>
+        </template>
+      </my-dialog>
+
+      <my-dialog>
+        <template #header>
+          <!-- # 是 v-slot: 的简写 -->
+          编辑用户
+        </template>
+        
+        <div style="margin-bottom: 16px;">
+          <label style="display: block; margin-bottom: 8px;">用户名</label>
+          <input type="text" value="张三" style="width: 100%; padding: 10px; border: 1px solid #E5E5EA; border-radius: 8px;">
+        </div>
+        <div>
+          <label style="display: block; margin-bottom: 8px;">邮箱</label>
+          <input type="email" value="zhangsan@example.com" style="width: 100%; padding: 10px; border: 1px solid #E5E5EA; border-radius: 8px;">
+        </div>
+        
+        <template #footer>
+          <button class="btn secondary">取消</button>
+          <button class="btn primary">保存</button>
+        </template>
+      </my-dialog>
+    </div>
+
+    <!-- v-slot 简写 -->
+    <div class="demo-section">
+      <div class="section-title">✂️ v-slot 简写语法</div>
+      
+      <div class="tip-box">
+        <h4>💡 简写规则</h4>
+        <ul style="font-size: 14px; margin-left: 20px; line-height: 1.8;">
+          <li><code>v-slot:header</code> 可简写为 <code>#header</code></li>
+          <li><code>v-slot:default</code> 可简写为 <code>#default</code></li>
+          <li>没有名字的内容会进入默认插槽</li>
+        </ul>
+      </div>
+
+      <article-card>
+        <template #title>
+          Vue 组件化开发指南
+        </template>
+        
+        <template #meta>
+          <span>👤 作者：张三</span>
+          <span style="margin: 0 12px;">|</span>
+          <span>📅 2024-01-15</span>
+        </template>
+        
+        <p>Vue 的组件化是其核心特性之一，通过组件可以将页面拆分成独立、可复用的部分...</p>
+        <p style="margin-top: 12px;">插槽是组件内容分发的重要机制，让组件更加灵活。</p>
+        
+        <template #actions>
+          <button class="btn secondary">👍 点赞</button>
+          <button class="btn secondary">💬 评论</button>
+          <button class="btn primary">📖 阅读全文</button>
+        </template>
+      </article-card>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/vue@2.7.16/dist/vue.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

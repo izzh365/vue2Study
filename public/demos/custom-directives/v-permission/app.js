@@ -1,11 +1,11 @@
 /**
  * v-permission 权限控制指令
- * 
+ *
  * 📚 知识点：
  * 1. 根据权限决定元素显示/隐藏
  * 2. 移除 DOM 元素（而非隐藏）
  * 3. 结合全局状态管理
- * 
+ *
  * 🎯 使用场景：
  * - 按钮级权限控制
  * - 菜单权限
@@ -38,14 +38,14 @@ Vue.directive('permission', {
    * inserted 钩子
    * 检查权限，无权限则移除元素
    */
-  inserted: function(el, binding, vnode) {
+  inserted: function (el, binding, vnode) {
     const permission = binding.value
-    
+
     if (!hasPermission(permission)) {
       // 保存父节点引用，用于后续恢复
       el._parentNode = el.parentNode
       el._nextSibling = el.nextSibling
-      
+
       // 移除元素
       el.parentNode && el.parentNode.removeChild(el)
       console.log(`v-permission: 无权限 [${permission}]，元素已移除`)
@@ -53,14 +53,14 @@ Vue.directive('permission', {
       console.log(`v-permission: 有权限 [${permission}]`)
     }
   },
-  
+
   /**
    * update 钩子
    * 权限变化时重新检查（需配合 key 使用）
    */
-  update: function(el, binding) {
+  update: function (el, binding) {
     const permission = binding.value
-    
+
     if (!hasPermission(permission)) {
       if (el.parentNode) {
         el._parentNode = el.parentNode
@@ -83,7 +83,7 @@ Vue.directive('permission', {
 // ==================== Vue 实例 ====================
 new Vue({
   el: '#app',
-  
+
   data() {
     return {
       currentRole: 'viewer',
@@ -96,7 +96,7 @@ new Vue({
       permissionKey: 0
     }
   },
-  
+
   methods: {
     /**
      * 切换角色
@@ -105,15 +105,15 @@ new Vue({
     switchRole(role) {
       this.currentRole = role
       permissionConfig.currentRole = role
-      
+
       console.log('切换角色为:', this.roleNames[role])
-      
+
       // 强制刷新页面以重新渲染权限
       // 实际项目中可以使用 Vuex + 路由守卫处理
       location.reload()
     }
   },
-  
+
   created() {
     // 从 URL 参数读取角色（演示用）
     const urlParams = new URLSearchParams(window.location.search)

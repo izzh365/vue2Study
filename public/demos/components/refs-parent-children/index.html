@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>$parent 和 $children</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+      min-height: 100vh;
+      padding: 40px 20px;
+    }
+
+    #app {
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    h1 {
+      color: white;
+      text-align: center;
+      margin-bottom: 30px;
+      text-shadow: 0 2px 10px rgba(0,0,0,0.2);
+    }
+
+    .demo-section {
+      background: white;
+      border-radius: 16px;
+      padding: 24px;
+      margin-bottom: 24px;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+    }
+
+    .section-title {
+      font-size: 18px;
+      font-weight: 600;
+      color: #1D1D1F;
+      margin-bottom: 16px;
+      padding-bottom: 12px;
+      border-bottom: 2px solid #F5F5F7;
+    }
+
+    /* 组件层级样式 */
+    .component-box {
+      border: 2px dashed #E5E5EA;
+      border-radius: 12px;
+      padding: 16px;
+      margin: 12px 0;
+    }
+
+    .component-box.parent {
+      border-color: #11998e;
+      background: rgba(17, 153, 142, 0.05);
+    }
+
+    .component-box.child {
+      border-color: #38ef7d;
+      background: rgba(56, 239, 125, 0.05);
+    }
+
+    .component-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+
+    .component-label {
+      font-size: 14px;
+      font-weight: 600;
+      color: #1D1D1F;
+    }
+
+    .component-badge {
+      padding: 4px 12px;
+      border-radius: 12px;
+      font-size: 12px;
+      font-weight: 500;
+    }
+
+    .badge-parent {
+      background: #11998e;
+      color: white;
+    }
+
+    .badge-child {
+      background: #38ef7d;
+      color: #1D1D1F;
+    }
+
+    /* 按钮 */
+    .btn {
+      padding: 8px 16px;
+      border: none;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.3s;
+      margin: 4px;
+    }
+
+    .btn:hover {
+      transform: translateY(-1px);
+    }
+
+    .btn.primary {
+      background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+      color: white;
+    }
+
+    .btn.secondary {
+      background: #F5F5F7;
+      color: #1D1D1F;
+    }
+
+    /* 数据显示 */
+    .data-display {
+      background: #F9FAFB;
+      padding: 12px;
+      border-radius: 8px;
+      font-family: 'SF Mono', Consolas, monospace;
+      font-size: 13px;
+      margin: 8px 0;
+    }
+
+    /* 日志 */
+    .log-box {
+      background: #1D1D1F;
+      border-radius: 8px;
+      padding: 16px;
+      margin-top: 16px;
+      max-height: 200px;
+      overflow-y: auto;
+    }
+
+    .log-item {
+      font-family: 'SF Mono', Consolas, monospace;
+      font-size: 13px;
+      color: #38ef7d;
+      margin-bottom: 4px;
+    }
+
+    .code-note {
+      background: #F9FAFB;
+      border: 1px solid #E5E5EA;
+      border-radius: 8px;
+      padding: 16px;
+      margin-top: 16px;
+    }
+
+    .code-note h4 {
+      color: #1D1D1F;
+      margin-bottom: 8px;
+    }
+
+    .code-note pre {
+      background: #1D1D1F;
+      color: #fff;
+      padding: 12px;
+      border-radius: 6px;
+      overflow-x: auto;
+      font-family: 'SF Mono', Consolas, monospace;
+      font-size: 13px;
+      line-height: 1.6;
+    }
+
+    .tip-box {
+      background: #FFF3E0;
+      border-left: 4px solid #FF9500;
+      padding: 16px;
+      border-radius: 0 8px 8px 0;
+      margin: 16px 0;
+    }
+
+    .tip-box.warning {
+      background: #FFEBEE;
+      border-color: #FF3B30;
+    }
+
+    .tip-box h4 {
+      color: #F57C00;
+      margin-bottom: 8px;
+    }
+
+    .tip-box.warning h4 {
+      color: #C62828;
+    }
+
+    .tree-diagram {
+      background: #F9FAFB;
+      padding: 20px;
+      border-radius: 12px;
+      font-family: 'SF Mono', Consolas, monospace;
+      font-size: 14px;
+      color: #1D1D1F;
+      line-height: 1.8;
+    }
+  </style>
+</head>
+<body>
+  <div id="app">
+    <h1>👨‍👩‍👧‍👦 $parent 和 $children</h1>
+
+    <!-- 概念说明 -->
+    <div class="demo-section">
+      <div class="section-title">📚 概念说明</div>
+      
+      <div class="tree-diagram">
+        <div>Root (this.$parent = undefined)</div>
+        <div>&nbsp;&nbsp;├── Parent (this.$children = [Child1, Child2])</div>
+        <div>&nbsp;&nbsp;│&nbsp;&nbsp;&nbsp;&nbsp;├── Child1 (this.$parent = Parent)</div>
+        <div>&nbsp;&nbsp;│&nbsp;&nbsp;&nbsp;&nbsp;└── Child2 (this.$parent = Parent)</div>
+        <div>&nbsp;&nbsp;└── AnotherParent</div>
+      </div>
+
+      <div class="tip-box warning">
+        <h4>⚠️ 不推荐在生产中使用</h4>
+        <ul style="font-size: 14px; margin-left: 20px; line-height: 1.8;">
+          <li>使组件间产生强耦合，难以维护</li>
+          <li>$children 的顺序不确定</li>
+          <li>Vue 3 中已移除 $children</li>
+          <li>推荐使用 props、events 或 provide/inject</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- $parent 示例 -->
+    <div class="demo-section">
+      <div class="section-title">👆 子组件访问父组件 ($parent)</div>
+      
+      <parent-component></parent-component>
+    </div>
+
+    <!-- $children 示例 -->
+    <div class="demo-section">
+      <div class="section-title">👇 父组件访问子组件 ($children)</div>
+      
+      <parent-with-children></parent-with-children>
+
+      <div class="code-note">
+        <h4>$children 注意事项</h4>
+        <pre>// $children 是子组件实例数组
+// 顺序不保证与模板中的顺序一致
+// 不包含孙组件
+
+mounted() {
+  console.log(this.$children)  // [VueComponent, VueComponent, ...]
+  console.log(this.$children.length)  // 子组件数量
+  
+  // 遍历所有子组件
+  this.$children.forEach(child => {
+    console.log(child.$options.name)
+  })
+}</pre>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/vue@2.7.16/dist/vue.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

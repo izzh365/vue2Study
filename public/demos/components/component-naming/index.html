@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>组件命名规范</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      padding: 40px 20px;
+    }
+
+    #app {
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    h1 {
+      color: white;
+      text-align: center;
+      margin-bottom: 30px;
+      text-shadow: 0 2px 10px rgba(0,0,0,0.2);
+    }
+
+    .demo-section {
+      background: white;
+      border-radius: 16px;
+      padding: 24px;
+      margin-bottom: 24px;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+    }
+
+    .section-title {
+      font-size: 18px;
+      font-weight: 600;
+      color: #1D1D1F;
+      margin-bottom: 16px;
+      padding-bottom: 12px;
+      border-bottom: 2px solid #F5F5F7;
+    }
+
+    .naming-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 20px;
+    }
+
+    .naming-table th,
+    .naming-table td {
+      padding: 12px 16px;
+      text-align: left;
+      border-bottom: 1px solid #E5E5EA;
+    }
+
+    .naming-table th {
+      background: #F5F5F7;
+      font-weight: 600;
+      color: #1D1D1F;
+    }
+
+    .naming-table td:first-child {
+      font-family: 'SF Mono', Consolas, monospace;
+      color: #6f42c1;
+    }
+
+    .naming-table td:nth-child(2) {
+      font-family: 'SF Mono', Consolas, monospace;
+      color: #22863a;
+    }
+
+    /* 组件展示区域 */
+    .component-demo {
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    /* 测试组件样式 */
+    .test-box {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      padding: 16px 24px;
+      border-radius: 12px;
+      font-weight: 500;
+      display: inline-block;
+    }
+
+    .code-note {
+      background: #F9FAFB;
+      border: 1px solid #E5E5EA;
+      border-radius: 8px;
+      padding: 16px;
+      margin-top: 16px;
+    }
+
+    .code-note h4 {
+      color: #1D1D1F;
+      margin-bottom: 8px;
+    }
+
+    .code-note pre {
+      background: #1D1D1F;
+      color: #fff;
+      padding: 12px;
+      border-radius: 6px;
+      overflow-x: auto;
+      font-family: 'SF Mono', Consolas, monospace;
+      font-size: 13px;
+      line-height: 1.6;
+    }
+
+    .tip-box {
+      background: #E3F2FD;
+      border-left: 4px solid #2196F3;
+      padding: 16px;
+      border-radius: 0 8px 8px 0;
+      margin-top: 20px;
+    }
+
+    .tip-box h4 {
+      color: #1976D2;
+      margin-bottom: 8px;
+    }
+
+    .tip-box ul {
+      margin: 0;
+      padding-left: 20px;
+      color: #1D1D1F;
+    }
+
+    .tip-box li {
+      margin-bottom: 4px;
+    }
+  </style>
+</head>
+<body>
+  <div id="app">
+    <h1>🏷️ 组件命名规范</h1>
+
+    <!-- 命名规范说明 -->
+    <div class="demo-section">
+      <div class="section-title">📋 两种命名方式对照表</div>
+      <table class="naming-table">
+        <thead>
+          <tr>
+            <th>PascalCase（大驼峰）</th>
+            <th>kebab-case（短横线）</th>
+            <th>适用场景</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>MyComponent</td>
+            <td>my-component</td>
+            <td>单文件组件推荐大驼峰</td>
+          </tr>
+          <tr>
+            <td>UserCard</td>
+            <td>user-card</td>
+            <td>模板中使用推荐短横线</td>
+          </tr>
+          <tr>
+            <td>TodoItem</td>
+            <td>todo-item</td>
+            <td>全局注册推荐大驼峰</td>
+          </tr>
+          <tr>
+            <td>NavigationMenu</td>
+            <td>navigation-menu</td>
+            <td>多单词组合</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="code-note">
+        <h4>💡 Vue 会自动转换命名</h4>
+        <pre>// 注册时使用 PascalCase
+Vue.component('MyComponent', { ... })
+
+// 模板中两种写法都可以
+&lt;MyComponent /&gt;
+&lt;my-component&gt;&lt;/my-component&gt;</pre>
+      </div>
+    </div>
+
+    <!-- 实际演示 -->
+    <div class="demo-section">
+      <div class="section-title">🎯 实际使用演示</div>
+      <p style="color: #86868B; margin-bottom: 16px;">以下组件用 PascalCase 注册，模板中用 kebab-case 使用：</p>
+      
+      <div class="component-demo">
+        <!-- 使用 kebab-case 方式调用 -->
+        <test-box message="使用 kebab-case"></test-box>
+        
+        <!-- 使用 PascalCase 方式调用（在 DOM 模板中会被转换） -->
+        <TestBox message="使用 PascalCase"></TestBox>
+      </div>
+
+      <div class="tip-box">
+        <h4>⚠️ 重要提示</h4>
+        <ul>
+          <li>在 DOM 模板（直接写在 HTML 中）中，必须使用 <strong>kebab-case</strong></li>
+          <li>在单文件组件 (.vue) 的 template 中，两种都可以</li>
+          <li>组件名必须是<strong>多单词</strong>，避免与 HTML 元素冲突</li>
+          <li>不要使用 HTML 保留标签名，如 header、footer、main 等</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- 最佳实践 -->
+    <div class="demo-section">
+      <div class="section-title">✅ 最佳实践</div>
+      <div class="code-note">
+        <h4>推荐的命名风格</h4>
+        <pre>// ✅ 好的命名（多单词、有意义）
+'UserProfileCard'
+'ProductListItem'
+'NavigationSidebar'
+'SearchInputBox'
+
+// ❌ 不好的命名
+'Card'        // 太简单，可能与未来 HTML 元素冲突
+'Item'        // 太模糊
+'my-header'   // 可能与 HTML &lt;header&gt; 混淆
+'Data'        // 太通用</pre>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/vue@2.7.16/dist/vue.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

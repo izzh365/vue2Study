@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>.sync 修饰符</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+      min-height: 100vh;
+      padding: 40px 20px;
+    }
+
+    #app {
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    h1 {
+      color: white;
+      text-align: center;
+      margin-bottom: 30px;
+      text-shadow: 0 2px 10px rgba(0,0,0,0.2);
+    }
+
+    .demo-section {
+      background: white;
+      border-radius: 16px;
+      padding: 24px;
+      margin-bottom: 24px;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+    }
+
+    .section-title {
+      font-size: 18px;
+      font-weight: 600;
+      color: #1D1D1F;
+      margin-bottom: 16px;
+      padding-bottom: 12px;
+      border-bottom: 2px solid #F5F5F7;
+    }
+
+    /* 对话框样式 */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.5);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+    }
+
+    .modal-content {
+      background: white;
+      border-radius: 16px;
+      padding: 24px;
+      max-width: 400px;
+      width: 90%;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+    }
+
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+    }
+
+    .modal-title {
+      font-size: 18px;
+      font-weight: 600;
+      color: #1D1D1F;
+    }
+
+    .modal-close {
+      width: 32px;
+      height: 32px;
+      border: none;
+      background: #F5F5F7;
+      border-radius: 50%;
+      font-size: 18px;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+
+    .modal-close:hover {
+      background: #E5E5EA;
+    }
+
+    .modal-body {
+      color: #86868B;
+      margin-bottom: 20px;
+    }
+
+    .modal-footer {
+      display: flex;
+      gap: 12px;
+      justify-content: flex-end;
+    }
+
+    .btn {
+      padding: 10px 20px;
+      border: none;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+
+    .btn:hover {
+      transform: translateY(-1px);
+    }
+
+    .btn.primary {
+      background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+      color: white;
+    }
+
+    .btn.secondary {
+      background: #F5F5F7;
+      color: #1D1D1F;
+    }
+
+    .btn.success {
+      background: #34C759;
+      color: white;
+    }
+
+    /* 比较表格 */
+    .compare-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 16px 0;
+    }
+
+    .compare-table th,
+    .compare-table td {
+      padding: 12px 16px;
+      text-align: left;
+      border-bottom: 1px solid #E5E5EA;
+    }
+
+    .compare-table th {
+      background: #F5F5F7;
+      font-weight: 600;
+    }
+
+    .code-note {
+      background: #F9FAFB;
+      border: 1px solid #E5E5EA;
+      border-radius: 8px;
+      padding: 16px;
+      margin-top: 16px;
+    }
+
+    .code-note h4 {
+      color: #1D1D1F;
+      margin-bottom: 8px;
+    }
+
+    .code-note pre {
+      background: #1D1D1F;
+      color: #fff;
+      padding: 12px;
+      border-radius: 6px;
+      overflow-x: auto;
+      font-family: 'SF Mono', Consolas, monospace;
+      font-size: 13px;
+      line-height: 1.6;
+    }
+
+    .tip-box {
+      background: #E3F2FD;
+      border-left: 4px solid #2196F3;
+      padding: 16px;
+      border-radius: 0 8px 8px 0;
+      margin: 16px 0;
+    }
+
+    .tip-box h4 {
+      color: #1976D2;
+      margin-bottom: 8px;
+    }
+
+    .demo-controls {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .status-display {
+      background: #F9FAFB;
+      padding: 16px;
+      border-radius: 12px;
+      margin-top: 16px;
+      text-align: center;
+    }
+
+    .status-label {
+      font-size: 13px;
+      color: #86868B;
+      margin-bottom: 8px;
+    }
+
+    .status-value {
+      font-size: 20px;
+      font-weight: 600;
+      color: #1D1D1F;
+    }
+
+    .status-value.open { color: #34C759; }
+    .status-value.closed { color: #FF3B30; }
+  </style>
+</head>
+<body>
+  <div id="app">
+    <h1>🔄 .sync 修饰符</h1>
+
+    <!-- 概念说明 -->
+    <div class="demo-section">
+      <div class="section-title">📚 什么是 .sync 修饰符？</div>
+      
+      <p style="color: #86868B; margin-bottom: 16px;">
+        .sync 修饰符是 props + $emit 的语法糖，用于实现"双向绑定"效果
+      </p>
+
+      <table class="compare-table">
+        <thead>
+          <tr>
+            <th>普通写法</th>
+            <th>.sync 语法糖</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><code>:visible="dialogVisible"</code><br><code>@update:visible="val => dialogVisible = val"</code></td>
+            <td><code>:visible.sync="dialogVisible"</code></td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="tip-box">
+        <h4>💡 使用条件</h4>
+        <p style="font-size: 14px;">
+          子组件必须通过 <code>this.$emit('update:propName', newValue)</code> 触发更新
+        </p>
+      </div>
+    </div>
+
+    <!-- 对话框示例 -->
+    <div class="demo-section">
+      <div class="section-title">🎯 实战案例：对话框组件</div>
+      
+      <div class="demo-controls">
+        <button class="btn primary" @click="showDialog = true">
+          打开对话框（使用 .sync）
+        </button>
+        <button class="btn secondary" @click="showDialog2 = true">
+          打开对话框（普通方式）
+        </button>
+      </div>
+
+      <div class="status-display">
+        <div class="status-label">对话框1 状态（.sync）</div>
+        <div class="status-value" :class="showDialog ? 'open' : 'closed'">
+          {{ showDialog ? '打开' : '关闭' }}
+        </div>
+      </div>
+
+      <!-- 使用 .sync 修饰符的对话框 -->
+      <my-dialog :visible.sync="showDialog" title="使用 .sync 修饰符">
+        <p>这个对话框使用 .sync 修饰符实现双向绑定</p>
+        <p style="margin-top: 8px; color: #86868B;">点击关闭或遮罩层会自动更新父组件的 showDialog</p>
+      </my-dialog>
+
+      <!-- 普通方式的对话框 -->
+      <my-dialog 
+        :visible="showDialog2" 
+        @update:visible="showDialog2 = $event"
+        title="普通方式"
+      >
+        <p>这个对话框使用普通的 props + $emit 方式</p>
+      </my-dialog>
+
+      <div class="code-note">
+        <h4>.sync 使用方式</h4>
+        <pre>// 父组件使用 .sync 修饰符
+&lt;my-dialog :visible.sync="showDialog"&gt;&lt;/my-dialog&gt;
+
+// 等价于：
+&lt;my-dialog 
+  :visible="showDialog"
+  @update:visible="val => showDialog = val"
+&gt;&lt;/my-dialog&gt;
+
+// 子组件触发更新
+methods: {
+  close() {
+    // 必须使用 'update:propName' 格式
+    this.$emit('update:visible', false)
+  }
+}</pre>
+      </div>
+    </div>
+
+    <!-- 多属性 .sync -->
+    <div class="demo-section">
+      <div class="section-title">📝 表单组件多属性 .sync</div>
+      
+      <user-form
+        :name.sync="formData.name"
+        :age.sync="formData.age"
+        :email.sync="formData.email"
+      ></user-form>
+
+      <div class="status-display">
+        <div class="status-label">父组件中的表单数据</div>
+        <pre style="text-align: left; background: #1D1D1F; color: #fff; padding: 12px; border-radius: 8px; margin-top: 12px;">{{ JSON.stringify(formData, null, 2) }}</pre>
+      </div>
+
+      <div class="code-note">
+        <h4>多个 .sync 属性</h4>
+        <pre>// 同时使用多个 .sync
+&lt;user-form
+  :name.sync="formData.name"
+  :age.sync="formData.age"
+  :email.sync="formData.email"
+&gt;&lt;/user-form&gt;
+
+// 子组件分别触发更新
+this.$emit('update:name', newName)
+this.$emit('update:age', newAge)
+this.$emit('update:email', newEmail)</pre>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/vue@2.7.16/dist/vue.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

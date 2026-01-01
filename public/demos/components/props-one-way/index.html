@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Props 单向数据流</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+      min-height: 100vh;
+      padding: 40px 20px;
+    }
+
+    #app {
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    h1 {
+      color: white;
+      text-align: center;
+      margin-bottom: 30px;
+      text-shadow: 0 2px 10px rgba(0,0,0,0.2);
+    }
+
+    .demo-section {
+      background: white;
+      border-radius: 16px;
+      padding: 24px;
+      margin-bottom: 24px;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+    }
+
+    .section-title {
+      font-size: 18px;
+      font-weight: 600;
+      color: #1D1D1F;
+      margin-bottom: 16px;
+      padding-bottom: 12px;
+      border-bottom: 2px solid #F5F5F7;
+    }
+
+    /* 数据流图 */
+    .flow-diagram {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 30px;
+      background: #F5F5F7;
+      border-radius: 16px;
+      margin-bottom: 20px;
+    }
+
+    .flow-box {
+      padding: 20px 40px;
+      border-radius: 12px;
+      font-weight: 600;
+      text-align: center;
+      width: 250px;
+    }
+
+    .flow-box.parent {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+    }
+
+    .flow-box.child {
+      background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+      color: white;
+    }
+
+    .flow-arrow {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin: 15px 0;
+      color: #86868B;
+    }
+
+    .flow-arrow-down {
+      font-size: 28px;
+    }
+
+    .flow-arrow-label {
+      font-size: 13px;
+      background: white;
+      padding: 4px 12px;
+      border-radius: 12px;
+      margin-top: 5px;
+    }
+
+    .flow-arrow-blocked {
+      color: #FF3B30;
+    }
+
+    /* 组件展示区 */
+    .component-display {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+      margin-bottom: 20px;
+    }
+
+    .component-box {
+      padding: 20px;
+      border-radius: 12px;
+      border: 2px solid #E5E5EA;
+    }
+
+    .component-box.parent {
+      border-color: #667eea;
+      background: rgba(102, 126, 234, 0.05);
+    }
+
+    .component-box.child {
+      border-color: #11998e;
+      background: rgba(17, 153, 142, 0.05);
+    }
+
+    .component-label {
+      font-size: 14px;
+      font-weight: 600;
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .component-label.parent { color: #667eea; }
+    .component-label.child { color: #11998e; }
+
+    .value-display {
+      font-size: 32px;
+      font-weight: 700;
+      color: #1D1D1F;
+      text-align: center;
+      margin: 16px 0;
+    }
+
+    .controls {
+      display: flex;
+      gap: 8px;
+      justify-content: center;
+    }
+
+    .btn {
+      padding: 8px 16px;
+      border: none;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+
+    .btn:hover {
+      transform: translateY(-1px);
+    }
+
+    .btn.primary {
+      background: #007AFF;
+      color: white;
+    }
+
+    .btn.danger {
+      background: #FF3B30;
+      color: white;
+    }
+
+    .btn.success {
+      background: #34C759;
+      color: white;
+    }
+
+    .code-note {
+      background: #F9FAFB;
+      border: 1px solid #E5E5EA;
+      border-radius: 8px;
+      padding: 16px;
+      margin-top: 16px;
+    }
+
+    .code-note h4 {
+      color: #1D1D1F;
+      margin-bottom: 8px;
+    }
+
+    .code-note pre {
+      background: #1D1D1F;
+      color: #fff;
+      padding: 12px;
+      border-radius: 6px;
+      overflow-x: auto;
+      font-family: 'SF Mono', Consolas, monospace;
+      font-size: 13px;
+      line-height: 1.6;
+    }
+
+    .warning-box {
+      background: #FFEBEE;
+      border-left: 4px solid #FF3B30;
+      padding: 16px;
+      border-radius: 0 8px 8px 0;
+      margin: 16px 0;
+    }
+
+    .warning-box h4 {
+      color: #C62828;
+      margin-bottom: 8px;
+    }
+
+    .tip-box {
+      background: #E8F5E9;
+      border-left: 4px solid #34C759;
+      padding: 16px;
+      border-radius: 0 8px 8px 0;
+      margin-top: 16px;
+    }
+
+    .tip-box h4 {
+      color: #2E7D32;
+      margin-bottom: 8px;
+    }
+
+    .log-panel {
+      background: #1D1D1F;
+      border-radius: 8px;
+      padding: 16px;
+      max-height: 200px;
+      overflow-y: auto;
+      margin-top: 16px;
+    }
+
+    .log-item {
+      font-family: 'SF Mono', Consolas, monospace;
+      font-size: 13px;
+      color: #86868B;
+      margin-bottom: 4px;
+    }
+
+    .log-item.warning { color: #FF9500; }
+    .log-item.error { color: #FF3B30; }
+    .log-item.success { color: #34C759; }
+  </style>
+</head>
+<body>
+  <div id="app">
+    <h1>🔄 Props 单向数据流</h1>
+
+    <!-- 概念说明 -->
+    <div class="demo-section">
+      <div class="section-title">📚 什么是单向数据流？</div>
+      
+      <div class="flow-diagram">
+        <div class="flow-box parent">
+          👨 父组件<br>
+          <small>data: { count: {{ parentCount }} }</small>
+        </div>
+        <div class="flow-arrow">
+          <div class="flow-arrow-down">⬇️</div>
+          <div class="flow-arrow-label">props 传递 ✅</div>
+        </div>
+        <div class="flow-box child">
+          👶 子组件<br>
+          <small>props: ['count']</small>
+        </div>
+        <div class="flow-arrow flow-arrow-blocked">
+          <div class="flow-arrow-down">⬆️ ❌</div>
+          <div class="flow-arrow-label">禁止直接修改</div>
+        </div>
+      </div>
+
+      <p style="text-align: center; color: #86868B;">
+        数据只能从父组件流向子组件，子组件不能直接修改 props
+      </p>
+    </div>
+
+    <!-- 实际演示 -->
+    <div class="demo-section">
+      <div class="section-title">🎯 演示：父组件修改数据</div>
+      
+      <div class="component-display">
+        <div class="component-box parent">
+          <div class="component-label parent">👨 父组件</div>
+          <div class="value-display">{{ parentCount }}</div>
+          <div class="controls">
+            <button class="btn primary" @click="parentCount++">+1</button>
+            <button class="btn danger" @click="parentCount--">-1</button>
+          </div>
+          <p style="text-align: center; color: #86868B; font-size: 13px; margin-top: 12px;">
+            父组件修改 data，子组件自动更新
+          </p>
+        </div>
+        
+        <div class="component-box child">
+          <div class="component-label child">👶 子组件</div>
+          <counter-display :count="parentCount"></counter-display>
+        </div>
+      </div>
+    </div>
+
+    <!-- 错误示范 -->
+    <div class="demo-section">
+      <div class="section-title">⚠️ 错误示范：子组件直接修改 prop</div>
+      
+      <wrong-counter :initial-count="10"></wrong-counter>
+
+      <div class="warning-box">
+        <h4>❌ 为什么不能修改 prop？</h4>
+        <ul style="padding-left: 20px; font-size: 14px;">
+          <li>破坏单向数据流，导致数据混乱</li>
+          <li>父组件更新时，子组件的修改会被覆盖</li>
+          <li>难以追踪数据变化来源，增加调试难度</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- 正确做法 -->
+    <div class="demo-section">
+      <div class="section-title">✅ 正确做法：使用本地 data</div>
+      
+      <correct-counter :initial-count="10"></correct-counter>
+
+      <div class="tip-box">
+        <h4>💡 正确的处理方式</h4>
+        <ul style="padding-left: 20px; font-size: 14px;">
+          <li><strong>用本地 data</strong>：把 prop 复制到本地 data，修改本地 data</li>
+          <li><strong>用 computed</strong>：基于 prop 计算出派生值</li>
+          <li><strong>用 $emit</strong>：通知父组件修改（下一节会讲）</li>
+        </ul>
+      </div>
+
+      <div class="code-note">
+        <h4>正确代码示例</h4>
+        <pre>props: ['initialCount'],
+
+data() {
+  return {
+    // ✅ 把 prop 复制到本地 data
+    localCount: this.initialCount
+  }
+},
+
+methods: {
+  increment() {
+    // ✅ 修改本地 data，不是 prop
+    this.localCount++
+  }
+}</pre>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/vue@2.7.16/dist/vue.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

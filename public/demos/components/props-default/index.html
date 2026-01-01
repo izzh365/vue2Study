@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Props 默认值和必填</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+      min-height: 100vh;
+      padding: 40px 20px;
+    }
+
+    #app {
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    h1 {
+      color: white;
+      text-align: center;
+      margin-bottom: 30px;
+      text-shadow: 0 2px 10px rgba(0,0,0,0.2);
+    }
+
+    .demo-section {
+      background: white;
+      border-radius: 16px;
+      padding: 24px;
+      margin-bottom: 24px;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+    }
+
+    .section-title {
+      font-size: 18px;
+      font-weight: 600;
+      color: #1D1D1F;
+      margin-bottom: 16px;
+      padding-bottom: 12px;
+      border-bottom: 2px solid #F5F5F7;
+    }
+
+    /* 按钮组件 */
+    .custom-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 12px 24px;
+      border: none;
+      border-radius: 10px;
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      margin: 4px;
+    }
+
+    .custom-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+    }
+
+    .custom-btn.small { padding: 8px 16px; font-size: 13px; }
+    .custom-btn.medium { padding: 12px 24px; font-size: 15px; }
+    .custom-btn.large { padding: 16px 32px; font-size: 17px; }
+
+    .custom-btn.primary { background: #007AFF; color: white; }
+    .custom-btn.success { background: #34C759; color: white; }
+    .custom-btn.warning { background: #FF9500; color: white; }
+    .custom-btn.danger { background: #FF3B30; color: white; }
+
+    .custom-btn.rounded { border-radius: 50px; }
+
+    .button-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 16px;
+    }
+
+    .code-note {
+      background: #F9FAFB;
+      border: 1px solid #E5E5EA;
+      border-radius: 8px;
+      padding: 16px;
+      margin-top: 16px;
+    }
+
+    .code-note h4 {
+      color: #1D1D1F;
+      margin-bottom: 8px;
+    }
+
+    .code-note pre {
+      background: #1D1D1F;
+      color: #fff;
+      padding: 12px;
+      border-radius: 6px;
+      overflow-x: auto;
+      font-family: 'SF Mono', Consolas, monospace;
+      font-size: 13px;
+      line-height: 1.6;
+    }
+
+    .example-label {
+      background: #F5F5F7;
+      padding: 8px 12px;
+      border-radius: 6px;
+      font-size: 13px;
+      color: #86868B;
+      margin-bottom: 12px;
+    }
+
+    .warning-box {
+      background: #FFEBEE;
+      border-left: 4px solid #FF3B30;
+      padding: 16px;
+      border-radius: 0 8px 8px 0;
+      margin-top: 16px;
+    }
+
+    .warning-box h4 {
+      color: #C62828;
+      margin-bottom: 8px;
+    }
+
+    .tip-box {
+      background: #E8F5E9;
+      border-left: 4px solid #34C759;
+      padding: 16px;
+      border-radius: 0 8px 8px 0;
+      margin-top: 16px;
+    }
+
+    .tip-box h4 {
+      color: #2E7D32;
+      margin-bottom: 8px;
+    }
+
+    /* 消息卡片 */
+    .message-card {
+      padding: 16px;
+      border-radius: 12px;
+      margin-bottom: 12px;
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+    }
+
+    .message-card.info { background: #E3F2FD; }
+    .message-card.success { background: #E8F5E9; }
+    .message-card.warning { background: #FFF3E0; }
+    .message-card.error { background: #FFEBEE; }
+
+    .message-icon {
+      font-size: 24px;
+    }
+
+    .message-content {
+      flex: 1;
+    }
+
+    .message-title {
+      font-weight: 600;
+      color: #1D1D1F;
+      margin-bottom: 4px;
+    }
+
+    .message-text {
+      font-size: 14px;
+      color: #86868B;
+    }
+  </style>
+</head>
+<body>
+  <div id="app">
+    <h1>⚙️ Props 默认值和必填</h1>
+
+    <!-- 默认值示例 -->
+    <div class="demo-section">
+      <div class="section-title">🎨 默认值示例：按钮组件</div>
+      
+      <div class="example-label">只传 text，其他用默认值：</div>
+      <div class="button-group">
+        <my-button text="默认按钮"></my-button>
+      </div>
+
+      <div class="example-label">传入不同的 type：</div>
+      <div class="button-group">
+        <my-button text="主要按钮" type="primary"></my-button>
+        <my-button text="成功按钮" type="success"></my-button>
+        <my-button text="警告按钮" type="warning"></my-button>
+        <my-button text="危险按钮" type="danger"></my-button>
+      </div>
+
+      <div class="example-label">传入不同的 size：</div>
+      <div class="button-group">
+        <my-button text="小按钮" size="small" type="primary"></my-button>
+        <my-button text="中按钮" size="medium" type="primary"></my-button>
+        <my-button text="大按钮" size="large" type="primary"></my-button>
+      </div>
+
+      <div class="example-label">圆角按钮（rounded=true）：</div>
+      <div class="button-group">
+        <my-button text="圆角按钮" type="success" :rounded="true"></my-button>
+        <my-button text="圆角按钮" type="warning" :rounded="true"></my-button>
+      </div>
+
+      <div class="code-note">
+        <h4>Props 默认值配置</h4>
+        <pre>props: {
+  text: {
+    type: String,
+    required: true  // 必填
+  },
+  type: {
+    type: String,
+    default: 'primary'  // 默认值
+  },
+  size: {
+    type: String,
+    default: 'medium'
+  },
+  rounded: {
+    type: Boolean,
+    default: false  // 布尔值默认值
+  }
+}</pre>
+      </div>
+    </div>
+
+    <!-- 必填验证示例 -->
+    <div class="demo-section">
+      <div class="section-title">🚨 必填项验证（required: true）</div>
+      
+      <message-card type="info">
+        <template #title>这是一条提示信息</template>
+        <template #content>title 是必填项，没有默认值</template>
+      </message-card>
+
+      <!-- 故意不传 title，观察控制台警告 -->
+      <message-card type="warning">
+        <template #content>这个没有传 title，查看控制台警告</template>
+      </message-card>
+
+      <div class="warning-box">
+        <h4>⚠️ 控制台警告</h4>
+        <p style="font-size: 14px;">当 required: true 的 prop 未传值时，Vue 会在控制台显示警告：</p>
+        <pre style="background: #333; color: #FF6B6B; padding: 8px; border-radius: 4px; font-size: 12px; margin-top: 8px;">
+[Vue warn]: Missing required prop: "title"</pre>
+      </div>
+    </div>
+
+    <!-- 对象/数组默认值 -->
+    <div class="demo-section">
+      <div class="section-title">📦 对象/数组类型的默认值</div>
+      
+      <list-component></list-component>
+      <list-component :items="customItems"></list-component>
+
+      <div class="tip-box">
+        <h4>💡 重要提示</h4>
+        <p style="font-size: 14px;">对象或数组的默认值必须用函数返回：</p>
+        <pre style="background: #333; color: #7CFC00; padding: 8px; border-radius: 4px; font-size: 12px; margin-top: 8px;">
+// ✅ 正确写法
+props: {
+  items: {
+    type: Array,
+    default: function() {
+      return []  // 用函数返回
+    }
+    // 或简写：default: () => []
+  }
+}
+
+// ❌ 错误写法
+props: {
+  items: {
+    type: Array,
+    default: []  // 不能直接写对象/数组！
+  }
+}</pre>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/vue@2.7.16/dist/vue.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>单文件组件结构</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      padding: 40px 20px;
+    }
+
+    #app {
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    h1 {
+      color: white;
+      text-align: center;
+      margin-bottom: 30px;
+      text-shadow: 0 2px 10px rgba(0,0,0,0.2);
+    }
+
+    .demo-section {
+      background: white;
+      border-radius: 16px;
+      padding: 24px;
+      margin-bottom: 24px;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+    }
+
+    .section-title {
+      font-size: 18px;
+      font-weight: 600;
+      color: #1D1D1F;
+      margin-bottom: 16px;
+      padding-bottom: 12px;
+      border-bottom: 2px solid #F5F5F7;
+    }
+
+    .sfc-preview {
+      background: #1e1e1e;
+      border-radius: 12px;
+      overflow: hidden;
+    }
+
+    .sfc-header {
+      background: #2d2d2d;
+      padding: 12px 16px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+    }
+
+    .dot.red { background: #ff5f56; }
+    .dot.yellow { background: #ffbd2e; }
+    .dot.green { background: #27c93f; }
+
+    .file-name {
+      color: #9d9d9d;
+      font-size: 13px;
+      margin-left: 10px;
+    }
+
+    .sfc-content {
+      padding: 0;
+    }
+
+    .code-section {
+      padding: 16px;
+      border-bottom: 1px solid #3d3d3d;
+    }
+
+    .code-section:last-child {
+      border-bottom: none;
+    }
+
+    .code-tag {
+      display: inline-block;
+      padding: 4px 12px;
+      border-radius: 6px;
+      font-size: 12px;
+      font-weight: 600;
+      margin-bottom: 12px;
+    }
+
+    .code-tag.template { background: #42b983; color: white; }
+    .code-tag.script { background: #f7df1e; color: #1e1e1e; }
+    .code-tag.style { background: #cc6699; color: white; }
+
+    .code-section pre {
+      font-family: 'SF Mono', Consolas, 'Monaco', monospace;
+      font-size: 13px;
+      line-height: 1.6;
+      color: #d4d4d4;
+      margin: 0;
+      white-space: pre-wrap;
+    }
+
+    .code-section .keyword { color: #c586c0; }
+    .code-section .string { color: #ce9178; }
+    .code-section .function { color: #dcdcaa; }
+    .code-section .property { color: #9cdcfe; }
+    .code-section .tag { color: #569cd6; }
+    .code-section .attr { color: #9cdcfe; }
+    .code-section .comment { color: #6a9955; }
+
+    .structure-list {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      margin-bottom: 20px;
+    }
+
+    .structure-item {
+      background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+      border-radius: 12px;
+      padding: 20px;
+      text-align: center;
+    }
+
+    .structure-item.template { 
+      background: linear-gradient(135deg, #42b983 0%, #2c9866 100%);
+      color: white;
+    }
+
+    .structure-item.script { 
+      background: linear-gradient(135deg, #f7df1e 0%, #d4c018 100%);
+      color: #1e1e1e;
+    }
+
+    .structure-item.style { 
+      background: linear-gradient(135deg, #cc6699 0%, #b34d7e 100%);
+      color: white;
+    }
+
+    .structure-icon {
+      font-size: 32px;
+      margin-bottom: 8px;
+    }
+
+    .structure-name {
+      font-weight: 600;
+      font-size: 16px;
+      margin-bottom: 4px;
+    }
+
+    .structure-desc {
+      font-size: 13px;
+      opacity: 0.9;
+    }
+
+    .tip-box {
+      background: #E8F5E9;
+      border-left: 4px solid #4CAF50;
+      padding: 16px;
+      border-radius: 0 8px 8px 0;
+      margin-top: 20px;
+    }
+
+    .tip-box h4 {
+      color: #2E7D32;
+      margin-bottom: 8px;
+    }
+
+    .tip-box ul {
+      margin: 0;
+      padding-left: 20px;
+      color: #1D1D1F;
+    }
+
+    .tip-box li {
+      margin-bottom: 4px;
+    }
+
+    .advantage-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 16px;
+    }
+
+    .advantage-item {
+      background: #F5F5F7;
+      border-radius: 12px;
+      padding: 16px;
+    }
+
+    .advantage-item h4 {
+      color: #007AFF;
+      margin-bottom: 8px;
+      font-size: 15px;
+    }
+
+    .advantage-item p {
+      color: #86868B;
+      font-size: 14px;
+      margin: 0;
+    }
+  </style>
+</head>
+<body>
+  <div id="app">
+    <h1>📦 单文件组件结构 (.vue)</h1>
+
+    <!-- 三大块说明 -->
+    <div class="demo-section">
+      <div class="section-title">🧩 单文件组件的三个部分</div>
+      
+      <div class="structure-list">
+        <div class="structure-item template">
+          <div class="structure-icon">📄</div>
+          <div class="structure-name">&lt;template&gt;</div>
+          <div class="structure-desc">组件的 HTML 模板</div>
+        </div>
+        <div class="structure-item script">
+          <div class="structure-icon">⚡</div>
+          <div class="structure-name">&lt;script&gt;</div>
+          <div class="structure-desc">组件的 JavaScript 逻辑</div>
+        </div>
+        <div class="structure-item style">
+          <div class="structure-icon">🎨</div>
+          <div class="structure-name">&lt;style&gt;</div>
+          <div class="structure-desc">组件的 CSS 样式</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 代码预览 -->
+    <div class="demo-section">
+      <div class="section-title">📝 完整的 .vue 文件示例</div>
+      
+      <div class="sfc-preview">
+        <div class="sfc-header">
+          <div class="dot red"></div>
+          <div class="dot yellow"></div>
+          <div class="dot green"></div>
+          <span class="file-name">UserCard.vue</span>
+        </div>
+        <div class="sfc-content">
+          <!-- Template 部分 -->
+          <div class="code-section">
+            <span class="code-tag template">template</span>
+            <pre>&lt;<span class="tag">template</span>&gt;
+  &lt;<span class="tag">div</span> <span class="attr">class</span>=<span class="string">"user-card"</span>&gt;
+    &lt;<span class="tag">img</span> <span class="attr">:src</span>=<span class="string">"avatar"</span> <span class="attr">:alt</span>=<span class="string">"name"</span> /&gt;
+    &lt;<span class="tag">h3</span>&gt;{{ name }}&lt;/<span class="tag">h3</span>&gt;
+    &lt;<span class="tag">p</span>&gt;{{ bio }}&lt;/<span class="tag">p</span>&gt;
+    &lt;<span class="tag">button</span> <span class="attr">@click</span>=<span class="string">"follow"</span>&gt;关注&lt;/<span class="tag">button</span>&gt;
+  &lt;/<span class="tag">div</span>&gt;
+&lt;/<span class="tag">template</span>&gt;</pre>
+          </div>
+
+          <!-- Script 部分 -->
+          <div class="code-section">
+            <span class="code-tag script">script</span>
+            <pre>&lt;<span class="tag">script</span>&gt;
+<span class="keyword">export default</span> {
+  <span class="comment">// 组件名称</span>
+  <span class="property">name</span>: <span class="string">'UserCard'</span>,
+
+  <span class="comment">// 接收的属性</span>
+  <span class="property">props</span>: {
+    <span class="property">name</span>: String,
+    <span class="property">avatar</span>: String,
+    <span class="property">bio</span>: String
+  },
+
+  <span class="comment">// 组件数据（必须是函数）</span>
+  <span class="function">data</span>() {
+    <span class="keyword">return</span> {
+      <span class="property">isFollowed</span>: <span class="keyword">false</span>
+    }
+  },
+
+  <span class="comment">// 方法</span>
+  <span class="property">methods</span>: {
+    <span class="function">follow</span>() {
+      <span class="keyword">this</span>.isFollowed = !<span class="keyword">this</span>.isFollowed
+      <span class="keyword">this</span>.<span class="function">$emit</span>(<span class="string">'follow'</span>, <span class="keyword">this</span>.isFollowed)
+    }
+  }
+}
+&lt;/<span class="tag">script</span>&gt;</pre>
+          </div>
+
+          <!-- Style 部分 -->
+          <div class="code-section">
+            <span class="code-tag style">style scoped</span>
+            <pre>&lt;<span class="tag">style</span> <span class="attr">scoped</span>&gt;
+<span class="tag">.user-card</span> {
+  <span class="property">background</span>: <span class="string">white</span>;
+  <span class="property">border-radius</span>: <span class="string">12px</span>;
+  <span class="property">padding</span>: <span class="string">20px</span>;
+  <span class="property">text-align</span>: <span class="string">center</span>;
+}
+
+<span class="tag">button</span> {
+  <span class="property">background</span>: <span class="string">#007AFF</span>;
+  <span class="property">color</span>: <span class="string">white</span>;
+  <span class="property">border</span>: <span class="string">none</span>;
+  <span class="property">padding</span>: <span class="string">8px 16px</span>;
+  <span class="property">border-radius</span>: <span class="string">8px</span>;
+}
+&lt;/<span class="tag">style</span>&gt;</pre>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 优势说明 -->
+    <div class="demo-section">
+      <div class="section-title">✨ 单文件组件的优势</div>
+      
+      <div class="advantage-grid">
+        <div class="advantage-item">
+          <h4>🎯 关注点分离</h4>
+          <p>模板、逻辑、样式分开，清晰明了</p>
+        </div>
+        <div class="advantage-item">
+          <h4>🔒 作用域样式</h4>
+          <p>使用 scoped 让样式只作用于当前组件</p>
+        </div>
+        <div class="advantage-item">
+          <h4>📦 模块化</h4>
+          <p>每个组件独立，易于维护和复用</p>
+        </div>
+        <div class="advantage-item">
+          <h4>🛠️ 预处理器支持</h4>
+          <p>支持 Sass、TypeScript 等预处理器</p>
+        </div>
+      </div>
+
+      <div class="tip-box">
+        <h4>💡 注意事项</h4>
+        <ul>
+          <li>单文件组件需要构建工具（如 Vue CLI、Vite）支持</li>
+          <li><code>scoped</code> 使样式只对当前组件生效</li>
+          <li><code>name</code> 属性建议始终填写，方便调试</li>
+          <li>template 必须有且只有一个根元素（Vue 2）</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/vue@2.7.16/dist/vue.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

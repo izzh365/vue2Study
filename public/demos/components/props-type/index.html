@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Props 类型验证</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+      min-height: 100vh;
+      padding: 40px 20px;
+    }
+
+    #app {
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    h1 {
+      color: white;
+      text-align: center;
+      margin-bottom: 30px;
+      text-shadow: 0 2px 10px rgba(0,0,0,0.2);
+    }
+
+    .demo-section {
+      background: white;
+      border-radius: 16px;
+      padding: 24px;
+      margin-bottom: 24px;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+    }
+
+    .section-title {
+      font-size: 18px;
+      font-weight: 600;
+      color: #1D1D1F;
+      margin-bottom: 16px;
+      padding-bottom: 12px;
+      border-bottom: 2px solid #F5F5F7;
+    }
+
+    .type-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 20px;
+    }
+
+    .type-table th,
+    .type-table td {
+      padding: 12px 16px;
+      text-align: left;
+      border-bottom: 1px solid #E5E5EA;
+    }
+
+    .type-table th {
+      background: #F5F5F7;
+      font-weight: 600;
+      color: #1D1D1F;
+    }
+
+    .type-badge {
+      display: inline-block;
+      padding: 4px 10px;
+      border-radius: 6px;
+      font-size: 13px;
+      font-weight: 600;
+      font-family: 'SF Mono', Consolas, monospace;
+    }
+
+    .type-badge.string { background: #E3F2FD; color: #1976D2; }
+    .type-badge.number { background: #FFF3E0; color: #E65100; }
+    .type-badge.boolean { background: #E8F5E9; color: #2E7D32; }
+    .type-badge.array { background: #FCE4EC; color: #C2185B; }
+    .type-badge.object { background: #F3E5F5; color: #7B1FA2; }
+    .type-badge.function { background: #E0F7FA; color: #00838F; }
+    .type-badge.date { background: #FFF8E1; color: #FF6F00; }
+
+    /* 用户卡片组件 */
+    .user-profile {
+      display: flex;
+      gap: 20px;
+      padding: 20px;
+      background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+      border-radius: 16px;
+      margin-bottom: 16px;
+    }
+
+    .user-avatar {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 36px;
+      color: white;
+    }
+
+    .user-info {
+      flex: 1;
+    }
+
+    .user-name {
+      font-size: 20px;
+      font-weight: 700;
+      color: #1D1D1F;
+      margin-bottom: 4px;
+    }
+
+    .user-meta {
+      font-size: 14px;
+      color: #86868B;
+      margin-bottom: 8px;
+    }
+
+    .user-tags {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .tag {
+      padding: 4px 10px;
+      background: rgba(17, 153, 142, 0.1);
+      color: #11998e;
+      border-radius: 12px;
+      font-size: 12px;
+      font-weight: 500;
+    }
+
+    .code-note {
+      background: #F9FAFB;
+      border: 1px solid #E5E5EA;
+      border-radius: 8px;
+      padding: 16px;
+      margin-top: 16px;
+    }
+
+    .code-note h4 {
+      color: #1D1D1F;
+      margin-bottom: 8px;
+    }
+
+    .code-note pre {
+      background: #1D1D1F;
+      color: #fff;
+      padding: 12px;
+      border-radius: 6px;
+      overflow-x: auto;
+      font-family: 'SF Mono', Consolas, monospace;
+      font-size: 13px;
+      line-height: 1.6;
+    }
+
+    .warning-box {
+      background: #FFF3E0;
+      border-left: 4px solid #FF9500;
+      padding: 16px;
+      border-radius: 0 8px 8px 0;
+      margin-top: 16px;
+    }
+
+    .warning-box h4 {
+      color: #E65100;
+      margin-bottom: 8px;
+    }
+
+    .prop-display {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 12px;
+      margin-top: 16px;
+    }
+
+    .prop-item {
+      background: #F9FAFB;
+      padding: 12px;
+      border-radius: 8px;
+      border: 1px solid #E5E5EA;
+    }
+
+    .prop-label {
+      font-size: 12px;
+      color: #86868B;
+      margin-bottom: 4px;
+    }
+
+    .prop-value {
+      font-weight: 600;
+      color: #1D1D1F;
+    }
+  </style>
+</head>
+<body>
+  <div id="app">
+    <h1>✅ Props 类型验证</h1>
+
+    <!-- 支持的类型 -->
+    <div class="demo-section">
+      <div class="section-title">📋 Props 支持的类型</div>
+      
+      <table class="type-table">
+        <thead>
+          <tr>
+            <th>类型</th>
+            <th>说明</th>
+            <th>示例</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><span class="type-badge string">String</span></td>
+            <td>字符串类型</td>
+            <td><code>"Hello"</code></td>
+          </tr>
+          <tr>
+            <td><span class="type-badge number">Number</span></td>
+            <td>数字类型</td>
+            <td><code>123</code></td>
+          </tr>
+          <tr>
+            <td><span class="type-badge boolean">Boolean</span></td>
+            <td>布尔类型</td>
+            <td><code>true / false</code></td>
+          </tr>
+          <tr>
+            <td><span class="type-badge array">Array</span></td>
+            <td>数组类型</td>
+            <td><code>[1, 2, 3]</code></td>
+          </tr>
+          <tr>
+            <td><span class="type-badge object">Object</span></td>
+            <td>对象类型</td>
+            <td><code>{ name: 'Vue' }</code></td>
+          </tr>
+          <tr>
+            <td><span class="type-badge function">Function</span></td>
+            <td>函数类型</td>
+            <td><code>() => {}</code></td>
+          </tr>
+          <tr>
+            <td><span class="type-badge date">Date</span></td>
+            <td>日期类型</td>
+            <td><code>new Date()</code></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- 类型验证示例 -->
+    <div class="demo-section">
+      <div class="section-title">🎯 类型验证实例</div>
+      <p style="color: #86868B; margin-bottom: 16px;">打开控制台，观察传入错误类型时的警告</p>
+      
+      <user-profile
+        :name="user.name"
+        :age="user.age"
+        :is-vip="user.isVip"
+        :tags="user.tags"
+        :profile="user.profile"
+        :created-at="user.createdAt"
+      ></user-profile>
+
+      <div class="code-note">
+        <h4>Props 类型验证配置</h4>
+        <pre>props: {
+  // 单一类型
+  name: String,
+  age: Number,
+  isVip: Boolean,
+  
+  // 对象/数组类型
+  tags: Array,
+  profile: Object,
+  
+  // 日期类型
+  createdAt: Date,
+  
+  // 多种类型
+  id: [String, Number]
+}</pre>
+      </div>
+    </div>
+
+    <!-- 错误类型测试 -->
+    <div class="demo-section">
+      <div class="section-title">⚠️ 类型错误测试</div>
+      <p style="color: #86868B; margin-bottom: 16px;">下面传入了错误的类型，打开控制台查看 Vue 的警告</p>
+      
+      <!-- 故意传入错误类型 -->
+      <wrong-type-demo
+        :count="'这是字符串不是数字'"
+        :items="'这应该是数组'"
+      ></wrong-type-demo>
+
+      <div class="warning-box">
+        <h4>💡 类型验证的作用</h4>
+        <ul style="padding-left: 20px;">
+          <li>开发阶段及时发现错误</li>
+          <li>作为组件的文档说明</li>
+          <li>帮助团队协作，明确接口</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/vue@2.7.16/dist/vue.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

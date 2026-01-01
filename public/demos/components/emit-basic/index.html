@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>$emit 基本用法</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+      min-height: 100vh;
+      padding: 40px 20px;
+    }
+
+    #app {
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    h1 {
+      color: white;
+      text-align: center;
+      margin-bottom: 30px;
+      text-shadow: 0 2px 10px rgba(0,0,0,0.2);
+    }
+
+    .demo-section {
+      background: white;
+      border-radius: 16px;
+      padding: 24px;
+      margin-bottom: 24px;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+    }
+
+    .section-title {
+      font-size: 18px;
+      font-weight: 600;
+      color: #1D1D1F;
+      margin-bottom: 16px;
+      padding-bottom: 12px;
+      border-bottom: 2px solid #F5F5F7;
+    }
+
+    /* 数据流图 */
+    .flow-diagram {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 30px;
+      background: #F5F5F7;
+      border-radius: 16px;
+      margin-bottom: 20px;
+    }
+
+    .flow-box {
+      padding: 20px 40px;
+      border-radius: 12px;
+      font-weight: 600;
+      text-align: center;
+      width: 280px;
+    }
+
+    .flow-box.parent {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+    }
+
+    .flow-box.child {
+      background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+      color: white;
+    }
+
+    .flow-arrow {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin: 15px 0;
+    }
+
+    .flow-arrow-up {
+      font-size: 28px;
+    }
+
+    .flow-arrow-label {
+      font-size: 13px;
+      background: white;
+      padding: 4px 12px;
+      border-radius: 12px;
+      color: #86868B;
+    }
+
+    /* 组件展示区 */
+    .component-display {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+    }
+
+    .component-box {
+      padding: 20px;
+      border-radius: 12px;
+      border: 2px solid #E5E5EA;
+    }
+
+    .component-box.parent {
+      border-color: #667eea;
+      background: rgba(102, 126, 234, 0.05);
+    }
+
+    .component-box.child {
+      border-color: #f5576c;
+      background: rgba(245, 87, 108, 0.05);
+    }
+
+    .component-label {
+      font-size: 14px;
+      font-weight: 600;
+      margin-bottom: 12px;
+    }
+
+    .component-label.parent { color: #667eea; }
+    .component-label.child { color: #f5576c; }
+
+    .message-display {
+      background: #F9FAFB;
+      padding: 16px;
+      border-radius: 8px;
+      min-height: 60px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      color: #1D1D1F;
+    }
+
+    .btn {
+      padding: 12px 24px;
+      border: none;
+      border-radius: 10px;
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+    }
+
+    .btn.primary {
+      background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+      color: white;
+    }
+
+    .btn.success {
+      background: #34C759;
+      color: white;
+    }
+
+    .btn.warning {
+      background: #FF9500;
+      color: white;
+    }
+
+    .code-note {
+      background: #F9FAFB;
+      border: 1px solid #E5E5EA;
+      border-radius: 8px;
+      padding: 16px;
+      margin-top: 16px;
+    }
+
+    .code-note h4 {
+      color: #1D1D1F;
+      margin-bottom: 8px;
+    }
+
+    .code-note pre {
+      background: #1D1D1F;
+      color: #fff;
+      padding: 12px;
+      border-radius: 6px;
+      overflow-x: auto;
+      font-family: 'SF Mono', Consolas, monospace;
+      font-size: 13px;
+      line-height: 1.6;
+    }
+
+    .event-log {
+      background: #1D1D1F;
+      border-radius: 8px;
+      padding: 16px;
+      max-height: 200px;
+      overflow-y: auto;
+      margin-top: 16px;
+    }
+
+    .log-item {
+      font-family: 'SF Mono', Consolas, monospace;
+      font-size: 12px;
+      color: #86868B;
+      margin-bottom: 4px;
+    }
+
+    .log-item .time { color: #5AC8FA; }
+    .log-item .event { color: #FF9500; }
+    .log-item .data { color: #34C759; }
+
+    .button-group {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+  </style>
+</head>
+<body>
+  <div id="app">
+    <h1>📤 $emit 基本用法</h1>
+
+    <!-- 概念说明 -->
+    <div class="demo-section">
+      <div class="section-title">📚 什么是 $emit？</div>
+      
+      <div class="flow-diagram">
+        <div class="flow-box parent">
+          👨 父组件<br>
+          <small>@child-event="handleEvent"</small>
+        </div>
+        <div class="flow-arrow">
+          <div class="flow-arrow-up">⬆️</div>
+          <div class="flow-arrow-label">$emit('child-event', data)</div>
+        </div>
+        <div class="flow-box child">
+          👶 子组件<br>
+          <small>this.$emit('child-event', data)</small>
+        </div>
+      </div>
+
+      <p style="text-align: center; color: #86868B;">
+        $emit 是子组件向父组件通信的方式，用于触发自定义事件
+      </p>
+    </div>
+
+    <!-- 基础示例 -->
+    <div class="demo-section">
+      <div class="section-title">🎯 基础示例：子组件通知父组件</div>
+      
+      <div class="component-display">
+        <div class="component-box parent">
+          <div class="component-label parent">👨 父组件</div>
+          <div class="message-display">
+            {{ parentMessage || '等待子组件消息...' }}
+          </div>
+          <p style="color: #86868B; font-size: 13px; margin-top: 12px; text-align: center;">
+            监听子组件的 @notify 事件
+          </p>
+        </div>
+        
+        <div class="component-box child">
+          <div class="component-label child">👶 子组件</div>
+          <child-button @notify="handleNotify"></child-button>
+        </div>
+      </div>
+
+      <div class="code-note">
+        <h4>代码说明</h4>
+        <pre>// 子组件中触发事件
+methods: {
+  sendMessage() {
+    this.$emit('notify', '来自子组件的问候！')
+  }
+}
+
+// 父组件中监听事件
+&lt;child-button @notify="handleNotify"&gt;&lt;/child-button&gt;
+
+methods: {
+  handleNotify(message) {
+    console.log('收到消息：', message)
+  }
+}</pre>
+      </div>
+    </div>
+
+    <!-- 多种事件 -->
+    <div class="demo-section">
+      <div class="section-title">🎨 多种自定义事件</div>
+      
+      <action-panel
+        @action-save="handleAction('保存', $event)"
+        @action-delete="handleAction('删除', $event)"
+        @action-publish="handleAction('发布', $event)"
+      ></action-panel>
+
+      <div class="event-log">
+        <div v-if="eventLogs.length === 0" class="log-item">
+          等待事件触发...
+        </div>
+        <div v-for="(log, index) in eventLogs" :key="index" class="log-item">
+          <span class="time">[{{ log.time }}]</span>
+          <span class="event">{{ log.event }}</span>
+          <span class="data">{{ log.data }}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/vue@2.7.16/dist/vue.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

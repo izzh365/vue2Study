@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>$emit 传递参数</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+      min-height: 100vh;
+      padding: 40px 20px;
+    }
+
+    #app {
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    h1 {
+      color: white;
+      text-align: center;
+      margin-bottom: 30px;
+      text-shadow: 0 2px 10px rgba(0,0,0,0.2);
+    }
+
+    .demo-section {
+      background: white;
+      border-radius: 16px;
+      padding: 24px;
+      margin-bottom: 24px;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+    }
+
+    .section-title {
+      font-size: 18px;
+      font-weight: 600;
+      color: #1D1D1F;
+      margin-bottom: 16px;
+      padding-bottom: 12px;
+      border-bottom: 2px solid #F5F5F7;
+    }
+
+    /* 购物车样式 */
+    .cart-item {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      padding: 16px;
+      background: #F9FAFB;
+      border-radius: 12px;
+      margin-bottom: 12px;
+    }
+
+    .cart-image {
+      width: 80px;
+      height: 80px;
+      background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 36px;
+    }
+
+    .cart-info {
+      flex: 1;
+    }
+
+    .cart-name {
+      font-weight: 600;
+      color: #1D1D1F;
+      margin-bottom: 4px;
+    }
+
+    .cart-price {
+      color: #FF3B30;
+      font-weight: 600;
+    }
+
+    .cart-quantity {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .qty-btn {
+      width: 32px;
+      height: 32px;
+      border: none;
+      border-radius: 8px;
+      background: #E5E5EA;
+      color: #1D1D1F;
+      font-size: 18px;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+
+    .qty-btn:hover {
+      background: #007AFF;
+      color: white;
+    }
+
+    .qty-btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    .qty-value {
+      font-size: 18px;
+      font-weight: 600;
+      min-width: 40px;
+      text-align: center;
+    }
+
+    .cart-remove {
+      padding: 8px;
+      border: none;
+      background: transparent;
+      color: #FF3B30;
+      font-size: 20px;
+      cursor: pointer;
+      transition: transform 0.3s;
+    }
+
+    .cart-remove:hover {
+      transform: scale(1.2);
+    }
+
+    /* 购物车汇总 */
+    .cart-summary {
+      background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+      color: white;
+      padding: 20px;
+      border-radius: 12px;
+      margin-top: 20px;
+    }
+
+    .summary-row {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 8px;
+    }
+
+    .summary-total {
+      font-size: 24px;
+      font-weight: 700;
+      border-top: 1px solid rgba(255,255,255,0.3);
+      padding-top: 12px;
+      margin-top: 12px;
+    }
+
+    .code-note {
+      background: #F9FAFB;
+      border: 1px solid #E5E5EA;
+      border-radius: 8px;
+      padding: 16px;
+      margin-top: 16px;
+    }
+
+    .code-note h4 {
+      color: #1D1D1F;
+      margin-bottom: 8px;
+    }
+
+    .code-note pre {
+      background: #1D1D1F;
+      color: #fff;
+      padding: 12px;
+      border-radius: 6px;
+      overflow-x: auto;
+      font-family: 'SF Mono', Consolas, monospace;
+      font-size: 13px;
+      line-height: 1.6;
+    }
+
+    .empty-cart {
+      text-align: center;
+      padding: 40px;
+      color: #86868B;
+    }
+
+    .empty-cart-icon {
+      font-size: 48px;
+      margin-bottom: 16px;
+    }
+  </style>
+</head>
+<body>
+  <div id="app">
+    <h1>📦 $emit 传递参数</h1>
+
+    <!-- 购物车示例 -->
+    <div class="demo-section">
+      <div class="section-title">🛒 实战案例：购物车</div>
+      <p style="color: #86868B; margin-bottom: 16px;">
+        子组件通过 $emit 传递商品信息给父组件
+      </p>
+      
+      <!-- 购物车列表 -->
+      <div v-if="cartItems.length > 0">
+        <cart-item
+          v-for="item in cartItems"
+          :key="item.id"
+          :item="item"
+          @update-quantity="updateQuantity"
+          @remove-item="removeItem"
+        ></cart-item>
+      </div>
+      <div v-else class="empty-cart">
+        <div class="empty-cart-icon">🛒</div>
+        <p>购物车是空的</p>
+      </div>
+
+      <!-- 购物车汇总 -->
+      <div v-if="cartItems.length > 0" class="cart-summary">
+        <div class="summary-row">
+          <span>商品数量</span>
+          <span>{{ totalQuantity }} 件</span>
+        </div>
+        <div class="summary-row summary-total">
+          <span>总计</span>
+          <span>¥{{ totalPrice.toFixed(2) }}</span>
+        </div>
+      </div>
+
+      <div class="code-note">
+        <h4>$emit 传递多个参数</h4>
+        <pre>// 子组件触发事件时传递多个参数
+methods: {
+  updateQty(newQty) {
+    // 传递商品ID和新数量
+    this.$emit('update-quantity', {
+      id: this.item.id,
+      quantity: newQty
+    })
+  },
+  
+  remove() {
+    // 传递要删除的商品ID
+    this.$emit('remove-item', this.item.id)
+  }
+}
+
+// 父组件接收
+&lt;cart-item 
+  @update-quantity="updateQuantity"
+  @remove-item="removeItem"
+&gt;&lt;/cart-item&gt;
+
+methods: {
+  updateQuantity(payload) {
+    // payload = { id, quantity }
+    const item = this.cartItems.find(i => i.id === payload.id)
+    if (item) {
+      item.quantity = payload.quantity
+    }
+  }
+}</pre>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/vue@2.7.16/dist/vue.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

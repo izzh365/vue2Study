@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ref 获取 DOM 元素</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      padding: 40px 20px;
+    }
+
+    #app {
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    h1 {
+      color: white;
+      text-align: center;
+      margin-bottom: 30px;
+      text-shadow: 0 2px 10px rgba(0,0,0,0.2);
+    }
+
+    .demo-section {
+      background: white;
+      border-radius: 16px;
+      padding: 24px;
+      margin-bottom: 24px;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+    }
+
+    .section-title {
+      font-size: 18px;
+      font-weight: 600;
+      color: #1D1D1F;
+      margin-bottom: 16px;
+      padding-bottom: 12px;
+      border-bottom: 2px solid #F5F5F7;
+    }
+
+    /* 输入框样式 */
+    .input-field {
+      width: 100%;
+      padding: 12px 16px;
+      border: 2px solid #E5E5EA;
+      border-radius: 12px;
+      font-size: 16px;
+      transition: all 0.3s;
+      outline: none;
+    }
+
+    .input-field:focus {
+      border-color: #667eea;
+      box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.2);
+    }
+
+    /* 按钮 */
+    .btn {
+      padding: 10px 20px;
+      border: none;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.3s;
+      margin: 4px;
+    }
+
+    .btn:hover {
+      transform: translateY(-1px);
+    }
+
+    .btn.primary {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+    }
+
+    .btn.success {
+      background: #34C759;
+      color: white;
+    }
+
+    .btn.warning {
+      background: #FF9500;
+      color: white;
+    }
+
+    /* 演示区域 */
+    .demo-box {
+      background: #F9FAFB;
+      padding: 20px;
+      border-radius: 12px;
+      margin: 16px 0;
+      text-align: center;
+    }
+
+    .demo-element {
+      padding: 40px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      border-radius: 12px;
+      font-size: 18px;
+      font-weight: 600;
+      transition: all 0.3s;
+    }
+
+    /* 信息显示 */
+    .info-box {
+      background: #F9FAFB;
+      padding: 16px;
+      border-radius: 12px;
+      margin-top: 16px;
+    }
+
+    .info-label {
+      font-size: 13px;
+      color: #86868B;
+      margin-bottom: 4px;
+    }
+
+    .info-value {
+      font-size: 14px;
+      font-family: 'SF Mono', Consolas, monospace;
+      color: #1D1D1F;
+      word-break: break-all;
+    }
+
+    /* 代码说明 */
+    .code-note {
+      background: #F9FAFB;
+      border: 1px solid #E5E5EA;
+      border-radius: 8px;
+      padding: 16px;
+      margin-top: 16px;
+    }
+
+    .code-note h4 {
+      color: #1D1D1F;
+      margin-bottom: 8px;
+    }
+
+    .code-note pre {
+      background: #1D1D1F;
+      color: #fff;
+      padding: 12px;
+      border-radius: 6px;
+      overflow-x: auto;
+      font-family: 'SF Mono', Consolas, monospace;
+      font-size: 13px;
+      line-height: 1.6;
+    }
+
+    .tip-box {
+      background: #FFF3E0;
+      border-left: 4px solid #FF9500;
+      padding: 16px;
+      border-radius: 0 8px 8px 0;
+      margin: 16px 0;
+    }
+
+    .tip-box h4 {
+      color: #F57C00;
+      margin-bottom: 8px;
+    }
+
+    .controls {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 16px;
+    }
+
+    /* 画布 */
+    .canvas-container {
+      background: #1D1D1F;
+      border-radius: 12px;
+      padding: 20px;
+    }
+
+    canvas {
+      display: block;
+      background: white;
+      border-radius: 8px;
+    }
+  </style>
+</head>
+<body>
+  <div id="app">
+    <h1>🎯 ref 获取 DOM 元素</h1>
+
+    <!-- 概念说明 -->
+    <div class="demo-section">
+      <div class="section-title">📚 什么是 ref？</div>
+      
+      <p style="color: #86868B; margin-bottom: 16px;">
+        ref 是 Vue 提供的直接访问 DOM 元素或子组件实例的方式
+      </p>
+
+      <div class="tip-box">
+        <h4>⚠️ 使用时机</h4>
+        <ul style="font-size: 14px; margin-left: 20px; line-height: 1.8;">
+          <li>必须在 <code>mounted</code> 之后访问（DOM 已渲染）</li>
+          <li>避免过度使用，优先考虑数据驱动的方式</li>
+          <li>常用于集成第三方库、管理焦点等场景</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- 自动聚焦 -->
+    <div class="demo-section">
+      <div class="section-title">🔍 自动聚焦输入框</div>
+      
+      <div class="controls">
+        <button class="btn primary" @click="focusInput">聚焦输入框</button>
+        <button class="btn warning" @click="selectInput">选中内容</button>
+        <button class="btn success" @click="clearInput">清空内容</button>
+      </div>
+
+      <input 
+        ref="myInput"
+        type="text" 
+        class="input-field"
+        v-model="inputValue"
+        placeholder="点击按钮操作这个输入框"
+      >
+
+      <div class="code-note">
+        <h4>使用 ref 访问 DOM</h4>
+        <pre>// 模板中添加 ref 属性
+&lt;input ref="myInput" /&gt;
+
+// 在方法中通过 this.$refs 访问
+methods: {
+  focusInput() {
+    this.$refs.myInput.focus()
+  },
+  selectInput() {
+    this.$refs.myInput.select()
+  }
+}</pre>
+      </div>
+    </div>
+
+    <!-- 读取 DOM 信息 -->
+    <div class="demo-section">
+      <div class="section-title">📐 读取 DOM 信息</div>
+      
+      <div class="demo-box">
+        <div ref="demoElement" class="demo-element" :style="elementStyle">
+          调整我的大小
+        </div>
+      </div>
+
+      <div class="controls">
+        <button class="btn primary" @click="readElementInfo">读取元素信息</button>
+        <button class="btn success" @click="changeSize('large')">变大</button>
+        <button class="btn warning" @click="changeSize('small')">变小</button>
+      </div>
+
+      <div class="info-box" v-if="elementInfo">
+        <div style="margin-bottom: 12px;">
+          <div class="info-label">尺寸</div>
+          <div class="info-value">宽: {{ elementInfo.width }}px, 高: {{ elementInfo.height }}px</div>
+        </div>
+        <div style="margin-bottom: 12px;">
+          <div class="info-label">位置</div>
+          <div class="info-value">left: {{ elementInfo.left }}px, top: {{ elementInfo.top }}px</div>
+        </div>
+        <div>
+          <div class="info-label">标签名</div>
+          <div class="info-value">{{ elementInfo.tagName }}</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 操作 Canvas -->
+    <div class="demo-section">
+      <div class="section-title">🎨 操作 Canvas</div>
+      
+      <div class="canvas-container">
+        <canvas ref="canvas" width="400" height="200"></canvas>
+      </div>
+
+      <div class="controls" style="margin-top: 16px;">
+        <button class="btn primary" @click="drawCircle">画圆</button>
+        <button class="btn success" @click="drawRect">画矩形</button>
+        <button class="btn warning" @click="drawText">写文字</button>
+        <button class="btn" style="background: #FF3B30; color: white;" @click="clearCanvas">清空</button>
+      </div>
+
+      <div class="code-note">
+        <h4>通过 ref 获取 Canvas 上下文</h4>
+        <pre>mounted() {
+  // 获取 canvas DOM 元素
+  const canvas = this.$refs.canvas
+  // 获取 2D 绑图上下文
+  this.ctx = canvas.getContext('2d')
+},
+
+methods: {
+  drawCircle() {
+    this.ctx.beginPath()
+    this.ctx.arc(x, y, radius, 0, Math.PI * 2)
+    this.ctx.fill()
+  }
+}</pre>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/vue@2.7.16/dist/vue.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

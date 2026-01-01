@@ -176,6 +176,6 @@ new Vue({
     console.log('  :prop="value" @update:prop="val => value = val"')
     console.log('')
     console.log('💡 子组件必须触发：')
-    console.log('  this.$emit(\'update:propName\', newValue)')
+    console.log("  this.$emit('update:propName', newValue)")
   }
 })

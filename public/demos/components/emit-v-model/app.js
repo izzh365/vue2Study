@@ -110,8 +110,8 @@ Vue.component('my-switch', {
 Vue.component('custom-checkbox', {
   // 自定义 v-model 的行为
   model: {
-    prop: 'checked',   // 使用 checked 而不是默认的 value
-    event: 'change'    // 使用 change 而不是默认的 input
+    prop: 'checked', // 使用 checked 而不是默认的 value
+    event: 'change' // 使用 change 而不是默认的 input
   },
 
   props: {
@@ -178,9 +178,9 @@ new Vue({
     console.log('')
     console.log('💡 组件实现要点：')
     console.log('  1. props 中接收 value')
-    console.log('  2. 通过 $emit(\'input\', newValue) 更新')
+    console.log("  2. 通过 $emit('input', newValue) 更新")
     console.log('')
     console.log('⚙️ model 选项（Vue 2.2+）：')
-    console.log('  model: { prop: \'checked\', event: \'change\' }')
+    console.log("  model: { prop: 'checked', event: 'change' }")
   }
 })

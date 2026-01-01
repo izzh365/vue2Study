@@ -133,7 +133,7 @@ new Vue({
     console.log('=== $emit 传递参数 ===')
     console.log('')
     console.log('📦 传递方式：')
-    console.log('  this.$emit(\'event-name\', payload)')
+    console.log("  this.$emit('event-name', payload)")
     console.log('')
     console.log('💡 最佳实践：')
     console.log('  传递对象，便于扩展和理解')

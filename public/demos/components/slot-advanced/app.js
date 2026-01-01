@@ -32,7 +32,7 @@ Vue.component('my-accordion', {
 
   data() {
     return {
-      openIndex: 0  // 默认打开第一个
+      openIndex: 0 // 默认打开第一个
     }
   },
 
@@ -164,17 +164,18 @@ new Vue({
 
       // FAQ 列表
       faqList: [
-        { 
-          title: '什么是 Vue.js？', 
-          content: 'Vue.js 是一套构建用户界面的渐进式 JavaScript 框架，易于上手，同时也可以构建大型应用。' 
+        {
+          title: '什么是 Vue.js？',
+          content:
+            'Vue.js 是一套构建用户界面的渐进式 JavaScript 框架，易于上手，同时也可以构建大型应用。'
         },
-        { 
-          title: '什么是组件化？', 
-          content: '组件化是将页面拆分成独立、可复用的部分，每个组件包含自己的模板、逻辑和样式。' 
+        {
+          title: '什么是组件化？',
+          content: '组件化是将页面拆分成独立、可复用的部分，每个组件包含自己的模板、逻辑和样式。'
         },
-        { 
-          title: '什么是插槽？', 
-          content: '插槽是一种内容分发机制，允许父组件向子组件传递模板内容，实现组件的灵活定制。' 
+        {
+          title: '什么是插槽？',
+          content: '插槽是一种内容分发机制，允许父组件向子组件传递模板内容，实现组件的灵活定制。'
         }
       ],
 

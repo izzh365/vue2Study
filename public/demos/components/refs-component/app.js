@@ -12,7 +12,7 @@
 Vue.component('audio-player', {
   data() {
     return {
-      status: 'stopped',  // playing, paused, stopped
+      status: 'stopped', // playing, paused, stopped
       currentSong: '周杰伦 - 晴天.mp3',
       volume: 80
     }
@@ -220,7 +220,7 @@ new Vue({
 
   methods: {
     // ==================== 播放器控制 ====================
-    
+
     parentPlay() {
       // 调用子组件的方法
       this.$refs.player.play()
@@ -241,7 +241,7 @@ new Vue({
     },
 
     // ==================== 表单控制 ====================
-    
+
     getFormData() {
       const data = this.$refs.userForm.getData()
       this.formResult = JSON.stringify(data, null, 2)
@@ -271,7 +271,7 @@ new Vue({
     },
 
     // ==================== 多计数器控制 ====================
-    
+
     getAllValues() {
       const values = {
         counter1: this.$refs.counter1.getValue(),

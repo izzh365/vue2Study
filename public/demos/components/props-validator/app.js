@@ -19,7 +19,7 @@ Vue.component('star-rating', {
        * @param {number} value - 传入的值
        * @returns {boolean} - 是否验证通过
        */
-      validator: function(value) {
+      validator: function (value) {
         // 必须是 1-5 之间的整数
         const valid = value >= 1 && value <= 5 && Number.isInteger(value)
         if (!valid) {
@@ -70,7 +70,7 @@ Vue.component('progress-bar', {
     percent: {
       type: Number,
       default: 0,
-      validator: function(value) {
+      validator: function (value) {
         // 必须是 0-100 之间的数字
         const valid = value >= 0 && value <= 100
         if (!valid) {
@@ -116,12 +116,14 @@ Vue.component('status-badge', {
     status: {
       type: String,
       default: 'pending',
-      validator: function(value) {
+      validator: function (value) {
         // 只允许这几个状态值
         const allowedValues = ['pending', 'processing', 'completed', 'failed']
         const valid = allowedValues.includes(value)
         if (!valid) {
-          console.warn(`[status-badge] status 必须是 ${allowedValues.join('/')} 之一，收到：${value}`)
+          console.warn(
+            `[status-badge] status 必须是 ${allowedValues.join('/')} 之一，收到：${value}`
+          )
         }
         return valid
       }
@@ -163,7 +165,7 @@ new Vue({
     console.log('')
     console.log('💡 常见验证场景：')
     console.log('  1. 范围验证：value >= min && value <= max')
-    console.log('  2. 枚举验证：[\'a\', \'b\', \'c\'].includes(value)')
+    console.log("  2. 枚举验证：['a', 'b', 'c'].includes(value)")
     console.log('  3. 格式验证：正则表达式匹配')
   }
 })

@@ -22,7 +22,7 @@ Vue.component('my-button', {
       type: String,
       default: 'primary',
       // 自定义验证器（后面会详细讲）
-      validator: function(value) {
+      validator: function (value) {
         return ['primary', 'success', 'warning', 'danger'].includes(value)
       }
     },
@@ -31,7 +31,7 @@ Vue.component('my-button', {
     size: {
       type: String,
       default: 'medium',
-      validator: function(value) {
+      validator: function (value) {
         return ['small', 'medium', 'large'].includes(value)
       }
     },
@@ -52,12 +52,7 @@ Vue.component('my-button', {
   computed: {
     // 计算 class
     btnClass() {
-      return [
-        'custom-btn',
-        this.type,
-        this.size,
-        { 'rounded': this.rounded }
-      ]
+      return ['custom-btn', this.type, this.size, { rounded: this.rounded }]
     }
   },
 
@@ -121,7 +116,7 @@ Vue.component('list-component', {
     items: {
       type: Array,
       // ✅ 正确写法：用函数返回
-      default: function() {
+      default: function () {
         return ['默认项目 1', '默认项目 2', '默认项目 3']
       }
       // 也可以用箭头函数简写
@@ -131,7 +126,7 @@ Vue.component('list-component', {
     // 对象类型同理
     config: {
       type: Object,
-      default: function() {
+      default: function () {
         return {
           showIndex: true,
           bordered: false

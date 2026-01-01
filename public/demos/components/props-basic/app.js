@@ -65,7 +65,7 @@ new Vue({
     console.log('  父组件 data → props → 子组件')
     console.log('')
     console.log('💡 使用方式：')
-    console.log('  1. 子组件声明 props: [\'name\']')
+    console.log("  1. 子组件声明 props: ['name']")
     console.log('  2. 父组件使用 :name="value" 传递')
   }
 })

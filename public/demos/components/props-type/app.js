@@ -15,27 +15,27 @@ Vue.component('user-profile', {
     name: {
       type: String
     },
-    
+
     // Number 类型
     age: {
       type: Number
     },
-    
+
     // Boolean 类型
     isVip: {
       type: Boolean
     },
-    
+
     // Array 类型
     tags: {
       type: Array
     },
-    
+
     // Object 类型
     profile: {
       type: Object
     },
-    
+
     // Date 类型
     createdAt: {
       type: Date
@@ -83,7 +83,7 @@ Vue.component('wrong-type-demo', {
     count: {
       type: Number
     },
-    
+
     // 期望 Array 类型
     items: {
       type: Array

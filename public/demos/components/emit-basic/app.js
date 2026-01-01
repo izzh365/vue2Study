@@ -135,7 +135,7 @@ new Vue({
      */
     handleAction(actionName, data) {
       const time = new Date().toLocaleTimeString()
-      
+
       this.eventLogs.unshift({
         time: time,
         event: `action-${data.action}`,
@@ -158,7 +158,7 @@ new Vue({
     console.log('  子组件向父组件发送消息/事件')
     console.log('')
     console.log('📋 使用方式：')
-    console.log('  子组件：this.$emit(\'event-name\', data)')
+    console.log("  子组件：this.$emit('event-name', data)")
     console.log('  父组件：@event-name="handler"')
   }
 })

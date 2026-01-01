@@ -19,7 +19,7 @@ new Vue({
         fontSize: '18px'
       },
       elementInfo: null,
-      ctx: null  // Canvas 上下文
+      ctx: null // Canvas 上下文
     }
   },
 
@@ -29,17 +29,17 @@ new Vue({
    */
   mounted() {
     console.log('mounted: 可以访问 $refs 了')
-    
+
     // 自动聚焦输入框
     this.$refs.myInput.focus()
-    
+
     // 初始化 Canvas
     this.initCanvas()
   },
 
   methods: {
     // ==================== 输入框操作 ====================
-    
+
     /**
      * 聚焦输入框
      */
@@ -67,7 +67,7 @@ new Vue({
     },
 
     // ==================== 读取 DOM 信息 ====================
-    
+
     /**
      * 读取元素信息
      */
@@ -75,7 +75,7 @@ new Vue({
       const el = this.$refs.demoElement
       // getBoundingClientRect() 返回元素的大小和位置信息
       const rect = el.getBoundingClientRect()
-      
+
       this.elementInfo = {
         width: Math.round(rect.width),
         height: Math.round(rect.height),
@@ -102,7 +102,7 @@ new Vue({
           fontSize: '14px'
         }
       }
-      
+
       // DOM 更新后重新读取信息
       this.$nextTick(() => {
         this.readElementInfo()
@@ -110,7 +110,7 @@ new Vue({
     },
 
     // ==================== Canvas 操作 ====================
-    
+
     /**
      * 初始化 Canvas
      */

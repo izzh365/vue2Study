@@ -31,13 +31,13 @@ Vue.component('child-component', {
      */
     getParentInfo() {
       const parent = this.$parent
-      
+
       // 访问父组件的数据
       const parentData = parent.parentData
-      
+
       // 调用父组件的方法
       const message = parent.getParentMessage()
-      
+
       this.logs.unshift(`父组件数据: ${parentData}`)
       this.logs.unshift(`父组件消息: ${message}`)
     },

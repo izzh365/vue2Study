@@ -10,8 +10,8 @@
 
 | 序号 | 知识点 | 页面文件 | Demo 数量 | 状态 |
 |------|--------|----------|-----------|------|
-| 5.1 | computed 计算属性 | Computed.vue | 6 | ⬜ |
-| 5.2 | watch 侦听器 | Watch.vue | 6 | ⬜ |
+| 5.1 | computed 计算属性 | Computed.vue | 6 | ✅ |
+| 5.2 | watch 侦听器 | Watch.vue | 6 | ✅ |
 
 ---
 

@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>watch 异步请求</title>
+  <script src="https://cdn.jsdelivr.net/npm/vue@2.7.16/dist/vue.js"></script>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; padding: 20px; background: #f5f5f7; min-height: 100vh; }
+    .demo-container { max-width: 500px; margin: 0 auto; }
+    h3 { color: #1d1d1f; margin-bottom: 16px; font-size: 18px; }
+    .card { background: white; border-radius: 12px; padding: 20px; margin-bottom: 16px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); }
+    .search-box { position: relative; margin-bottom: 20px; }
+    .search-input { width: 100%; padding: 14px 16px 14px 44px; border: 2px solid #e5e5ea; border-radius: 12px; font-size: 16px; transition: all 0.2s; }
+    .search-input:focus { outline: none; border-color: #007aff; box-shadow: 0 0 0 4px rgba(0,122,255,0.1); }
+    .search-icon { position: absolute; left: 16px; top: 50%; transform: translateY(-50%); font-size: 18px; }
+    .loading-spinner { position: absolute; right: 16px; top: 50%; transform: translateY(-50%); width: 20px; height: 20px; border: 2px solid #e5e5ea; border-top-color: #007aff; border-radius: 50%; animation: spin 0.8s linear infinite; }
+    @keyframes spin { to { transform: translateY(-50%) rotate(360deg); } }
+    .status-bar { display: flex; align-items: center; gap: 8px; padding: 10px 14px; border-radius: 8px; font-size: 13px; margin-bottom: 16px; }
+    .status-bar.idle { background: #f9fafb; color: #86868b; }
+    .status-bar.loading { background: #fff3cd; color: #856404; }
+    .status-bar.success { background: #d4edda; color: #155724; }
+    .status-bar.empty { background: #f8d7da; color: #721c24; }
+    .result-list { display: flex; flex-direction: column; gap: 8px; }
+    .result-item { display: flex; align-items: center; gap: 12px; padding: 14px; background: #f9fafb; border-radius: 10px; transition: all 0.2s; cursor: pointer; }
+    .result-item:hover { background: #e3f2fd; transform: translateX(4px); }
+    .result-avatar { width: 40px; height: 40px; border-radius: 50%; background: linear-gradient(135deg, #007aff 0%, #5ac8fa 100%); display: flex; align-items: center; justify-content: center; color: white; font-weight: 600; }
+    .result-info { flex: 1; }
+    .result-name { font-weight: 600; color: #1d1d1f; margin-bottom: 2px; }
+    .result-desc { font-size: 12px; color: #86868b; }
+    .result-arrow { color: #86868b; }
+    .tip-panel { background: #e8f4fd; padding: 14px; border-radius: 10px; margin-top: 16px; }
+    .tip-title { font-size: 14px; font-weight: 600; color: #1565c0; margin-bottom: 8px; }
+    .tip-content { font-size: 13px; color: #1976d2; line-height: 1.6; }
+    .tip-code { font-family: 'SF Mono', monospace; background: rgba(0,0,0,0.05); padding: 2px 6px; border-radius: 4px; }
+  </style>
+</head>
+<body>
+  <div id="app" class="demo-container">
+    <h3>🔍 watch 执行异步请求</h3>
+    
+    <div class="card">
+      <div class="search-box">
+        <span class="search-icon">🔍</span>
+        <input 
+          type="text" 
+          class="search-input"
+          v-model="keyword"
+          placeholder="输入关键词搜索用户..."
+        >
+        <div v-if="loading" class="loading-spinner"></div>
+      </div>
+      
+      <div 
+        class="status-bar"
+        :class="statusClass"
+      >
+        <span>{{ statusIcon }}</span>
+        <span>{{ statusText }}</span>
+      </div>
+      
+      <div class="result-list" v-if="results.length > 0">
+        <div 
+          v-for="user in results"
+          :key="user.id"
+          class="result-item"
+        >
+          <div class="result-avatar">{{ user.name.charAt(0) }}</div>
+          <div class="result-info">
+            <div class="result-name">{{ user.name }}</div>
+            <div class="result-desc">{{ user.email }}</div>
+          </div>
+          <span class="result-arrow">→</span>
+        </div>
+      </div>
+      
+      <div class="tip-panel">
+        <div class="tip-title">💡 防抖技巧</div>
+        <div class="tip-content">
+          本示例在 watch 中使用了 <span class="tip-code">setTimeout</span> + <span class="tip-code">clearTimeout</span> 实现防抖，
+          避免每次输入都发起请求，只在用户停止输入 500ms 后才真正请求。
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <script src="app.js"></script>
+</body>
+</html>

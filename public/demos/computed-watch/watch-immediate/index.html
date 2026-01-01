@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>watch immediate 立即执行</title>
+  <script src="https://cdn.jsdelivr.net/npm/vue@2.7.16/dist/vue.js"></script>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; padding: 20px; background: #f5f5f7; min-height: 100vh; }
+    .demo-container { max-width: 550px; margin: 0 auto; }
+    h3 { color: #1d1d1f; margin-bottom: 16px; font-size: 18px; }
+    .card { background: white; border-radius: 12px; padding: 20px; margin-bottom: 16px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); }
+    .card-title { font-size: 16px; font-weight: 600; color: #1d1d1f; margin-bottom: 16px; display: flex; align-items: center; gap: 8px; }
+    .category-select { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 16px; }
+    .category-btn { padding: 8px 16px; border: 1px solid #e5e5ea; border-radius: 20px; background: white; font-size: 14px; cursor: pointer; transition: all 0.2s; }
+    .category-btn:hover { border-color: #007aff; }
+    .category-btn.active { background: #007aff; color: white; border-color: #007aff; }
+    .data-status { padding: 16px; border-radius: 10px; margin-bottom: 16px; }
+    .data-status.loading { background: #fff3cd; color: #856404; }
+    .data-status.success { background: #d4edda; color: #155724; }
+    .data-status.error { background: #f8d7da; color: #721c24; }
+    .data-list { display: flex; flex-direction: column; gap: 8px; }
+    .data-item { padding: 12px; background: #f9fafb; border-radius: 8px; display: flex; align-items: center; gap: 12px; }
+    .data-icon { font-size: 20px; }
+    .data-name { flex: 1; font-weight: 500; color: #1d1d1f; }
+    .data-price { font-weight: 600; color: #ff3b30; }
+    .compare-box { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 20px; }
+    .compare-card { padding: 16px; border-radius: 10px; border: 1px solid #e5e5ea; }
+    .compare-title { font-size: 14px; font-weight: 600; color: #86868b; margin-bottom: 12px; }
+    .compare-code { background: #f9fafb; padding: 12px; border-radius: 8px; font-family: 'SF Mono', monospace; font-size: 12px; white-space: pre-wrap; }
+    .compare-note { font-size: 12px; color: #86868b; margin-top: 8px; }
+    .compare-note.good { color: #34c759; }
+    .compare-note.bad { color: #ff3b30; }
+  </style>
+</head>
+<body>
+  <div id="app" class="demo-container">
+    <h3>⚡ watch immediate 立即执行</h3>
+    
+    <div class="card">
+      <div class="card-title">
+        <span>🏪</span>
+        <span>商品分类</span>
+      </div>
+      
+      <div class="category-select">
+        <button 
+          v-for="cat in categories"
+          :key="cat.id"
+          class="category-btn"
+          :class="{ active: selectedCategory === cat.id }"
+          @click="selectedCategory = cat.id"
+        >
+          {{ cat.icon }} {{ cat.name }}
+        </button>
+      </div>
+      
+      <div 
+        class="data-status"
+        :class="statusClass"
+      >
+        {{ statusText }}
+      </div>
+      
+      <div class="data-list" v-if="products.length > 0">
+        <div 
+          v-for="product in products"
+          :key="product.id"
+          class="data-item"
+        >
+          <span class="data-icon">{{ product.icon }}</span>
+          <span class="data-name">{{ product.name }}</span>
+          <span class="data-price">¥{{ product.price }}</span>
+        </div>
+      </div>
+    </div>
+    
+    <div class="compare-box">
+      <div class="compare-card">
+        <div class="compare-title">❌ 不用 immediate</div>
+        <div class="compare-code">watch: {
+  category(val) {
+    this.fetchData(val)
+  }
+}
+
+// 需要在 created 中
+// 手动调用一次
+created() {
+  this.fetchData(this.category)
+}</div>
+        <div class="compare-note bad">需要两处代码</div>
+      </div>
+      
+      <div class="compare-card">
+        <div class="compare-title">✅ 使用 immediate</div>
+        <div class="compare-code">watch: {
+  category: {
+    handler(val) {
+      this.fetchData(val)
+    },
+    immediate: true
+  }
+}
+
+// 自动在创建时执行一次！</div>
+        <div class="compare-note good">只需一处代码</div>
+      </div>
+    </div>
+  </div>
+  
+  <script src="app.js"></script>
+</body>
+</html>

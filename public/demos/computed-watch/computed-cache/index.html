@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>computed 缓存特性</title>
+  <script src="https://cdn.jsdelivr.net/npm/vue@2.7.16/dist/vue.js"></script>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; padding: 20px; background: #f5f5f7; min-height: 100vh; }
+    .demo-container { max-width: 600px; margin: 0 auto; }
+    h3 { color: #1d1d1f; margin-bottom: 16px; font-size: 18px; }
+    .card { background: white; border-radius: 12px; padding: 20px; margin-bottom: 16px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); }
+    .compare-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px; }
+    .compare-item { padding: 16px; border-radius: 8px; }
+    .computed-box { background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%); }
+    .methods-box { background: linear-gradient(135deg, #fff3e0 0%, #ffe0b2 100%); }
+    .compare-item h4 { font-size: 14px; margin-bottom: 12px; }
+    .computed-box h4 { color: #2e7d32; }
+    .methods-box h4 { color: #e65100; }
+    .result { font-size: 18px; font-weight: 600; margin-bottom: 8px; }
+    .computed-box .result { color: #1b5e20; }
+    .methods-box .result { color: #bf360c; }
+    .count-badge { display: inline-block; background: rgba(0,0,0,0.1); padding: 4px 8px; border-radius: 4px; font-size: 12px; }
+    .btn { padding: 12px 20px; border: none; border-radius: 8px; font-size: 14px; cursor: pointer; transition: all 0.2s; margin-right: 8px; margin-bottom: 8px; }
+    .btn-primary { background: #007aff; color: white; }
+    .btn-primary:hover { background: #0056b3; }
+    .btn-secondary { background: #e5e5ea; color: #1d1d1f; }
+    .btn-secondary:hover { background: #d1d1d6; }
+    .info-box { padding: 12px; border-radius: 8px; font-size: 14px; margin-bottom: 12px; }
+    .info-success { background: #e8f5e9; color: #2e7d32; }
+    .info-warning { background: #fff3e0; color: #e65100; }
+    .counter { font-size: 14px; color: #86868b; margin-top: 8px; }
+  </style>
+</head>
+<body>
+  <div id="app" class="demo-container">
+    <h3>⚡ computed vs methods 缓存对比</h3>
+    
+    <div class="card">
+      <p style="margin-bottom: 16px; color: #86868b;">当前计数器：<strong style="color: #007aff; font-size: 24px;">{{ count }}</strong></p>
+      
+      <div class="compare-grid">
+        <!-- computed 方式 -->
+        <div class="compare-item computed-box">
+          <h4>✅ computed（有缓存）</h4>
+          <div class="result">{{ computedValue }}</div>
+          <span class="count-badge">计算次数: {{ computedCount }}</span>
+        </div>
+        
+        <!-- methods 方式 -->
+        <div class="compare-item methods-box">
+          <h4>⚠️ methods（无缓存）</h4>
+          <div class="result">{{ getMethodValue() }}</div>
+          <span class="count-badge">调用次数: {{ methodCount }}</span>
+        </div>
+      </div>
+      
+      <button class="btn btn-primary" @click="count++">
+        📈 增加计数器（触发重渲染）
+      </button>
+      <button class="btn btn-secondary" @click="message = '新消息' + Date.now()">
+        📝 修改依赖（message）
+      </button>
+      
+      <div class="info-box info-success">
+        <strong>computed 优势：</strong>依赖不变时直接返回缓存结果，不重新计算！
+      </div>
+      <div class="info-box info-warning">
+        <strong>methods 问题：</strong>每次组件渲染都会重新执行，性能较差！
+      </div>
+      
+      <div class="counter">当前 message: "{{ message }}"</div>
+    </div>
+  </div>
+  
+  <script src="app.js"></script>
+</body>
+</html>

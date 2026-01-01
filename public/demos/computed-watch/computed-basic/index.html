@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>computed 基本用法</title>
+  <script src="https://cdn.jsdelivr.net/npm/vue@2.7.16/dist/vue.js"></script>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; padding: 20px; background: #f5f5f7; min-height: 100vh; }
+    .demo-container { max-width: 600px; margin: 0 auto; }
+    h3 { color: #1d1d1f; margin-bottom: 16px; font-size: 18px; }
+    .card { background: white; border-radius: 12px; padding: 20px; margin-bottom: 16px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); }
+    .input-group { margin-bottom: 16px; }
+    .input-group label { display: block; font-size: 14px; color: #86868b; margin-bottom: 8px; }
+    .input-group input { width: 100%; padding: 10px 14px; border: 1px solid #e5e5ea; border-radius: 8px; font-size: 16px; transition: border-color 0.2s; }
+    .input-group input:focus { outline: none; border-color: #007aff; }
+    .result-box { background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%); padding: 16px; border-radius: 8px; margin-bottom: 12px; }
+    .result-label { font-size: 12px; color: #2e7d32; margin-bottom: 4px; }
+    .result-value { font-size: 20px; font-weight: 600; color: #1b5e20; }
+    .info-box { background: #e3f2fd; padding: 12px; border-radius: 8px; font-size: 14px; color: #1565c0; }
+    .info-box strong { color: #0d47a1; }
+  </style>
+</head>
+<body>
+  <div id="app" class="demo-container">
+    <h3>📐 computed 基本用法</h3>
+    
+    <div class="card">
+      <div class="input-group">
+        <label>姓：</label>
+        <input v-model="firstName" placeholder="请输入姓">
+      </div>
+      <div class="input-group">
+        <label>名：</label>
+        <input v-model="lastName" placeholder="请输入名">
+      </div>
+      
+      <div class="result-box">
+        <div class="result-label">计算属性 fullName</div>
+        <div class="result-value">{{ fullName }}</div>
+      </div>
+      
+      <div class="info-box">
+        <strong>💡 原理：</strong>fullName 依赖 firstName 和 lastName，任意一个变化，fullName 都会自动更新。无需手动调用方法！
+      </div>
+    </div>
+  </div>
+  
+  <script src="app.js"></script>
+</body>
+</html>

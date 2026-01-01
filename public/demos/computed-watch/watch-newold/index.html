@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>watch 新旧值对比</title>
+  <script src="https://cdn.jsdelivr.net/npm/vue@2.7.16/dist/vue.js"></script>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; padding: 20px; background: #f5f5f7; min-height: 100vh; }
+    .demo-container { max-width: 500px; margin: 0 auto; }
+    h3 { color: #1d1d1f; margin-bottom: 16px; font-size: 18px; }
+    .card { background: white; border-radius: 12px; padding: 20px; margin-bottom: 16px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); }
+    .score-display { text-align: center; margin-bottom: 24px; }
+    .score-number { font-size: 64px; font-weight: 700; color: #007aff; line-height: 1; }
+    .score-label { font-size: 14px; color: #86868b; margin-top: 8px; }
+    .score-controls { display: flex; gap: 12px; justify-content: center; margin-bottom: 24px; }
+    .score-btn { width: 50px; height: 50px; border-radius: 50%; border: none; font-size: 24px; cursor: pointer; transition: all 0.2s; display: flex; align-items: center; justify-content: center; }
+    .score-btn:hover { transform: scale(1.1); }
+    .score-btn.minus { background: #ff3b30; color: white; }
+    .score-btn.plus { background: #34c759; color: white; }
+    .score-btn.reset { background: #86868b; color: white; font-size: 16px; }
+    .change-indicator { text-align: center; padding: 16px; border-radius: 12px; transition: all 0.3s; }
+    .change-indicator.positive { background: #d4edda; color: #155724; }
+    .change-indicator.negative { background: #f8d7da; color: #721c24; }
+    .change-indicator.neutral { background: #f9fafb; color: #86868b; }
+    .change-arrow { font-size: 24px; margin-bottom: 8px; }
+    .change-text { font-size: 14px; }
+    .change-detail { font-size: 18px; font-weight: 600; margin-top: 4px; }
+    .history-panel { margin-top: 20px; }
+    .history-title { font-size: 14px; font-weight: 600; color: #1d1d1f; margin-bottom: 12px; }
+    .history-list { display: flex; flex-direction: column; gap: 8px; }
+    .history-item { display: flex; align-items: center; gap: 12px; padding: 10px 12px; background: #f9fafb; border-radius: 8px; font-size: 13px; }
+    .history-icon { font-size: 16px; }
+    .history-values { flex: 1; color: #1d1d1f; }
+    .history-diff { font-weight: 600; }
+    .history-diff.positive { color: #34c759; }
+    .history-diff.negative { color: #ff3b30; }
+  </style>
+</head>
+<body>
+  <div id="app" class="demo-container">
+    <h3>📊 watch 新旧值对比</h3>
+    
+    <div class="card">
+      <div class="score-display">
+        <div class="score-number">{{ score }}</div>
+        <div class="score-label">当前分数</div>
+      </div>
+      
+      <div class="score-controls">
+        <button class="score-btn minus" @click="score -= 10">-10</button>
+        <button class="score-btn minus" @click="score -= 1">-1</button>
+        <button class="score-btn reset" @click="score = 0">归零</button>
+        <button class="score-btn plus" @click="score += 1">+1</button>
+        <button class="score-btn plus" @click="score += 10">+10</button>
+      </div>
+      
+      <div 
+        class="change-indicator"
+        :class="changeClass"
+      >
+        <div class="change-arrow">{{ changeArrow }}</div>
+        <div class="change-text">{{ changeText }}</div>
+        <div class="change-detail">{{ changeDetail }}</div>
+      </div>
+      
+      <div class="history-panel" v-if="history.length > 0">
+        <div class="history-title">📜 变化历史（最近5次）</div>
+        <div class="history-list">
+          <div 
+            v-for="(item, index) in history" 
+            :key="index" 
+            class="history-item"
+          >
+            <span class="history-icon">{{ item.diff > 0 ? '📈' : '📉' }}</span>
+            <span class="history-values">{{ item.oldVal }} → {{ item.newVal }}</span>
+            <span 
+              class="history-diff"
+              :class="item.diff > 0 ? 'positive' : 'negative'"
+            >
+              {{ item.diff > 0 ? '+' : '' }}{{ item.diff }}
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <script src="app.js"></script>
+</body>
+</html>

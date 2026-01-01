@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>watch deep 深度监听</title>
+  <script src="https://cdn.jsdelivr.net/npm/vue@2.7.16/dist/vue.js"></script>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; padding: 20px; background: #f5f5f7; min-height: 100vh; }
+    .demo-container { max-width: 600px; margin: 0 auto; }
+    h3 { color: #1d1d1f; margin-bottom: 16px; font-size: 18px; }
+    .card { background: white; border-radius: 12px; padding: 20px; margin-bottom: 16px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); }
+    .card-title { font-size: 16px; font-weight: 600; color: #1d1d1f; margin-bottom: 16px; display: flex; align-items: center; gap: 8px; }
+    .form-grid { display: grid; gap: 16px; }
+    .form-group { display: flex; flex-direction: column; gap: 6px; }
+    .form-label { font-size: 14px; color: #86868b; }
+    .form-input { padding: 10px 14px; border: 1px solid #e5e5ea; border-radius: 8px; font-size: 15px; transition: all 0.2s; }
+    .form-input:focus { outline: none; border-color: #007aff; box-shadow: 0 0 0 3px rgba(0,122,255,0.1); }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    .address-group { padding: 16px; background: #f9fafb; border-radius: 10px; }
+    .address-title { font-size: 14px; font-weight: 600; color: #1d1d1f; margin-bottom: 12px; }
+    .result-panel { margin-top: 20px; }
+    .result-title { font-size: 14px; font-weight: 600; color: #1d1d1f; margin-bottom: 12px; display: flex; align-items: center; gap: 8px; }
+    .result-box { background: #f9fafb; padding: 16px; border-radius: 10px; }
+    .watch-log { display: flex; flex-direction: column; gap: 8px; max-height: 150px; overflow-y: auto; }
+    .log-item { padding: 8px 12px; background: white; border-radius: 6px; font-size: 13px; display: flex; align-items: center; gap: 8px; border: 1px solid #e5e5ea; }
+    .log-icon { font-size: 16px; }
+    .log-text { flex: 1; color: #1d1d1f; }
+    .log-time { font-size: 11px; color: #86868b; font-family: 'SF Mono', monospace; }
+    .empty-log { text-align: center; color: #86868b; padding: 20px; }
+    .tip-box { background: #e3f2fd; padding: 12px; border-radius: 8px; font-size: 13px; color: #1565c0; margin-top: 16px; }
+    .compare-section { margin-top: 20px; }
+    .compare-title { font-size: 14px; font-weight: 600; color: #1d1d1f; margin-bottom: 12px; }
+    .compare-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .compare-item { padding: 12px; border-radius: 8px; font-size: 12px; }
+    .compare-item.bad { background: #ffebee; border: 1px solid #ffcdd2; }
+    .compare-item.good { background: #e8f5e9; border: 1px solid #c8e6c9; }
+    .compare-code { font-family: 'SF Mono', monospace; margin-top: 8px; white-space: pre-wrap; color: #424242; }
+  </style>
+</head>
+<body>
+  <div id="app" class="demo-container">
+    <h3>🔍 watch deep 深度监听</h3>
+    
+    <div class="card">
+      <div class="card-title">
+        <span>📋</span>
+        <span>用户信息表单（嵌套对象）</span>
+      </div>
+      
+      <div class="form-grid">
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">姓名</label>
+            <input 
+              type="text" 
+              class="form-input"
+              v-model="userInfo.name"
+              placeholder="请输入姓名"
+            >
+          </div>
+          <div class="form-group">
+            <label class="form-label">年龄</label>
+            <input 
+              type="number" 
+              class="form-input"
+              v-model.number="userInfo.age"
+              placeholder="请输入年龄"
+            >
+          </div>
+        </div>
+        
+        <div class="address-group">
+          <div class="address-title">📍 收货地址（嵌套对象）</div>
+          <div class="form-grid">
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label">省份</label>
+                <input 
+                  type="text" 
+                  class="form-input"
+                  v-model="userInfo.address.province"
+                  placeholder="省份"
+                >
+              </div>
+              <div class="form-group">
+                <label class="form-label">城市</label>
+                <input 
+                  type="text" 
+                  class="form-input"
+                  v-model="userInfo.address.city"
+                  placeholder="城市"
+                >
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="form-label">详细地址</label>
+              <input 
+                type="text" 
+                class="form-input"
+                v-model="userInfo.address.detail"
+                placeholder="街道、门牌号等"
+              >
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="result-panel">
+        <div class="result-title">
+          <span>📝</span>
+          <span>深度监听日志</span>
+        </div>
+        <div class="result-box">
+          <div class="watch-log" v-if="logs.length > 0">
+            <div 
+              v-for="(log, index) in logs" 
+              :key="index"
+              class="log-item"
+            >
+              <span class="log-icon">{{ log.icon }}</span>
+              <span class="log-text">{{ log.message }}</span>
+              <span class="log-time">{{ log.time }}</span>
+            </div>
+          </div>
+          <div v-else class="empty-log">修改表单内容，观察监听效果...</div>
+        </div>
+      </div>
+      
+      <div class="tip-box">
+        <strong>💡 说明：</strong>
+        对象内部属性（如 address.city）变化时，普通 watch 监听不到，需要 deep: true
+      </div>
+    </div>
+    
+    <div class="compare-section">
+      <div class="compare-title">对比：普通监听 vs 深度监听</div>
+      <div class="compare-grid">
+        <div class="compare-item bad">
+          <strong>❌ 普通监听</strong>
+          <div class="compare-code">watch: {
+  userInfo(val) {
+    // 内部属性变化
+    // 不会触发！
+  }
+}</div>
+        </div>
+        <div class="compare-item good">
+          <strong>✅ 深度监听</strong>
+          <div class="compare-code">watch: {
+  userInfo: {
+    handler(val) {
+      // 任何层级变化
+      // 都会触发！
+    },
+    deep: true
+  }
+}</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <script src="app.js"></script>
+</body>
+</html>

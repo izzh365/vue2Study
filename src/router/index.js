@@ -115,6 +115,18 @@ const routes = [
     component: () => import('@/views/chapters/computed-watch/Index.vue'),
     meta: { title: '计算属性与侦听器', chapter: 5 }
   },
+  {
+    path: '/computed-watch/computed',
+    name: 'Computed',
+    component: () => import('@/views/chapters/computed-watch/Computed.vue'),
+    meta: { title: 'computed 计算属性', chapter: 5 }
+  },
+  {
+    path: '/computed-watch/watch',
+    name: 'Watch',
+    component: () => import('@/views/chapters/computed-watch/Watch.vue'),
+    meta: { title: 'watch 侦听器', chapter: 5 }
+  },
 
   // ==================== 自定义指令章节 ====================
   {

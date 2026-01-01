@@ -12,12 +12,11 @@
 
 | 序号 | 知识点 | 页面文件 | Demo 数量 | 状态 |
 |------|--------|----------|-----------|------|
-| 8.1 | 路由基础 | RouterBasic.vue | 5 | ⬜ |
-| 8.2 | 动态路由 | DynamicRoute.vue | 5 | ⬜ |
-| 8.3 | 嵌套路由 | NestedRoute.vue | 4 | ⬜ |
-| 8.4 | 编程式导航 | ProgrammaticNav.vue | 5 | ⬜ |
-| 8.5 | 导航守卫 | NavigationGuards.vue | 6 | ⬜ |
-| 8.6 | 路由进阶 | RouterAdvanced.vue | 5 | ⬜ |
+| 8.1 | 路由基础 | RouterBasic.vue | 5 | ✅ |
+| 8.2 | 动态路由 | DynamicRoute.vue | 5 | ✅ |
+| 8.3 | 嵌套路由 | NestedRoute.vue | 4 | ✅ |
+| 8.4 | 编程式导航 | ProgrammaticNav.vue | 5 | ✅ |
+| 8.5 | 导航守卫 | NavigationGuards.vue | 6 | ✅ |
 
 ---
 
@@ -108,4 +107,4 @@
 
 ---
 
-*任务状态：⬜ 待开始*
+*任务状态：✅ 已完成*

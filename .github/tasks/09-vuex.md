@@ -12,11 +12,11 @@
 
 | 序号 | 知识点 | 页面文件 | Demo 数量 | 状态 |
 |------|--------|----------|-----------|------|
-| 9.1 | State 状态 | State.vue | 5 | ⬜ |
-| 9.2 | Getters 计算属性 | Getters.vue | 5 | ⬜ |
-| 9.3 | Mutations 同步修改 | Mutations.vue | 5 | ⬜ |
-| 9.4 | Actions 异步操作 | Actions.vue | 5 | ⬜ |
-| 9.5 | Modules 模块化 | Modules.vue | 5 | ⬜ |
+| 9.1 | State 状态 | State.vue | 5 | ✅ |
+| 9.2 | Getters 计算属性 | Getters.vue | 5 | ✅ |
+| 9.3 | Mutations 同步修改 | Mutations.vue | 5 | ✅ |
+| 9.4 | Actions 异步操作 | Actions.vue | 5 | ✅ |
+| 9.5 | Modules 模块化 | Modules.vue | 5 | ✅ |
 
 ---
 

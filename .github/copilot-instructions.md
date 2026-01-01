@@ -524,7 +524,7 @@ export default {
 | 自定义指令 | 06-custom-directives.md | 1 | 8 | ✅ 已完成 | 2025-01-05 |
 | 组件化 | 07-components.md | 5 | 23 | ✅ 已完成 | 2025-01-06 |
 | Vue-Router | 08-vue-router.md | 5 | 25 | ✅ 已完成 | 2025-01-07 |
-| Vuex | 09-vuex.md | 5 | ~25 | ⬜ 待开始 | - |
+| Vuex | 09-vuex.md | 5 | 25 | ✅ 已完成 | 2025-01-08 |
 | Axios | 10-axios.md | 5 | ~25 | ⬜ 待开始 | - |
 | **总计** | **11 个文档** | **~50** | **~198** | - | - |
 

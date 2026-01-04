@@ -1,6 +1,6 @@
 /**
  * 请求拦截器演示 - 添加 Token
- * 
+ *
  * 请求拦截器的常见用途：
  * 1. 添加认证 Token
  * 2. 添加公共请求头
@@ -26,11 +26,11 @@ api.interceptors.request.use(
       window.vueApp.addLog('request', `📤 请求拦截器触发`)
       window.vueApp.addLog('info', `   URL: ${config.url}`)
     }
-    
+
     // 如果有 token，添加到请求头
     if (currentToken) {
       config.headers.Authorization = `Bearer ${currentToken}`
-      
+
       if (window.vueApp) {
         window.vueApp.addLog('info', `   ✅ 已添加 Token: ${currentToken}`)
       }
@@ -39,7 +39,7 @@ api.interceptors.request.use(
         window.vueApp.addLog('info', `   ⚠️ 未设置 Token`)
       }
     }
-    
+
     // 必须返回 config！
     return config
   },
@@ -58,7 +58,7 @@ api.interceptors.response.use(
     if (window.vueApp) {
       window.vueApp.addLog('response', `📥 响应拦截器触发`)
       window.vueApp.addLog('info', `   状态码: ${response.status}`)
-      
+
       // 显示请求头中是否包含 Token
       const authHeader = response.config.headers.Authorization
       if (authHeader) {
@@ -79,7 +79,7 @@ api.interceptors.response.use(
 
 const app = new Vue({
   el: '#app',
-  
+
   data() {
     return {
       loading: false,
@@ -88,13 +88,13 @@ const app = new Vue({
       logs: []
     }
   },
-  
+
   created() {
     // 暴露 Vue 实例供拦截器使用
     window.vueApp = this
     this.addLog('info', '🚀 拦截器已配置完成')
   },
-  
+
   methods: {
     /**
      * 设置 Token
@@ -107,7 +107,7 @@ const app = new Vue({
         this.tokenInput = ''
       }
     },
-    
+
     /**
      * 清除 Token
      */
@@ -116,7 +116,7 @@ const app = new Vue({
       currentToken = null
       this.addLog('info', '🗑️ Token 已清除')
     },
-    
+
     /**
      * 发送请求
      */
@@ -124,7 +124,7 @@ const app = new Vue({
       this.loading = true
       this.addLog('info', '─'.repeat(40))
       this.addLog('info', '🌐 开始发送请求...')
-      
+
       try {
         const response = await api.get('/posts/1')
         this.addLog('response', `✅ 请求成功，数据: ${response.data.title.substring(0, 30)}...`)
@@ -134,7 +134,7 @@ const app = new Vue({
         this.loading = false
       }
     },
-    
+
     /**
      * 添加日志
      */

@@ -1,6 +1,6 @@
 /**
  * Axios 响应结构解析
- * 
+ *
  * 响应对象包含以下属性：
  * - data: 服务器返回的数据（最常用）
  * - status: HTTP 状态码
@@ -12,25 +12,25 @@
 
 new Vue({
   el: '#app',
-  
+
   data() {
     return {
       loading: false,
       parts: []
     }
   },
-  
+
   methods: {
     async fetchData() {
       this.loading = true
       this.parts = []
-      
+
       try {
         // 发送请求，获取完整响应对象
         const response = await axios.get('https://jsonplaceholder.typicode.com/posts/1')
-        
+
         console.log('完整响应对象:', response)
-        
+
         // 解析响应的各个部分
         this.parts = [
           {
@@ -57,20 +57,28 @@ new Vue({
             name: 'response.headers',
             type: 'object',
             desc: '响应头信息',
-            value: JSON.stringify({
-              'content-type': response.headers['content-type'],
-              'cache-control': response.headers['cache-control']
-            }, null, 2)
+            value: JSON.stringify(
+              {
+                'content-type': response.headers['content-type'],
+                'cache-control': response.headers['cache-control']
+              },
+              null,
+              2
+            )
           },
           {
             name: 'response.config',
             type: 'object',
             desc: '请求配置信息',
-            value: JSON.stringify({
-              method: response.config.method,
-              url: response.config.url,
-              timeout: response.config.timeout
-            }, null, 2)
+            value: JSON.stringify(
+              {
+                method: response.config.method,
+                url: response.config.url,
+                timeout: response.config.timeout
+              },
+              null,
+              2
+            )
           },
           {
             name: 'response.request',
@@ -79,17 +87,17 @@ new Vue({
             value: null
           }
         ]
-        
       } catch (error) {
         console.error('请求失败:', error)
-        this.parts = [{
-          name: 'error',
-          type: 'Error',
-          desc: '请求失败',
-          value: error.message,
-          important: false
-        }]
-        
+        this.parts = [
+          {
+            name: 'error',
+            type: 'Error',
+            desc: '请求失败',
+            value: error.message,
+            important: false
+          }
+        ]
       } finally {
         this.loading = false
       }

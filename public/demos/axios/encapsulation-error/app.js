@@ -1,12 +1,12 @@
 /**
  * 统一错误处理示例
- * 
+ *
  * 错误处理策略：
  * 1. HTTP 错误（4xx, 5xx）：根据状态码显示友好提示
  * 2. 网络错误：提示检查网络连接
  * 3. 超时错误：提示请求超时
  * 4. 业务错误：根据业务错误码处理
- * 
+ *
  * 特殊处理：
  * - 401：自动跳转登录页
  * - 403：提示权限不足
@@ -44,16 +44,16 @@ request.interceptors.response.use(
   response => response.data,
   error => {
     console.log('❌ 捕获错误:', error)
-    
+
     // 错误信息
     let errorMessage = '请求失败'
     let errorType = 'error'
     let errorDetail = {}
-    
+
     if (error.response) {
       // ==================== HTTP 错误 ====================
       const status = error.response.status
-      
+
       // 状态码 -> 友好提示的映射
       const errorMessages = {
         400: { message: '请求参数错误', type: 'warning' },
@@ -66,15 +66,15 @@ request.interceptors.response.use(
         503: { message: '服务暂不可用', type: 'error' },
         504: { message: '网关超时', type: 'error' }
       }
-      
-      const errorConfig = errorMessages[status] || { 
-        message: `HTTP 错误: ${status}`, 
-        type: 'error' 
+
+      const errorConfig = errorMessages[status] || {
+        message: `HTTP 错误: ${status}`,
+        type: 'error'
       }
-      
+
       errorMessage = errorConfig.message
       errorType = errorConfig.type
-      
+
       errorDetail = {
         type: 'HTTP Error',
         status,
@@ -82,7 +82,7 @@ request.interceptors.response.use(
         url: error.config.url,
         message: errorMessage
       }
-      
+
       // 特殊处理：401 未授权
       if (status === 401) {
         // 清除本地 Token
@@ -91,7 +91,6 @@ request.interceptors.response.use(
         // window.location.href = '/login'
         console.log('🔐 需要重新登录')
       }
-      
     } else if (error.code === 'ECONNABORTED') {
       // ==================== 超时错误 ====================
       errorMessage = '请求超时，请检查网络后重试'
@@ -101,7 +100,6 @@ request.interceptors.response.use(
         message: errorMessage,
         timeout: error.config.timeout
       }
-      
     } else if (error.message === 'Network Error') {
       // ==================== 网络错误 ====================
       errorMessage = '网络连接失败，请检查网络'
@@ -111,7 +109,6 @@ request.interceptors.response.use(
         message: errorMessage,
         online: navigator.onLine
       }
-      
     } else {
       // ==================== 其他错误 ====================
       errorMessage = error.message || '未知错误'
@@ -120,10 +117,10 @@ request.interceptors.response.use(
         message: errorMessage
       }
     }
-    
+
     // 显示 Toast 提示
     Toast[errorType](errorMessage)
-    
+
     // 返回格式化的错误
     return Promise.reject({
       message: errorMessage,
@@ -138,7 +135,7 @@ request.interceptors.response.use(
 
 new Vue({
   el: '#app',
-  
+
   data() {
     return {
       toast: {
@@ -149,31 +146,31 @@ new Vue({
       result: null
     }
   },
-  
+
   created() {
     // 保存 Vue 实例引用，供 Toast 使用
     window.vueApp = this
   },
-  
+
   methods: {
     /**
      * 显示 Toast
      */
     showToast(message, type) {
       this.toast = { show: true, message, type }
-      
+
       // 3 秒后自动隐藏
       setTimeout(() => {
         this.toast.show = false
       }, 3000)
     },
-    
+
     /**
      * 触发不同类型的错误
      */
     async triggerError(errorType) {
       this.result = null
-      
+
       try {
         if (errorType === 'network') {
           // 模拟网络错误：访问不存在的域名

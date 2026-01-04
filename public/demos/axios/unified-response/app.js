@@ -1,6 +1,6 @@
 /**
  * 统一响应处理演示
- * 
+ *
  * 封装好处：
  * 1. 业务代码更简洁
  * 2. 错误处理统一
@@ -25,18 +25,18 @@ request.interceptors.response.use(
   // 成功响应处理
   response => {
     console.log('✅ 响应拦截器 - 成功')
-    
+
     // 直接返回 data，省去每次 .data 的操作
     return response.data
   },
-  
+
   // 错误响应处理
   error => {
     console.log('❌ 响应拦截器 - 错误')
-    
+
     // 统一错误处理
     let message = '未知错误'
-    
+
     if (error.response) {
       // HTTP 错误
       const status = error.response.status
@@ -64,10 +64,10 @@ request.interceptors.response.use(
     } else {
       message = error.message
     }
-    
+
     // 可以在这里显示全局错误提示
     console.error('统一错误提示:', message)
-    
+
     // 返回统一格式的错误
     return Promise.reject({
       success: false,
@@ -81,14 +81,14 @@ request.interceptors.response.use(
 
 new Vue({
   el: '#app',
-  
+
   data() {
     return {
       loading: false,
       results: []
     }
   },
-  
+
   methods: {
     /**
      * 测试成功请求
@@ -97,20 +97,19 @@ new Vue({
     async testRequest() {
       this.loading = true
       this.results = []
-      
+
       try {
         // 直接获取 data，不需要 response.data
         const posts = await request.get('/posts', {
           params: { _limit: 3 }
         })
-        
+
         this.results = [
           { label: '请求状态', value: '✅ 成功' },
           { label: '数据类型', value: Array.isArray(posts) ? 'Array' : typeof posts },
           { label: '数据数量', value: posts.length + ' 条' },
           { label: '第一条标题', value: posts[0].title.substring(0, 30) + '...' }
         ]
-        
       } catch (err) {
         this.results = [
           { label: '请求状态', value: '❌ 失败' },
@@ -120,7 +119,7 @@ new Vue({
         this.loading = false
       }
     },
-    
+
     /**
      * 测试错误处理
      * 故意请求不存在的资源
@@ -128,11 +127,10 @@ new Vue({
     async testError() {
       this.loading = true
       this.results = []
-      
+
       try {
         // 请求不存在的资源
         await request.get('https://httpstat.us/404')
-        
       } catch (err) {
         // 捕获统一格式的错误
         this.results = [

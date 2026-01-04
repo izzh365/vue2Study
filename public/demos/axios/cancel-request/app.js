@@ -1,8 +1,8 @@
 /**
  * Axios 取消请求演示
- * 
+ *
  * 使用 AbortController（推荐，现代浏览器）
- * 
+ *
  * 适用场景：
  * 1. 用户取消操作（如搜索时输入新内容）
  * 2. 组件卸载时取消未完成的请求
@@ -12,7 +12,7 @@
 
 new Vue({
   el: '#app',
-  
+
   data() {
     return {
       loading: false,
@@ -23,7 +23,7 @@ new Vue({
       abortController: null
     }
   },
-  
+
   computed: {
     statusClass() {
       if (this.loading) return 'loading'
@@ -38,7 +38,7 @@ new Vue({
       return '❌'
     }
   },
-  
+
   methods: {
     /**
      * 发送慢速请求
@@ -49,24 +49,23 @@ new Vue({
       this.logs = []
       this.status = '请求中...'
       this.statusDetail = '正在等待服务器响应'
-      
+
       // 创建新的 AbortController
       this.abortController = new AbortController()
-      
+
       this.addLog('创建 AbortController')
       this.addLog('发送请求到服务器...')
-      
+
       try {
         // 使用 httpbin 的延迟 API，延迟 5 秒响应
         const response = await axios.get('https://httpbin.org/delay/5', {
           // 将 signal 传给 axios
           signal: this.abortController.signal
         })
-        
+
         this.status = '请求成功'
         this.statusDetail = `状态码: ${response.status}`
         this.addLog('✅ 请求成功完成')
-        
       } catch (error) {
         // 检查是否是取消错误
         if (axios.isCancel(error)) {
@@ -83,13 +82,12 @@ new Vue({
           this.statusDetail = error.message
           this.addLog('❌ 请求失败: ' + error.message)
         }
-        
       } finally {
         this.loading = false
         this.abortController = null
       }
     },
-    
+
     /**
      * 取消请求
      */
@@ -100,7 +98,7 @@ new Vue({
         this.abortController.abort()
       }
     },
-    
+
     /**
      * 添加日志
      */
@@ -109,7 +107,7 @@ new Vue({
       this.logs.push(`[${time}] ${message}`)
     }
   },
-  
+
   /**
    * 组件销毁前取消未完成的请求
    * 这是最佳实践！

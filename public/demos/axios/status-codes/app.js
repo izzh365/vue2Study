@@ -1,6 +1,6 @@
 /**
  * HTTP 状态码处理演示
- * 
+ *
  * 常见状态码：
  * - 200 OK: 请求成功
  * - 201 Created: 创建成功
@@ -13,14 +13,14 @@
 
 new Vue({
   el: '#app',
-  
+
   data() {
     return {
       loading: false,
       result: null
     }
   },
-  
+
   methods: {
     /**
      * 测试 200 OK
@@ -41,7 +41,7 @@ new Vue({
         this.loading = false
       }
     },
-    
+
     /**
      * 测试 201 Created
      */
@@ -65,7 +65,7 @@ new Vue({
         this.loading = false
       }
     },
-    
+
     /**
      * 测试 404 Not Found
      */
@@ -92,7 +92,7 @@ new Vue({
         this.loading = false
       }
     },
-    
+
     /**
      * 测试 500 Server Error
      */
@@ -116,7 +116,7 @@ new Vue({
         this.loading = false
       }
     },
-    
+
     /**
      * 通用错误处理
      */

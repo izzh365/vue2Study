@@ -1,6 +1,6 @@
 /**
  * POST 请求基础演示
- * 
+ *
  * 知识点：
  * 1. axios.post(url, data) 发起 POST 请求
  * 2. 数据默认以 JSON 格式发送
@@ -8,7 +8,7 @@
  */
 new Vue({
   el: '#app',
-  
+
   data() {
     return {
       // 要提交的数据
@@ -24,7 +24,7 @@ new Vue({
       error: null
     }
   },
-  
+
   computed: {
     /**
      * 格式化结果显示
@@ -33,7 +33,7 @@ new Vue({
       return JSON.stringify(this.result, null, 2)
     }
   },
-  
+
   methods: {
     /**
      * 创建文章
@@ -43,22 +43,19 @@ new Vue({
       this.loading = true
       this.error = null
       this.result = null
-      
+
       try {
         // POST 请求 - 第二个参数是请求体数据
-        const response = await axios.post(
-          'https://jsonplaceholder.typicode.com/posts',
-          {
-            title: this.postData.title,
-            body: this.postData.body,
-            userId: 1
-          }
-        )
-        
+        const response = await axios.post('https://jsonplaceholder.typicode.com/posts', {
+          title: this.postData.title,
+          body: this.postData.body,
+          userId: 1
+        })
+
         // 服务器返回创建的资源（包含生成的 id）
         console.log('创建成功:', response.data)
-        console.log('状态码:', response.status)  // 通常是 201
-        
+        console.log('状态码:', response.status) // 通常是 201
+
         this.result = response.data
       } catch (err) {
         this.error = err.message || '请求失败'

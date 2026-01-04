@@ -1,6 +1,6 @@
 /**
  * 响应拦截器 - 统一处理示例
- * 
+ *
  * 响应拦截器的主要职责：
  * 1. 统一解包响应数据（直接返回 response.data）
  * 2. 统一错误处理和提示
@@ -25,12 +25,12 @@ api.interceptors.response.use(
    */
   response => {
     console.log('✅ 响应拦截器 - 成功', response.status)
-    
+
     // 【核心】直接返回 data，简化调用方代码
     // 这样在组件中就不用每次都写 res.data 了
     return response.data
   },
-  
+
   /**
    * 响应错误处理
    * HTTP 状态码非 2xx 或网络错误时触发
@@ -39,14 +39,14 @@ api.interceptors.response.use(
    */
   error => {
     console.log('❌ 响应拦截器 - 错误', error)
-    
+
     // 统一错误处理
     let errorMessage = '未知错误'
-    
+
     if (error.response) {
       // 服务器返回了错误状态码
       const status = error.response.status
-      
+
       // 根据状态码给出友好提示
       const statusMessages = {
         400: '请求参数错误',
@@ -59,9 +59,9 @@ api.interceptors.response.use(
         503: '服务不可用',
         504: '网关超时'
       }
-      
+
       errorMessage = statusMessages[status] || `HTTP 错误: ${status}`
-      
+
       // 特殊处理：401 未授权，可以跳转到登录页
       if (status === 401) {
         // window.location.href = '/login'
@@ -74,10 +74,10 @@ api.interceptors.response.use(
       // 请求配置出错
       errorMessage = error.message
     }
-    
+
     // 可以在这里显示全局提示（如 Toast）
     // Toast.error(errorMessage)
-    
+
     // 返回统一的错误格式
     return Promise.reject({
       message: errorMessage,
@@ -90,14 +90,14 @@ api.interceptors.response.use(
 
 new Vue({
   el: '#app',
-  
+
   data() {
     return {
       loading: false,
       result: null
     }
   },
-  
+
   methods: {
     /**
      * 测试成功请求
@@ -106,12 +106,12 @@ new Vue({
     async testSuccess() {
       this.loading = true
       this.result = null
-      
+
       try {
         // 使用拦截器后，直接获得的就是 data
         // 不用再写 res.data
         const data = await api.get('https://jsonplaceholder.typicode.com/posts/1')
-        
+
         this.result = {
           success: true,
           title: '✅ 请求成功',
@@ -128,14 +128,14 @@ new Vue({
         this.loading = false
       }
     },
-    
+
     /**
      * 测试 404 错误
      */
     async test404() {
       this.loading = true
       this.result = null
-      
+
       try {
         await api.get('https://jsonplaceholder.typicode.com/posts/999999')
       } catch (err) {
@@ -143,20 +143,20 @@ new Vue({
         this.result = {
           success: false,
           title: '❌ 404 错误',
-          message: err.message  // "请求的资源不存在"
+          message: err.message // "请求的资源不存在"
         }
       } finally {
         this.loading = false
       }
     },
-    
+
     /**
      * 测试 500 错误
      */
     async test500() {
       this.loading = true
       this.result = null
-      
+
       try {
         // 使用 httpstat.us 模拟 500 错误
         await api.get('https://httpstat.us/500')
@@ -164,7 +164,7 @@ new Vue({
         this.result = {
           success: false,
           title: '❌ 500 错误',
-          message: err.message  // "服务器内部错误"
+          message: err.message // "服务器内部错误"
         }
       } finally {
         this.loading = false

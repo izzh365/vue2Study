@@ -1,6 +1,6 @@
 /**
  * API 模块化封装示例
- * 
+ *
  * 目录结构建议：
  * src/
  * ├── api/
@@ -10,7 +10,7 @@
  * │   └── comment.js    # 评论模块
  * └── utils/
  *     └── request.js    # axios 实例
- * 
+ *
  * 优点：
  * 1. 按业务模块组织，结构清晰
  * 2. 方便维护和查找
@@ -45,7 +45,7 @@ const userApi = {
       params
     })
   },
-  
+
   /**
    * 获取用户详情
    * @param {number} id - 用户 ID
@@ -57,7 +57,7 @@ const userApi = {
       method: 'get'
     })
   },
-  
+
   /**
    * 创建用户
    * @param {Object} data - 用户数据
@@ -87,7 +87,7 @@ const postApi = {
       params
     })
   },
-  
+
   /**
    * 获取文章详情
    * @param {number} id - 文章 ID
@@ -99,7 +99,7 @@ const postApi = {
       method: 'get'
     })
   },
-  
+
   /**
    * 更新文章
    * @param {number} id - 文章 ID
@@ -113,7 +113,7 @@ const postApi = {
       data
     })
   },
-  
+
   /**
    * 删除文章
    * @param {number} id - 文章 ID
@@ -142,7 +142,7 @@ const commentApi = {
       params: { postId }
     })
   },
-  
+
   /**
    * 创建评论
    * @param {Object} data - 评论数据
@@ -161,13 +161,13 @@ const commentApi = {
 
 new Vue({
   el: '#app',
-  
+
   data() {
     return {
       loading: false,
       result: null,
       currentModule: 'user',
-      
+
       // 模块定义
       modules: [
         {
@@ -175,9 +175,27 @@ new Vue({
           label: '用户模块',
           icon: '👤',
           apis: [
-            { name: 'getList', method: 'get', path: '/users', desc: '获取列表', handler: () => userApi.getList({ _limit: 3 }) },
-            { name: 'getById', method: 'get', path: '/users/:id', desc: '获取详情', handler: () => userApi.getById(1) },
-            { name: 'create', method: 'post', path: '/users', desc: '创建用户', handler: () => userApi.create({ name: 'Test', email: 'test@example.com' }) }
+            {
+              name: 'getList',
+              method: 'get',
+              path: '/users',
+              desc: '获取列表',
+              handler: () => userApi.getList({ _limit: 3 })
+            },
+            {
+              name: 'getById',
+              method: 'get',
+              path: '/users/:id',
+              desc: '获取详情',
+              handler: () => userApi.getById(1)
+            },
+            {
+              name: 'create',
+              method: 'post',
+              path: '/users',
+              desc: '创建用户',
+              handler: () => userApi.create({ name: 'Test', email: 'test@example.com' })
+            }
           ]
         },
         {
@@ -185,10 +203,34 @@ new Vue({
           label: '文章模块',
           icon: '📝',
           apis: [
-            { name: 'getList', method: 'get', path: '/posts', desc: '获取列表', handler: () => postApi.getList({ _limit: 3 }) },
-            { name: 'getById', method: 'get', path: '/posts/:id', desc: '获取详情', handler: () => postApi.getById(1) },
-            { name: 'update', method: 'put', path: '/posts/:id', desc: '更新文章', handler: () => postApi.update(1, { title: 'Updated Title' }) },
-            { name: 'delete', method: 'delete', path: '/posts/:id', desc: '删除文章', handler: () => postApi.delete(1) }
+            {
+              name: 'getList',
+              method: 'get',
+              path: '/posts',
+              desc: '获取列表',
+              handler: () => postApi.getList({ _limit: 3 })
+            },
+            {
+              name: 'getById',
+              method: 'get',
+              path: '/posts/:id',
+              desc: '获取详情',
+              handler: () => postApi.getById(1)
+            },
+            {
+              name: 'update',
+              method: 'put',
+              path: '/posts/:id',
+              desc: '更新文章',
+              handler: () => postApi.update(1, { title: 'Updated Title' })
+            },
+            {
+              name: 'delete',
+              method: 'delete',
+              path: '/posts/:id',
+              desc: '删除文章',
+              handler: () => postApi.delete(1)
+            }
           ]
         },
         {
@@ -196,26 +238,38 @@ new Vue({
           label: '评论模块',
           icon: '💬',
           apis: [
-            { name: 'getByPostId', method: 'get', path: '/comments', desc: '获取评论', handler: () => commentApi.getByPostId(1) },
-            { name: 'create', method: 'post', path: '/comments', desc: '创建评论', handler: () => commentApi.create({ postId: 1, body: 'Great!' }) }
+            {
+              name: 'getByPostId',
+              method: 'get',
+              path: '/comments',
+              desc: '获取评论',
+              handler: () => commentApi.getByPostId(1)
+            },
+            {
+              name: 'create',
+              method: 'post',
+              path: '/comments',
+              desc: '创建评论',
+              handler: () => commentApi.create({ postId: 1, body: 'Great!' })
+            }
           ]
         }
       ]
     }
   },
-  
+
   computed: {
     currentApis() {
       const mod = this.modules.find(m => m.name === this.currentModule)
       return mod ? mod.apis : []
     }
   },
-  
+
   methods: {
     async callApi(api) {
       this.loading = true
       this.result = null
-      
+
       try {
         const data = await api.handler()
         this.result = JSON.stringify(data, null, 2)

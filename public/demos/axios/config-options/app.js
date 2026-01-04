@@ -1,6 +1,6 @@
 /**
  * Axios 请求配置详解
- * 
+ *
  * 常用配置项：
  * - url: 请求地址
  * - method: 请求方法
@@ -14,7 +14,7 @@
 
 new Vue({
   el: '#app',
-  
+
   data() {
     return {
       // 请求配置
@@ -29,7 +29,7 @@ new Vue({
       error: null
     }
   },
-  
+
   computed: {
     /**
      * 格式化结果显示
@@ -38,7 +38,7 @@ new Vue({
       return JSON.stringify(this.result, null, 2)
     }
   },
-  
+
   methods: {
     /**
      * 发送带配置的请求
@@ -48,26 +48,26 @@ new Vue({
       this.loading = true
       this.error = null
       this.result = null
-      
+
       try {
         // 构建请求配置对象
         const requestConfig = {
           // 请求 URL
           url: 'https://jsonplaceholder.typicode.com/posts/1',
-          
+
           // 请求方法
           method: this.config.method,
-          
+
           // 超时时间（毫秒）
           timeout: this.config.timeout,
-          
+
           // 自定义请求头
           headers: {
             'Content-Type': 'application/json',
             [this.config.headerName]: this.config.headerValue
           }
         }
-        
+
         // 如果是 POST/PUT，添加请求体
         if (['post', 'put'].includes(this.config.method)) {
           requestConfig.data = {
@@ -76,32 +76,30 @@ new Vue({
             userId: 1
           }
         }
-        
+
         console.log('📤 请求配置:', requestConfig)
-        
+
         // 发送请求
         const response = await axios(requestConfig)
-        
+
         // 展示配置和响应
         this.result = {
-          '发送的配置': {
+          发送的配置: {
             method: requestConfig.method.toUpperCase(),
             url: requestConfig.url,
             timeout: requestConfig.timeout + 'ms',
             headers: requestConfig.headers
           },
-          '响应数据': response.data
+          响应数据: response.data
         }
-        
       } catch (err) {
         console.error('请求失败:', err)
         this.error = err.message
-        
       } finally {
         this.loading = false
       }
     },
-    
+
     /**
      * 测试超时配置
      * 使用故意延迟的请求来触发超时
@@ -110,17 +108,16 @@ new Vue({
       this.loading = true
       this.error = null
       this.result = null
-      
+
       try {
         // 设置极短的超时时间
         const response = await axios({
           url: 'https://jsonplaceholder.typicode.com/posts',
           method: 'get',
-          timeout: 1  // 1毫秒，几乎肯定会超时
+          timeout: 1 // 1毫秒，几乎肯定会超时
         })
-        
+
         this.result = response.data
-        
       } catch (err) {
         // 超时会抛出错误
         if (err.code === 'ECONNABORTED' || err.message.includes('timeout')) {
@@ -129,7 +126,6 @@ new Vue({
           this.error = err.message
         }
         console.log('💡 这是预期的超时错误，用于演示 timeout 配置')
-        
       } finally {
         this.loading = false
       }

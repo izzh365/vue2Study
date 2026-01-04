@@ -45,21 +45,21 @@ mcp_io_github_ups_get-library-docs
 
 ## 📖 文档索引
 
-本项目的任务清单被拆分为多个子文档，便于管理和执行：
+本项目的任务清单位于 `.izzh/tasks/` 目录，便于管理和执行：
 
 | 序号 | 文档名称 | 文档路径 | 说明 | 难度 |
 |------|----------|----------|------|------|
-| 0 | 项目构建任务 | [00-project-setup.md](tasks/00-project-setup.md) | npm 项目初始化、目录结构、依赖配置 | ⭐ |
-| 1 | 公共模板任务 | [01-common-templates.md](tasks/01-common-templates.md) | 公共组件、样式、工具函数封装 | ⭐⭐ |
-| 2 | ES6 基础语法 | [02-es6-basics.md](tasks/02-es6-basics.md) | const/let、对象增强、高阶函数、箭头函数、Promise | ⭐⭐ |
-| 3 | Vue 生命周期 | [03-lifecycle.md](tasks/03-lifecycle.md) | 8 个生命周期钩子详解 | ⭐⭐ |
-| 4 | Vue 指令详解 | [04-directives.md](tasks/04-directives.md) | v-bind/v-on/v-model/v-if/v-for 等 | ⭐⭐ |
-| 5 | 计算属性与侦听器 | [05-computed-watch.md](tasks/05-computed-watch.md) | computed 和 watch 详解 | ⭐⭐ |
-| 6 | 自定义指令 | [06-custom-directives.md](tasks/06-custom-directives.md) | 自定义指令的钩子函数与实战 | ⭐⭐⭐ |
-| 7 | Vue 组件化 🔴 | [07-components.md](tasks/07-components.md) | 组件基础、props、emit、refs、slot | ⭐⭐⭐ |
-| 8 | Vue-Router 路由 🟠 | [08-vue-router.md](tasks/08-vue-router.md) | 路由配置、动态路由、导航守卫等 | ⭐⭐⭐ |
-| 9 | Vuex 状态管理 🟠 | [09-vuex.md](tasks/09-vuex.md) | state/getters/mutations/actions/modules | ⭐⭐⭐ |
-| 10 | Axios 网络请求 🟠 | [10-axios.md](tasks/10-axios.md) | 请求封装、拦截器、并发请求 | ⭐⭐ |
+| 0 | 项目构建任务 | [00-project-setup.md](../.izzh/tasks/00-project-setup.md) | npm 项目初始化、目录结构、依赖配置 | ⭐ |
+| 1 | 公共模板任务 | [01-common-templates.md](../.izzh/tasks/01-common-templates.md) | 公共组件、样式、工具函数封装 | ⭐⭐ |
+| 2 | ES6 基础语法 | [02-es6-basics.md](../.izzh/tasks/02-es6-basics.md) | const/let、对象增强、高阶函数、箭头函数、Promise | ⭐⭐ |
+| 3 | Vue 生命周期 | [03-lifecycle.md](../.izzh/tasks/03-lifecycle.md) | 8 个生命周期钩子详解 | ⭐⭐ |
+| 4 | Vue 指令详解 | [04-directives.md](../.izzh/tasks/04-directives.md) | v-bind/v-on/v-model/v-if/v-for 等 | ⭐⭐ |
+| 5 | 计算属性与侦听器 | [05-computed-watch.md](../.izzh/tasks/05-computed-watch.md) | computed 和 watch 详解 | ⭐⭐ |
+| 6 | 自定义指令 | [06-custom-directives.md](../.izzh/tasks/06-custom-directives.md) | 自定义指令的钩子函数与实战 | ⭐⭐⭐ |
+| 7 | Vue 组件化 🔴 | [07-components.md](../.izzh/tasks/07-components.md) | 组件基础、props、emit、refs、slot | ⭐⭐⭐ |
+| 8 | Vue-Router 路由 🟠 | [08-vue-router.md](../.izzh/tasks/08-vue-router.md) | 路由配置、动态路由、导航守卫等 | ⭐⭐⭐ |
+| 9 | Vuex 状态管理 🟠 | [09-vuex.md](../.izzh/tasks/09-vuex.md) | state/getters/mutations/actions/modules | ⭐⭐⭐ |
+| 10 | Axios 网络请求 🟠 | [10-axios.md](../.izzh/tasks/10-axios.md) | 请求封装、拦截器、并发请求 | ⭐⭐ |
 
 > 🔴 非常重要（核心） | 🟠 重要 | ⭐ 简单 | ⭐⭐ 中等 | ⭐⭐⭐ 较难
 
@@ -243,8 +243,7 @@ vue2-learning/
 │   ├── App.vue                        # 根组件
 │   └── main.js                        # 入口文件
 │
-├── .github/                           # GitHub 配置
-│   ├── copilot-instructions.md        # 本文件：主索引
+├── .izzh/                             # 项目配置目录
 │   └── tasks/                         # 任务清单目录
 │       ├── 00-project-setup.md        # 项目搭建任务
 │       ├── 01-common-templates.md     # 公共模板任务
@@ -257,6 +256,9 @@ vue2-learning/
 │       ├── 08-vue-router.md           # 路由章节任务
 │       ├── 09-vuex.md                 # Vuex 章节任务
 │       └── 10-axios.md                # Axios 章节任务
+│
+├── .github/                           # GitHub 配置
+│   └── copilot-instructions.md        # 本文件：主索引
 │
 ├── package.json                       # 项目配置
 ├── vue.config.js                      # Vue CLI 配置

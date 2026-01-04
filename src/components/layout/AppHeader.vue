@@ -18,7 +18,10 @@
         
         <!-- Logo -->
         <router-link to="/" class="brand-link">
-          <span class="brand-icon">📚</span>
+          <!-- SVG 图标替代 emoji -->
+          <svg class="brand-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <path d="M12 6.042A8.967 8.967 0 006 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 016 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 016-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0018 18a8.967 8.967 0 00-6 2.292m0-14.25v14.25" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
           <span class="brand-text">Vue2 零基础学习</span>
         </router-link>
       </div>
@@ -98,15 +101,62 @@ export default {
   gap: $spacing-md;
 }
 
+// 品牌链接
+.brand-link {
+  display: flex;
+  align-items: center;
+  gap: $spacing-sm;
+  text-decoration: none;
+  color: $color-text;
+  font-family: $font-family-heading;
+  font-weight: 600;
+  transition: color $transition-base;
+  cursor: pointer; // ✓ 添加 cursor-pointer
+  
+  &:hover {
+    color: $color-primary;
+  }
+  
+  &:focus-visible {
+    outline: 2px solid $color-primary;
+    outline-offset: 4px;
+    border-radius: 4px;
+  }
+}
+
+// 品牌图标 (SVG)
+.brand-icon {
+  width: 28px;
+  height: 28px;
+  color: $color-primary;
+  flex-shrink: 0;
+}
+
+// 品牌文字
+.brand-text {
+  font-size: $font-size-lg;
+  
+  @media (max-width: $breakpoint-sm) {
+    display: none; // 移动端隐藏文字
+  }
+}
+
 // 移动端菜单按钮
 .menu-toggle {
   display: none;
   @include button-base;
   padding: $spacing-sm;
   background: transparent;
+  cursor: pointer; // ✓ 添加 cursor-pointer
   
   @media (max-width: $breakpoint-md) {
     display: flex;
+  }
+  
+  &:focus-visible {
+    outline: 2px solid $color-primary;
+    outline-offset: 2px;
+    border-radius: 4px;
   }
   
   .menu-icon {
@@ -130,28 +180,6 @@ export default {
   }
 }
 
-// 品牌链接
-.brand-link {
-  display: flex;
-  align-items: center;
-  gap: $spacing-sm;
-  text-decoration: none;
-  
-  .brand-icon {
-    font-size: $font-size-xl;
-  }
-  
-  .brand-text {
-    font-size: $font-size-lg;
-    font-weight: 600;
-    color: $color-text;
-    
-    @media (max-width: $breakpoint-sm) {
-      display: none;
-    }
-  }
-}
-
 // 导航区域
 .header-nav {
   display: flex;
@@ -163,26 +191,37 @@ export default {
   
   .nav-link {
     font-size: $font-size-sm;
+    font-weight: 500;
     color: $color-text-secondary;
     text-decoration: none;
     padding: $spacing-sm 0;
     position: relative;
     transition: color $transition-fast;
+    cursor: pointer; // ✓ 添加 cursor-pointer
     
-    &:hover,
-    &.router-link-active {
+    &:hover {
       color: $color-primary;
     }
     
-    &.router-link-active::after {
-      content: '';
-      position: absolute;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      height: 2px;
-      background: $color-primary;
-      border-radius: 1px;
+    &:focus-visible {
+      outline: 2px solid $color-primary;
+      outline-offset: 4px;
+      border-radius: 4px;
+    }
+    
+    &.router-link-active {
+      color: $color-primary;
+      
+      &::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        height: 2px;
+        background: $color-primary;
+        border-radius: 1px;
+      }
     }
   }
 }

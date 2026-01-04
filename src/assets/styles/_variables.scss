@@ -3,37 +3,51 @@
 // 苹果风设计规范
 
 // ==================== 颜色变量 ====================
+// 基于 Knowledge Base/Documentation 推荐配色
+// 来源：UI/UX Pro Max - 清晰层级 + 最小化颜色
 
-// 主色调
-$color-primary: #007AFF;           // 主色调蓝
-$color-primary-light: #5AC8FA;     // 浅蓝
-$color-primary-dark: #0056b3;      // 深蓝
+// 主色调 - 信任蓝
+$color-primary: #3B82F6;           // 主色调蓝 (blue-500)
+$color-primary-light: #60A5FA;     // 浅蓝 (blue-400)
+$color-primary-dark: #2563EB;      // 深蓝 (blue-600)
+
+// CTA 行动色 - 橙色
+$color-cta: #F97316;               // 行动按钮橙色 (orange-500)
+$color-cta-hover: #EA580C;         // 悬停状态 (orange-600)
 
 // 背景色
-$color-bg: #F5F5F7;                // 页面背景
+$color-bg: #F8FAFC;                // 页面背景 (slate-50)
 $color-card: #FFFFFF;              // 卡片背景
-$color-code-bg: #F9FAFB;           // 代码块背景
+$color-code-bg: #F1F5F9;           // 代码块背景 (slate-100)
 
-// 文字颜色
-$color-text: #1D1D1F;              // 主文字
-$color-text-secondary: #86868B;    // 次要文字
-$color-text-light: #AEAEB2;        // 浅色文字
+// 文字颜色 - 提升对比度
+$color-text: #1E293B;              // 主文字 (slate-800)
+$color-text-secondary: #64748B;    // 次要文字 (slate-500)
+$color-text-light: #94A3B8;        // 浅色文字 (slate-400)
 
 // 边框颜色
-$color-border: #E5E5EA;            // 边框
-$color-border-light: #F2F2F7;      // 浅边框
+$color-border: #E2E8F0;            // 边框 (slate-200)
+$color-border-light: #F1F5F9;      // 浅边框 (slate-100)
 
 // 状态颜色
-$color-success: #34C759;           // 成功
-$color-warning: #FF9500;           // 警告
-$color-error: #FF3B30;             // 错误
-$color-info: #5AC8FA;              // 信息
+$color-success: #10B981;           // 成功 (emerald-500)
+$color-warning: #F59E0B;           // 警告 (amber-500)
+$color-error: #EF4444;             // 错误 (red-500)
+$color-info: #3B82F6;              // 信息 (blue-500)
 
 // ==================== 字体变量 ====================
+// Modern Professional 字体配对
+// 来源：UI/UX Pro Max - Poppins (标题) + Open Sans (正文)
 
-$font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 
+// 标题字体 - Poppins (几何感，现代)
+$font-family-heading: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
+                      'Helvetica Neue', Arial, 'PingFang SC', 'Microsoft YaHei', sans-serif;
+
+// 正文字体 - Open Sans (人文，易读)
+$font-family: 'Open Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 
               'Helvetica Neue', Arial, 'PingFang SC', 'Microsoft YaHei', sans-serif;
 
+// 代码字体
 $font-family-code: 'SF Mono', SFMono-Regular, Consolas, 'Liberation Mono', 
                    Menlo, Courier, monospace;
 

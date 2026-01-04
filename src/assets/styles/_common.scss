@@ -49,6 +49,7 @@ button {
 // ==================== 标题样式 ====================
 
 h1, h2, h3, h4, h5, h6 {
+  font-family: $font-family-heading; // 使用 Poppins 标题字体
   font-weight: 600;
   line-height: $line-height-tight;
   color: $color-text;

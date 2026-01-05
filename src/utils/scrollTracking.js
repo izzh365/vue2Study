@@ -12,6 +12,7 @@ class ScrollTracker {
     this.isTracking = false
     this.currentChapter = null
     this.hasCompleted = false // 添加标记，防止重复触发
+    this.hasScrolled = false // 标记用户是否有过滚动行为
   }
 
   /**
@@ -24,12 +25,18 @@ class ScrollTracker {
     this.currentChapter = chapterKey
     this.isTracking = true
     this.hasCompleted = false // 重置完成标记
+    this.hasScrolled = false // 重置滚动标记
 
     // 添加滚动监听
     window.addEventListener('scroll', this.handleScroll)
 
-    // 页面加载时检查一次
-    this.checkScrollPosition()
+    // 延迟初始检查，确保页面内容已渲染
+    // 只有当页面高度足够且用户未滚动时才需要此检查
+    setTimeout(() => {
+      if (this.isTracking && !this.hasScrolled) {
+        this.checkScrollPosition()
+      }
+    }, 1000)
   }
 
   /**
@@ -49,6 +56,9 @@ class ScrollTracker {
    */
   handleScroll = () => {
     if (!this.isTracking) return
+    
+    // 标记用户已经滚动过
+    this.hasScrolled = true
 
     if (this.scrollTimer) {
       clearTimeout(this.scrollTimer)
@@ -70,6 +80,13 @@ class ScrollTracker {
     const scrollTop = window.pageYOffset || document.documentElement.scrollTop
     const windowHeight = window.innerHeight
     const documentHeight = document.documentElement.scrollHeight
+    
+    // 防止短页面误判：页面总高度必须大于视口高度的1.5倍
+    const minHeight = windowHeight * 1.5
+    if (documentHeight < minHeight) {
+      console.log(`⚠️ 页面内容太短 (${documentHeight}px < ${minHeight.toFixed(0)}px)，跳过完成检查`)
+      return
+    }
 
     // 计算滚动百分比
     const scrollPercent = ((scrollTop + windowHeight) / documentHeight) * 100
@@ -93,11 +110,19 @@ class ScrollTracker {
   markAsComplete(chapterKey) {
     // 检查是否已经完成
     const progress = store.getters['app/progress']
+    
+    console.log(`🔍 检查章节: ${chapterKey}`)
+    console.log(`📊 当前进度对象:`, progress)
+    console.log(`📌 该章节是否存在: ${Object.prototype.hasOwnProperty.call(progress, chapterKey)}`)
+    console.log(`✓ 该章节是否完成: ${progress[chapterKey]}`)
+    
     if (progress[chapterKey]) {
+      console.log(`⏭️ 章节 ${chapterKey} 已完成，跳过`)
       return // 已经完成，不重复标记
     }
 
     // 提交到 Vuex
+    console.log(`📤 提交完成到 Vuex: ${chapterKey}`)
     store.dispatch('app/completeChapter', chapterKey)
 
     // 显示提示（可选）

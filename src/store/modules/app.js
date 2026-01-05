@@ -145,14 +145,25 @@ const mutations = {
    * @param {String} chapter - 章节名
    */
   COMPLETE_CHAPTER(state, chapter) {
+    console.log(`🔄 MUTATION: COMPLETE_CHAPTER 被调用，章节: ${chapter}`)
+    console.log(`🔍 章节是否存在于 progress: ${Object.prototype.hasOwnProperty.call(state.progress, chapter)}`)
+    
     if (Object.prototype.hasOwnProperty.call(state.progress, chapter)) {
+      console.log(`📝 更新前: ${chapter} = ${state.progress[chapter]}`)
       state.progress[chapter] = true
+      console.log(`✓ 更新后: ${chapter} = ${state.progress[chapter]}`)
+      
       // 保存到 localStorage
       try {
-        localStorage.setItem('vue2_learning_progress', JSON.stringify(state.progress))
+        const progressJson = JSON.stringify(state.progress)
+        console.log(`💾 保存到 localStorage:`, progressJson)
+        localStorage.setItem('vue2_learning_progress', progressJson)
+        console.log(`✅ localStorage 保存成功`)
       } catch (e) {
-        console.error('保存学习进度失败:', e)
+        console.error('❌ 保存学习进度失败:', e)
       }
+    } else {
+      console.warn(`⚠️ 章节 ${chapter} 不存在于 progress 对象中！`)
     }
   },
 

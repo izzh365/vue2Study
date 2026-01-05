@@ -9,6 +9,7 @@
       <div class="header-brand">
         <!-- 移动端菜单按钮 -->
         <button 
+          v-show="!cleanMode"
           class="menu-toggle"
           @click="toggleSidebar"
           aria-label="切换菜单"
@@ -19,7 +20,7 @@
         <!-- Logo -->
         <router-link to="/" class="brand-link">
           <!-- SVG 图标替代 emoji -->
-          <svg class="brand-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <svg v-show="!cleanMode" class="brand-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
             <path d="M12 6.042A8.967 8.967 0 006 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 016 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 016-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0018 18a8.967 8.967 0 00-6 2.292m0-14.25v14.25" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
           </svg>
           <span class="brand-text" v-show="!cleanMode">Vue2 零基础学习</span>
@@ -28,29 +29,31 @@
       
       <!-- 学习进度 -->
       <div class="header-progress">
-        <div class="progress-info">
-          <span class="progress-text">学习进度</span>
-          <span class="progress-percent">{{ progressPercent }}%</span>
+        <div class="progress-container">
+          <div class="progress-info">
+            <span class="progress-text">学习进度</span>
+            <span class="progress-percent">{{ progressPercent }}%</span>
+          </div>
+          <div class="progress-bar">
+            <div 
+              class="progress-fill" 
+              :style="{ width: progressPercent + '%' }"
+            ></div>
+          </div>
         </div>
-        <div class="progress-bar">
-          <div 
-            class="progress-fill" 
-            :style="{ width: progressPercent + '%' }"
-          ></div>
-        </div>
-        
-        <!-- 清屏按钮 -->
-        <button 
-          class="clean-mode-btn"
-          @click="toggleCleanMode"
-          :class="{ active: cleanMode }"
-          :title="cleanMode ? '退出专注模式' : '进入专注模式'"
-        >
-          <svg class="clean-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M3.98 8.223A10.477 10.477 0 001.934 12C3.226 16.338 7.244 19.5 12 19.5c.993 0 1.953-.138 2.863-.395M6.228 6.228A10.45 10.45 0 0112 4.5c4.756 0 8.773 3.162 10.065 7.498a10.523 10.523 0 01-4.293 5.774M6.228 6.228L3 3m3.228 3.228l3.65 3.65m7.894 7.894L21 21m-3.228-3.228l-3.65-3.65m0 0a3 3 0 10-4.243-4.243m4.242 4.242L9.88 9.88" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-          </svg>
-        </button>
       </div>
+      
+      <!-- 清屏按钮（最右边） -->
+      <button 
+        class="clean-mode-btn"
+        @click="toggleCleanMode"
+        :class="{ active: cleanMode }"
+        :title="cleanMode ? '退出专注模式' : '进入专注模式'"
+      >
+        <svg class="clean-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M3.98 8.223A10.477 10.477 0 001.934 12C3.226 16.338 7.244 19.5 12 19.5c.993 0 1.953-.138 2.863-.395M6.228 6.228A10.45 10.45 0 0112 4.5c4.756 0 8.773 3.162 10.065 7.498a10.523 10.523 0 01-4.293 5.774M6.228 6.228L3 3m3.228 3.228l3.65 3.65m7.894 7.894L21 21m-3.228-3.228l-3.65-3.65m0 0a3 3 0 10-4.243-4.243m4.242 4.242L9.88 9.88" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </button>
     </div>
   </header>
 </template>
@@ -233,16 +236,15 @@ export default {
 
 // 进度区域
 .header-progress {
+  flex: 1;
   display: flex;
-  align-items: center;
-  gap: $spacing-md;
+  justify-content: flex-end;
   
   @media (max-width: $breakpoint-sm) {
     display: none;
   }
   
-  // 进度条容器
-  > div:first-child {
+  .progress-container {
     display: flex;
     flex-direction: column;
     gap: $spacing-xs;
@@ -280,8 +282,9 @@ export default {
   }
 }
 
-// 清屏按钮
+// 清屏按钮（独立在最右边）
 .clean-mode-btn {
+  margin-left: $spacing-md;
   padding: $spacing-xs;
   background: transparent;
   border: 1px solid transparent;
@@ -293,6 +296,10 @@ export default {
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
+  
+  @media (max-width: $breakpoint-sm) {
+    margin-left: auto;
+  }
   
   &:hover {
     background: rgba($color-primary, 0.1);

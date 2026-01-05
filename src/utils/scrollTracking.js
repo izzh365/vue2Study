@@ -76,11 +76,13 @@ class ScrollTracker {
 
     // 滚动到 95% 以上认为已读完（留一点余量，避免精确像素问题）
     if (scrollPercent >= 95) {
+      // 立即设置标记，避免在 markAsComplete 异步过程中重复触发
+      this.hasCompleted = true
+      
       console.log(`📖 章节 ${this.currentChapter} 已读完 (${scrollPercent.toFixed(1)}%)`)
 
       // 标记为已完成
       this.markAsComplete(this.currentChapter)
-      this.hasCompleted = true // 设置标记，避免重复触发
     }
   }
 
@@ -108,18 +110,8 @@ class ScrollTracker {
    * @returns {String} 章节名称
    */
   getChapterName(key) {
-    const names = {
-      es6: 'ES6 基础',
-      lifecycle: '生命周期',
-      directives: 'Vue 指令',
-      computedWatch: '计算属性与侦听器',
-      customDirectives: '自定义指令',
-      components: '组件化',
-      router: 'Vue-Router',
-      vuex: 'Vuex',
-      axios: 'Axios'
-    }
-    return names[key] || key
+    // 直接返回 key，因为 key 已经是可读的格式（如 es6-const-let）
+    return key
   }
 
   /**

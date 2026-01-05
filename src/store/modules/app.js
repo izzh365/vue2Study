@@ -65,6 +65,9 @@ const state = {
   // 侧边栏是否展开
   sidebarOpen: true,
 
+  // 清屏模式（隐藏侧边栏和标题）
+  cleanMode: localStorage.getItem('vue2_clean_mode') === 'true' || false,
+
   // 当前激活的章节
   activeChapter: null,
 
@@ -108,6 +111,15 @@ const getters = {
    */
   progress(state) {
     return state.progress
+  },
+
+  /**
+   * 获取清屏模式状态
+   * @param {Object} state - 状态
+   * @returns {Boolean} 是否清屏模式
+   */
+  cleanMode(state) {
+    return state.cleanMode
   }
 }
 
@@ -137,6 +149,24 @@ const mutations = {
    */
   SET_ACTIVE_CHAPTER(state, chapter) {
     state.activeChapter = chapter
+  },
+
+  /**
+   * 切换清屏模式
+   * @param {Object} state - 状态
+   */
+  TOGGLE_CLEAN_MODE(state) {
+    state.cleanMode = !state.cleanMode
+    // 保存到 localStorage
+    try {
+      localStorage.setItem('vue2_clean_mode', state.cleanMode.toString())
+      // 清屏模式开启时自动关闭侧边栏
+      if (state.cleanMode) {
+        state.sidebarOpen = false
+      }
+    } catch (e) {
+      console.error('保存清屏模式状态失败:', e)
+    }
   },
 
   /**
@@ -211,6 +241,14 @@ const actions = {
    */
   toggleSidebar({ commit }) {
     commit('TOGGLE_SIDEBAR')
+  },
+
+  /**
+   * 切换清屏模式
+   * @param {Object} context - 上下文
+   */
+  toggleCleanMode({ commit }) {
+    commit('TOGGLE_CLEAN_MODE')
   },
 
   /**

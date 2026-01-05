@@ -3,7 +3,7 @@
     AppSidebar.vue - 侧边栏导航
     包含章节目录树形结构
   -->
-  <aside class="app-sidebar" :class="{ 'is-open': sidebarOpen }">
+  <aside class="app-sidebar" :class="{ 'is-open': sidebarOpen && !cleanMode, 'is-hidden': cleanMode }">
     <!-- 侧边栏标题 -->
     <div class="sidebar-header">
       <h3 class="sidebar-title">📖 学习目录</h3>
@@ -193,8 +193,8 @@ export default {
   },
   
   computed: {
-    // 从 Vuex 获取侧边栏状态
-    ...mapState('app', ['sidebarOpen'])
+    // 从 Vuex 获取侧边栏状态和清屏模式
+    ...mapState('app', ['sidebarOpen', 'cleanMode'])
   },
   
   methods: {
@@ -228,6 +228,11 @@ export default {
   overflow: hidden;
   z-index: 900;
   transition: transform $transition-base;
+  
+  // 清屏模式：向左隐藏
+  &.is-hidden {
+    transform: translateX(-100%);
+  }
   
   // 移动端适配
   @media (max-width: $breakpoint-md) {

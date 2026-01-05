@@ -22,7 +22,7 @@
           <svg class="brand-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
             <path d="M12 6.042A8.967 8.967 0 006 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 016 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 016-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0018 18a8.967 8.967 0 00-6 2.292m0-14.25v14.25" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
           </svg>
-          <span class="brand-text">Vue2 零基础学习</span>
+          <span class="brand-text" v-show="!cleanMode">Vue2 零基础学习</span>
         </router-link>
       </div>
       
@@ -38,6 +38,18 @@
             :style="{ width: progressPercent + '%' }"
           ></div>
         </div>
+        
+        <!-- 清屏按钮 -->
+        <button 
+          class="clean-mode-btn"
+          @click="toggleCleanMode"
+          :class="{ active: cleanMode }"
+          :title="cleanMode ? '退出专注模式' : '进入专注模式'"
+        >
+          <svg class="clean-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M3.98 8.223A10.477 10.477 0 001.934 12C3.226 16.338 7.244 19.5 12 19.5c.993 0 1.953-.138 2.863-.395M6.228 6.228A10.45 10.45 0 0112 4.5c4.756 0 8.773 3.162 10.065 7.498a10.523 10.523 0 01-4.293 5.774M6.228 6.228L3 3m3.228 3.228l3.65 3.65m7.894 7.894L21 21m-3.228-3.228l-3.65-3.65m0 0a3 3 0 10-4.243-4.243m4.242 4.242L9.88 9.88" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </button>
       </div>
     </div>
   </header>
@@ -54,13 +66,13 @@ export default {
   name: 'AppHeader',
   
   computed: {
-    // 从 Vuex 获取学习进度
-    ...mapGetters('app', ['progressPercent'])
+    // 从 Vuex 获取学习进度和清屏模式
+    ...mapGetters('app', ['progressPercent', 'cleanMode'])
   },
   
   methods: {
-    // 切换侧边栏
-    ...mapActions('app', ['toggleSidebar'])
+    // 切换侧边栏和清屏模式
+    ...mapActions('app', ['toggleSidebar', 'toggleCleanMode'])
   }
 }
 </script>
@@ -222,12 +234,19 @@ export default {
 // 进度区域
 .header-progress {
   display: flex;
-  flex-direction: column;
-  gap: $spacing-xs;
-  min-width: 200px;
+  align-items: center;
+  gap: $spacing-md;
   
   @media (max-width: $breakpoint-sm) {
     display: none;
+  }
+  
+  // 进度条容器
+  > div:first-child {
+    display: flex;
+    flex-direction: column;
+    gap: $spacing-xs;
+    min-width: 200px;
   }
   
   .progress-info {
@@ -258,6 +277,43 @@ export default {
       border-radius: 3px;
       transition: width 0.6s ease;
     }
+  }
+}
+
+// 清屏按钮
+.clean-mode-btn {
+  padding: $spacing-xs;
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: $radius-sm;
+  cursor: pointer;
+  color: $color-text-secondary;
+  transition: all $transition-base;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  
+  &:hover {
+    background: rgba($color-primary, 0.1);
+    color: $color-primary;
+    border-color: $color-primary;
+  }
+  
+  &:focus-visible {
+    outline: 2px solid $color-primary;
+    outline-offset: 2px;
+  }
+  
+  &.active {
+    background: rgba($color-primary, 0.15);
+    color: $color-primary;
+    border-color: $color-primary;
+  }
+  
+  .clean-icon {
+    width: 20px;
+    height: 20px;
   }
 }
 </style>

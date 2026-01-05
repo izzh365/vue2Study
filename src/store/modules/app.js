@@ -1,6 +1,53 @@
 // store/modules/app.js
 // 应用级别状态管理模块
 
+// ==================== 默认进度结构 ====================
+const defaultProgress = {
+  // ES6 (5个)
+  'es6-const-let': false,
+  'es6-object-enhance': false,
+  'es6-higher-order': false,
+  'es6-arrow-function': false,
+  'es6-promise-async': false,
+  // 生命周期 (1个)
+  'lifecycle-detail': false,
+  // 指令 (5个)
+  'directives-v-bind': false,
+  'directives-v-on': false,
+  'directives-v-model': false,
+  'directives-v-if-show': false,
+  'directives-v-for': false,
+  // 计算属性 (2个)
+  'computed-watch-computed': false,
+  'computed-watch-watch': false,
+  // 自定义指令 (1个)
+  'custom-directives-main': false,
+  // 组件化 (5个)
+  'components-basic': false,
+  'components-props': false,
+  'components-emit': false,
+  'components-refs': false,
+  'components-slot': false,
+  // 路由 (5个)
+  'router-basic': false,
+  'router-dynamic': false,
+  'router-nested': false,
+  'router-programmatic': false,
+  'router-guards': false,
+  // Vuex (5个)
+  'vuex-state': false,
+  'vuex-getters': false,
+  'vuex-mutations': false,
+  'vuex-actions': false,
+  'vuex-modules': false,
+  // Axios (5个)
+  'axios-basic': false,
+  'axios-response': false,
+  'axios-concurrent': false,
+  'axios-interceptors': false,
+  'axios-encapsulation': false
+}
+
 // ==================== 初始化从 localStorage 加载进度 ====================
 const loadProgressFromStorage = () => {
   try {
@@ -8,59 +55,12 @@ const loadProgressFromStorage = () => {
     if (saved) {
       const savedProgress = JSON.parse(saved)
       // 合并保存的进度和默认结构，确保新增加的章节也能被追踪
-      // 使用默认进度作为基础，覆盖已保存的进度
-      // 这样可以确保所有定义的 key 都存在，同时保留用户的进度
       return { ...defaultProgress, ...savedProgress }
     }
     return defaultProgress
   } catch (e) {
-      // ES6 (5个)
-      'es6-const-let': false,
-      'es6-object-enhance': false,
-      'es6-higher-order': false,
-      'es6-arrow-function': false,
-      'es6-promise-async': false,
-      // 生命周期 (1个)
-      'lifecycle-detail': false,
-      // 指令 (5个)
-      'directives-v-bind': false,
-      'directives-v-on': false,
-      'directives-v-model': false,
-      'directives-v-if-show': false,
-      'directives-v-for': false,
-      // 计算属性 (2个)
-      'computed-watch-computed': false,
-      'computed-watch-watch': false,
-      // 自定义指令 (1个)
-      'custom-directives-main': false,
-      // 组件化 (5个)
-      'components-basic': false,
-      'components-props': false,
-      'components-emit': false,
-      'components-refs': false,
-      'components-slot': false,
-      // 路由 (5个)
-      'router-basic': false,
-      'router-dynamic': false,
-      'router-nested': false,
-      'router-programmatic': false,
-      'router-guards': false,
-      // Vuex (5个)
-      'vuex-state': false,
-      'vuex-getters': false,
-      'vuex-mutations': false,
-      'vuex-actions': false,
-      'vuex-modules': false,
-      // Axios (5个)
-      'axios-basic': false,
-      'axios-response': false,
-      'axios-concurrent': false,
-      'axios-interceptors': false,
-      'axios-encapsulation': false
-    }
-  } catch (e) {
     console.error('加载学习进度失败:', e)
-    return {}
+    return defaultProgress
   }
 }
 

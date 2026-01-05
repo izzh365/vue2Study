@@ -146,13 +146,15 @@ const mutations = {
    */
   COMPLETE_CHAPTER(state, chapter) {
     console.log(`🔄 MUTATION: COMPLETE_CHAPTER 被调用，章节: ${chapter}`)
-    console.log(`🔍 章节是否存在于 progress: ${Object.prototype.hasOwnProperty.call(state.progress, chapter)}`)
-    
+    console.log(
+      `🔍 章节是否存在于 progress: ${Object.prototype.hasOwnProperty.call(state.progress, chapter)}`
+    )
+
     if (Object.prototype.hasOwnProperty.call(state.progress, chapter)) {
       console.log(`📝 更新前: ${chapter} = ${state.progress[chapter]}`)
       state.progress[chapter] = true
       console.log(`✓ 更新后: ${chapter} = ${state.progress[chapter]}`)
-      
+
       // 保存到 localStorage
       try {
         const progressJson = JSON.stringify(state.progress)

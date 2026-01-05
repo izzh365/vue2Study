@@ -56,7 +56,7 @@ class ScrollTracker {
    */
   handleScroll = () => {
     if (!this.isTracking) return
-    
+
     // 标记用户已经滚动过
     this.hasScrolled = true
 
@@ -80,7 +80,7 @@ class ScrollTracker {
     const scrollTop = window.pageYOffset || document.documentElement.scrollTop
     const windowHeight = window.innerHeight
     const documentHeight = document.documentElement.scrollHeight
-    
+
     // 防止短页面误判：页面总高度必须大于视口高度的1.5倍
     const minHeight = windowHeight * 1.5
     if (documentHeight < minHeight) {
@@ -95,7 +95,7 @@ class ScrollTracker {
     if (scrollPercent >= 95) {
       // 立即设置标记，避免在 markAsComplete 异步过程中重复触发
       this.hasCompleted = true
-      
+
       console.log(`📖 章节 ${this.currentChapter} 已读完 (${scrollPercent.toFixed(1)}%)`)
 
       // 标记为已完成
@@ -110,12 +110,12 @@ class ScrollTracker {
   markAsComplete(chapterKey) {
     // 检查是否已经完成
     const progress = store.getters['app/progress']
-    
+
     console.log(`🔍 检查章节: ${chapterKey}`)
     console.log(`📊 当前进度对象:`, progress)
     console.log(`📌 该章节是否存在: ${Object.prototype.hasOwnProperty.call(progress, chapterKey)}`)
     console.log(`✓ 该章节是否完成: ${progress[chapterKey]}`)
-    
+
     if (progress[chapterKey]) {
       console.log(`⏭️ 章节 ${chapterKey} 已完成，跳过`)
       return // 已经完成，不重复标记

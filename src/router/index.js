@@ -29,7 +29,7 @@ const routes = [
     path: '/es6/const-let',
     name: 'ConstLet',
     component: () => import('@/views/chapters/es6/ConstLet.vue'),
-    meta: { title: 'const 与 let', chapter: 2, chapterKey: 'es6' }
+    meta: { title: 'const 与 let', chapter: 2, chapterKey: 'es6-const-let' }
   },
   {
     path: '/es6/object-enhance',

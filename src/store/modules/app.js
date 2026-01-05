@@ -6,10 +6,14 @@ const loadProgressFromStorage = () => {
   try {
     const saved = localStorage.getItem('vue2_learning_progress')
     if (saved) {
-      return JSON.parse(saved)
+      const savedProgress = JSON.parse(saved)
+      // 合并保存的进度和默认结构，确保新增加的章节也能被追踪
+      // 使用默认进度作为基础，覆盖已保存的进度
+      // 这样可以确保所有定义的 key 都存在，同时保留用户的进度
+      return { ...defaultProgress, ...savedProgress }
     }
-    // 默认进度结构：按小节统计（34个小节）
-    return {
+    return defaultProgress
+  } catch (e) {
       // ES6 (5个)
       'es6-const-let': false,
       'es6-object-enhance': false,

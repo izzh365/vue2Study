@@ -92,56 +92,101 @@ export default {
             { path: '/es6/object-enhance', title: '对象增强写法' },
             { path: '/es6/higher-order', title: '高阶函数' },
             { path: '/es6/arrow-function', title: '箭头函数' },
-            { path: '/es6/promise', title: 'Promise 异步' }
+            { path: '/es6/promise-async', title: 'Promise 异步' }
           ]
         },
         {
           path: '/lifecycle',
           icon: '🔄',
-          title: '第3章 生命周期'
+          title: '第3章 生命周期',
+          children: [
+            { path: '/lifecycle/detail', title: '生命周期详解' }
+          ]
         },
         {
           path: '/directives',
           icon: '📌',
-          title: '第4章 Vue 指令'
+          title: '第4章 Vue 指令',
+          children: [
+            { path: '/directives/v-bind', title: 'v-bind 属性绑定' },
+            { path: '/directives/v-on', title: 'v-on 事件绑定' },
+            { path: '/directives/v-model', title: 'v-model 双向绑定' },
+            { path: '/directives/v-if-show', title: 'v-if / v-show' },
+            { path: '/directives/v-for', title: 'v-for 列表渲染' }
+          ]
         },
         {
           path: '/computed-watch',
           icon: '🔍',
-          title: '第5章 计算属性'
+          title: '第5章 计算属性',
+          children: [
+            { path: '/computed-watch/computed', title: 'computed 计算属性' },
+            { path: '/computed-watch/watch', title: 'watch 侦听器' }
+          ]
         },
         {
           path: '/custom-directives',
           icon: '🛠️',
-          title: '第6章 自定义指令'
+          title: '第6章 自定义指令',
+          children: [
+            { path: '/custom-directives/main', title: '自定义指令详解' }
+          ]
         },
         {
           path: '/components',
           icon: '🧩',
           title: '第7章 组件化',
           badge: 'core',
-          badgeText: '核心'
+          badgeText: '核心',
+          children: [
+            { path: '/components/basic', title: '组件基础' },
+            { path: '/components/props', title: 'Props 父传子' },
+            { path: '/components/emit', title: '$emit 子传父' },
+            { path: '/components/refs', title: '$refs 访问子组件' },
+            { path: '/components/slot', title: 'Slot 插槽' }
+          ]
         },
         {
           path: '/router',
           icon: '🛤️',
           title: '第8章 Vue-Router',
           badge: 'important',
-          badgeText: '重要'
+          badgeText: '重要',
+          children: [
+            { path: '/router/basic', title: '路由基础' },
+            { path: '/router/dynamic', title: '动态路由' },
+            { path: '/router/nested', title: '嵌套路由' },
+            { path: '/router/programmatic', title: '编程式导航' },
+            { path: '/router/guards', title: '导航守卫' }
+          ]
         },
         {
           path: '/vuex',
           icon: '📦',
           title: '第9章 Vuex',
           badge: 'important',
-          badgeText: '重要'
+          badgeText: '重要',
+          children: [
+            { path: '/vuex/state', title: 'State 状态' },
+            { path: '/vuex/getters', title: 'Getters 计算属性' },
+            { path: '/vuex/mutations', title: 'Mutations 同步修改' },
+            { path: '/vuex/actions', title: 'Actions 异步操作' },
+            { path: '/vuex/modules', title: 'Modules 模块化' }
+          ]
         },
         {
           path: '/axios',
           icon: '🌐',
           title: '第10章 Axios',
           badge: 'important',
-          badgeText: '重要'
+          badgeText: '重要',
+          children: [
+            { path: '/axios/basic', title: '基础请求' },
+            { path: '/axios/response', title: '响应处理' },
+            { path: '/axios/concurrent', title: '并发请求' },
+            { path: '/axios/interceptors', title: '拦截器' },
+            { path: '/axios/encapsulation', title: '封装实践' }
+          ]
         }
       ]
     }

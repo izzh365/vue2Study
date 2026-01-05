@@ -8,7 +8,7 @@ module.exports = {
   // 部署应用时的基本 URL
   // 如果部署在子路径，如 https://example.com/vue2-learning/
   // 则设置为 '/vue2-learning/'
-  publicPath: process.env.NODE_ENV === 'production' ? './' : '/',
+  publicPath: '/',
 
   // 生产环境构建输出目录
   outputDir: 'dist',

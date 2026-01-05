@@ -23,9 +23,18 @@
     <!-- 学习进度 -->
     <section class="progress-section">
       <div class="progress-card">
-        <div class="progress-info">
-          <span class="progress-label">📊 学习进度</span>
-          <span class="progress-value">{{ progressPercent }}%</span>
+        <div class="progress-header">
+          <div class="progress-info">
+            <span class="progress-label">📊 学习进度</span>
+            <span class="progress-value">{{ progressPercent }}%</span>
+          </div>
+          <button 
+            class="reset-btn"
+            @click="handleResetProgress"
+            title="重置所有进度"
+          >
+            🔄 重置
+          </button>
         </div>
         <div class="progress-bar">
           <div 
@@ -35,6 +44,9 @@
         </div>
         <p class="progress-tip">
           已完成 {{ completedCount }} / {{ totalChapters }} 个章节
+        </p>
+        <p class="progress-desc">
+          💡 提示：阅读章节时，滚动到页面底部将自动标记为已完成
         </p>
       </div>
     </section>
@@ -49,7 +61,7 @@
           :key="chapter.path"
           :to="chapter.path"
           class="chapter-card"
-          :class="{ completed: chapter.completed }"
+          :class="{ completed: isChapterCompleted(chapter.key) }"
         >
           <span class="chapter-icon">{{ chapter.icon }}</span>
           <div class="chapter-info">
@@ -66,32 +78,6 @@
         </router-link>
       </div>
     </section>
-    
-    <!-- 学习路径 -->
-    <section class="path-section">
-      <h2 class="section-title">🛤️ 推荐学习路径</h2>
-      <div class="path-content">
-        <div class="path-step">
-          <span class="step-num">1</span>
-          <span class="step-text">ES6 基础语法</span>
-        </div>
-        <span class="path-arrow">→</span>
-        <div class="path-step">
-          <span class="step-num">2</span>
-          <span class="step-text">Vue 核心基础</span>
-        </div>
-        <span class="path-arrow">→</span>
-        <div class="path-step highlight">
-          <span class="step-num">3</span>
-          <span class="step-text">组件化开发</span>
-        </div>
-        <span class="path-arrow">→</span>
-        <div class="path-step">
-          <span class="step-num">4</span>
-          <span class="step-text">Vue 生态</span>
-        </div>
-      </div>
-    </section>
   </div>
 </template>
 
@@ -100,7 +86,7 @@
  * @description 首页组件
  * 展示学习进度和章节导航
  */
-import { mapGetters } from 'vuex'
+import { mapGetters, mapActions } from 'vuex'
 
 export default {
   name: 'Home',
@@ -111,81 +97,101 @@ export default {
       chapters: [
         {
           path: '/es6',
+          key: 'es6',
           icon: '📝',
           title: '第2章 ES6 基础',
-          desc: 'const/let、箭头函数、Promise 等',
-          completed: false
+          desc: 'const/let、箭头函数、Promise 等'
         },
         {
           path: '/lifecycle',
+          key: 'lifecycle',
           icon: '🔄',
           title: '第3章 生命周期',
-          desc: '8 个生命周期钩子详解',
-          completed: false
+          desc: '8 个生命周期钩子详解'
         },
         {
           path: '/directives',
+          key: 'directives',
           icon: '📌',
           title: '第4章 Vue 指令',
-          desc: 'v-bind/v-on/v-model/v-for 等',
-          completed: false
+          desc: 'v-bind/v-on/v-model/v-for 等'
         },
         {
           path: '/computed-watch',
+          key: 'computedWatch',
           icon: '🔍',
           title: '第5章 计算属性',
-          desc: 'computed 和 watch 详解',
-          completed: false
+          desc: 'computed 和 watch 详解'
         },
         {
           path: '/custom-directives',
+          key: 'customDirectives',
           icon: '🛠️',
           title: '第6章 自定义指令',
-          desc: '自定义指令钩子函数与实战',
-          completed: false
+          desc: '自定义指令钩子函数与实战'
         },
         {
           path: '/components',
+          key: 'components',
           icon: '🧩',
           title: '第7章 组件化',
           desc: 'props/emit/refs/slot',
           badge: 'core',
-          badgeText: '核心',
-          completed: false
+          badgeText: '核心'
         },
         {
           path: '/router',
+          key: 'router',
           icon: '🛤️',
           title: '第8章 Vue-Router',
           desc: '路由配置、导航守卫',
           badge: 'important',
-          badgeText: '重要',
-          completed: false
+          badgeText: '重要'
         },
         {
           path: '/vuex',
+          key: 'vuex',
           icon: '📦',
           title: '第9章 Vuex',
           desc: 'state/mutations/actions',
           badge: 'important',
-          badgeText: '重要',
-          completed: false
+          badgeText: '重要'
         },
         {
           path: '/axios',
+          key: 'axios',
           icon: '🌐',
           title: '第10章 Axios',
           desc: '请求封装、拦截器',
           badge: 'important',
-          badgeText: '重要',
-          completed: false
+          badgeText: '重要'
         }
       ]
     }
   },
   
   computed: {
-    ...mapGetters('app', ['progressPercent', 'completedCount', 'totalChapters'])
+    ...mapGetters('app', ['progressPercent', 'completedCount', 'totalChapters', 'progress'])
+  },
+  
+  methods: {
+    ...mapActions('app', ['resetProgress']),
+    
+    /**
+     * 判断章节是否完成
+     */
+    isChapterCompleted(key) {
+      return this.progress[key] || false
+    },
+    
+    /**
+     * 重置所有进度
+     */
+    handleResetProgress() {
+      if (confirm('确定要重置所有学习进度吗？')) {
+        this.resetProgress()
+      }
+    }
   }
 }
 </script>
@@ -240,19 +246,42 @@ export default {
     padding: $spacing-lg;
   }
   
-  .progress-info {
+  .progress-header {
     @include flex-between;
-    margin-bottom: $spacing-sm;
+    margin-bottom: $spacing-md;
     
-    .progress-label {
-      font-weight: 500;
-      color: $color-text;
+    .progress-info {
+      display: flex;
+      align-items: center;
+      gap: $spacing-md;
+      
+      .progress-label {
+        font-weight: 500;
+        color: $color-text;
+      }
+      
+      .progress-value {
+        font-size: $font-size-xl;
+        font-weight: 700;
+        color: $color-primary;
+      }
     }
     
-    .progress-value {
-      font-size: $font-size-xl;
-      font-weight: 700;
-      color: $color-primary;
+    .reset-btn {
+      padding: $spacing-xs $spacing-md;
+      background: transparent;
+      border: 1px solid $color-border;
+      border-radius: $radius-sm;
+      color: $color-text-secondary;
+      font-size: $font-size-sm;
+      cursor: pointer;
+      transition: all $transition-fast;
+      
+      &:hover {
+        background: $color-bg;
+        border-color: $color-primary;
+        color: $color-primary;
+      }
     }
   }
   
@@ -274,7 +303,17 @@ export default {
   .progress-tip {
     font-size: $font-size-sm;
     color: $color-text-secondary;
+    margin: 0 0 $spacing-xs 0;
+  }
+  
+  .progress-desc {
+    font-size: $font-size-xs;
+    color: $color-text-light;
     margin: 0;
+    padding: $spacing-sm;
+    background: rgba($color-info, 0.05);
+    border-radius: $radius-sm;
+    border-left: 3px solid $color-info;
   }
 }
 
@@ -296,13 +335,15 @@ export default {
 
 .chapter-card {
   @include card-base;
+  position: relative;
+  padding: $spacing-lg;
+  transition: all $transition-base;
+  cursor: pointer;
   display: flex;
   align-items: flex-start;
   gap: $spacing-md;
-  padding: $spacing-lg;
   text-decoration: none;
-  transition: all $transition-base;
-  position: relative;
+  color: inherit;
   
   &:hover {
     transform: translateY(-4px);
@@ -311,62 +352,51 @@ export default {
   
   &.completed {
     border: 2px solid $color-success;
-    
-    &::after {
-      content: '✓';
-      position: absolute;
-      top: $spacing-sm;
-      right: $spacing-sm;
-      width: 24px;
-      height: 24px;
-      background: $color-success;
-      color: white;
-      border-radius: 50%;
-      @include flex-center;
-      font-size: $font-size-sm;
-    }
+    background: linear-gradient(135deg, 
+      rgba($color-success, 0.05) 0%, 
+      transparent 100%);
+  }
+}
+
+.chapter-icon {
+  font-size: 32px;
+  flex-shrink: 0;
+}
+
+.chapter-info {
+  flex: 1;
+  
+  .chapter-title {
+    font-size: $font-size-base;
+    font-weight: 600;
+    color: $color-text;
+    margin: 0 0 $spacing-xs;
   }
   
-  .chapter-icon {
-    font-size: 32px;
-    flex-shrink: 0;
+  .chapter-desc {
+    font-size: $font-size-sm;
+    color: $color-text-secondary;
+    margin: 0;
+  }
+}
+
+.chapter-badge {
+  position: absolute;
+  top: $spacing-sm;
+  right: $spacing-sm;
+  font-size: $font-size-xs;
+  padding: 2px 8px;
+  border-radius: $radius-sm;
+  font-weight: 500;
+  
+  &.core {
+    background: rgba($color-error, 0.1);
+    color: $color-error;
   }
   
-  .chapter-info {
-    flex: 1;
-    
-    .chapter-title {
-      font-size: $font-size-base;
-      font-weight: 600;
-      color: $color-text;
-      margin: 0 0 $spacing-xs;
-    }
-    
-    .chapter-desc {
-      font-size: $font-size-sm;
-      color: $color-text-secondary;
-      margin: 0;
-    }
-  }
-  
-  .chapter-badge {
-    position: absolute;
-    top: $spacing-sm;
-    right: $spacing-sm;
-    font-size: $font-size-xs;
-    padding: 2px 8px;
-    border-radius: $radius-sm;
-    font-weight: 500;
-    
-    &.core {
-      background: rgba($color-error, 0.1);
-      color: $color-error;
-    }
-    
-    &.important {
-      background: rgba($color-warning, 0.1);
-      color: $color-warning;
-    }
+  &.important {
+    background: rgba($color-warning, 0.1);
+    color: $color-warning;
   }
 }
 

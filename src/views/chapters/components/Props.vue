@@ -141,9 +141,12 @@
 import KnowledgeCard from '@/components/content/KnowledgeCard.vue'
 import TipBox from '@/components/content/TipBox.vue'
 import DemoBox from '@/components/demo/DemoBox.vue'
+import scrollTrackingMixin from '@/utils/scrollTrackingMixin'
 
 export default {
   name: 'PropsPage',
+
+  mixins: [scrollTrackingMixin],
 
   components: {
     KnowledgeCard,

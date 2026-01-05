@@ -159,9 +159,11 @@ import KnowledgeCard from '@/components/content/KnowledgeCard.vue'
 import TipBox from '@/components/content/TipBox.vue'
 import CodeBlock from '@/components/demo/CodeBlock.vue'
 import DemoBox from '@/components/demo/DemoBox.vue'
+import scrollTrackingMixin from '@/utils/scrollTrackingMixin'
 
 export default {
   name: 'AxiosBasic',
+  mixins: [scrollTrackingMixin],
   components: {
     KnowledgeCard,
     TipBox,

@@ -26,25 +26,18 @@
         </router-link>
       </div>
       
-      <!-- 导航链接 -->
-      <nav class="header-nav">
-        <router-link to="/" class="nav-link">首页</router-link>
-        <router-link to="/es6" class="nav-link">ES6</router-link>
-        <router-link to="/lifecycle" class="nav-link">生命周期</router-link>
-        <router-link to="/directives" class="nav-link">指令</router-link>
-        <router-link to="/components" class="nav-link">组件化</router-link>
-      </nav>
-      
-      <!-- 进度指示 -->
+      <!-- 学习进度 -->
       <div class="header-progress">
-        <span class="progress-text">学习进度</span>
+        <div class="progress-info">
+          <span class="progress-text">学习进度</span>
+          <span class="progress-percent">{{ progressPercent }}%</span>
+        </div>
         <div class="progress-bar">
           <div 
             class="progress-fill" 
             :style="{ width: progressPercent + '%' }"
           ></div>
         </div>
-        <span class="progress-value">{{ progressPercent }}%</span>
       </div>
     </div>
   </header>
@@ -229,38 +222,42 @@ export default {
 // 进度区域
 .header-progress {
   display: flex;
-  align-items: center;
-  gap: $spacing-sm;
+  flex-direction: column;
+  gap: $spacing-xs;
+  min-width: 200px;
   
   @media (max-width: $breakpoint-sm) {
     display: none;
   }
   
-  .progress-text {
-    font-size: $font-size-xs;
-    color: $color-text-secondary;
+  .progress-info {
+    @include flex-between;
+    
+    .progress-text {
+      font-size: $font-size-sm;
+      color: $color-text-secondary;
+    }
+    
+    .progress-percent {
+      font-size: $font-size-sm;
+      font-weight: 600;
+      color: $color-primary;
+    }
   }
   
   .progress-bar {
-    width: 100px;
+    width: 100%;
     height: 6px;
-    background: $color-border;
+    background: $color-border-light;
     border-radius: 3px;
     overflow: hidden;
-  }
-  
-  .progress-fill {
-    height: 100%;
-    background: linear-gradient(90deg, $color-primary, $color-primary-light);
-    border-radius: 3px;
-    transition: width $transition-base;
-  }
-  
-  .progress-value {
-    font-size: $font-size-xs;
-    font-weight: 600;
-    color: $color-primary;
-    min-width: 32px;
+    
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, $color-primary, $color-primary-light);
+      border-radius: 3px;
+      transition: width 0.6s ease;
+    }
   }
 }
 </style>

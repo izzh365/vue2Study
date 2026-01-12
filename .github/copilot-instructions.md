@@ -18,8 +18,15 @@
 - ❌ **Never create documentation files** unless explicitly requested
 - ✅ Keep code comments concise
 - ✅ 新代码中的注释必须使用中文
-- ✅ Use `read_file` tool to read docs from `.izzh/tasks/` when needed
 - 📁 **MD文档生成规则**: 用户主动请求生成的 md 文档放到 `.izzh/tasks/` 目录
+
+**Serena MCP Tool Usage (代码分析优先):**
+- 📖 **文档阅读**: Use `read_file` to read `.md` documentation files (这是正确的)
+- 🔍 **代码分析**: Use Serena tools for Vue/JS code analysis:
+  - `get_symbols_overview` - 快速查看组件结构（节省 95% tokens）
+  - `find_symbol` - 精确定位并读取特定方法/computed/data
+  - `find_referencing_symbols` - 追踪组件/函数的引用关系
+- ⚠️ **重要**: 分析代码时优先使用 Serena，避免用 `read_file` 读取整个 .vue/.js 文件
 
 ---
 
@@ -75,6 +82,71 @@ mcp_io_github_ups_get-library-docs
 | 10 | Axios 网络请求 🟠 | `.izzh/tasks/10-axios.md` | 请求封装、拦截器、并发请求 | ⭐⭐ |
 
 > 🔴 非常重要（核心） | 🟠 重要 | ⭐ 简单 | ⭐⭐ 中等 | ⭐⭐⭐ 较难
+
+---
+
+## 📊 项目架构分析
+
+**详细分析已保存到 Serena Memory: `vue2study_architecture`**
+
+### 核心统计
+
+| 项目 | 数据 |
+|------|------|
+| **已完成章节** | 11 章（全部完成）|
+| **页面视图** | 44+ 个页面 |
+| **交互式 Demo** | ~198 个 |
+| **路由配置** | 44+ 条路由 |
+| **组件总数** | 6+ 核心组件 + 各章节组件 |
+| **代码规范** | Options API (Vue 2 标准) |
+
+### 目录结构速览
+
+```
+src/
+├── components/          # 6+ 可复用组件
+│   ├── layout/         # AppHeader, AppSidebar
+│   ├── content/        # KnowledgeCard, TipBox
+│   └── demo/           # DemoBox, CodeBlock
+├── views/chapters/     # 10 章内容，44+ 页面
+│   ├── es6/           # 6 页（ConstLet, ObjectEnhance, etc.）
+│   ├── lifecycle/     # 2 页
+│   ├── directives/    # 6 页
+│   ├── computed-watch/# 3 页
+│   ├── components/    # 6 页
+│   ├── router/        # 6 页
+│   ├── vuex/          # 6 页
+│   └── axios/         # 6 页
+├── demos/              # ~198 个 Demo 源码（HTML+JS）
+├── router/index.js     # 44+ 路由配置
+└── store/              # Vuex 状态管理
+```
+
+### 技术架构
+
+| 层级 | 技术栈 | 说明 |
+|------|--------|------|
+| **框架** | Vue 2.7.16 | Options API |
+| **路由** | Vue Router 3.6.5 | history 模式，支持滚动行为 |
+| **状态管理** | Vuex 3.6.2 | 模块化设计 |
+| **样式** | SCSS | 变量系统 + 混入 |
+| **代码高亮** | Prism.js | 浅色主题 + 行号 |
+| **构建工具** | Vue CLI 5.0.8 | Webpack 配置 |
+
+### Demo 系统设计
+
+```
+Demo 加载流程:
+DemoBox.vue (接收 demoPath)
+    ↓
+动态加载 public/demos/{demoPath}/
+    ├── index.html
+    └── app.js
+    ↓
+CodeBlock.vue (Prism 语法高亮)
+    ↓
+实时预览区 (iframe 运行)
+```
 
 ---
 

@@ -49,4 +49,7 @@ coverage/
 # IDE 本地文件
 .vscode/settings.json
 .idea/workspace.xml
-.shared/
+.github
+.izzh
+.shared
+.serena
